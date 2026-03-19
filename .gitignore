@@ -1,0 +1,16 @@
+build/
+install/
+log/
+
+*.pyc
+__pycache__/
+*.pyo
+
+.vscode/
+.idea/
+
+.venv/
+env/
+
+*.swp
+.DS_Store
