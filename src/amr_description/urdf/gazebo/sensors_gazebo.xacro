@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="gazebo_sensors" params="">
+    <gazebo reference="lidar_link">
+      <sensor name="front_lidar" type="gpu_lidar">
+        <pose>0 0 ${laser_z-lidar_z} 0 0 0</pose>
+        <topic>/amr/scan</topic><gz_frame_id>laser_frame</gz_frame_id>
+        <always_on>true</always_on><update_rate>${lidar_rate}</update_rate><visualize>false</visualize>
+        <lidar><scan><horizontal><samples>${lidar_samples}</samples><resolution>1</resolution>
+          <min_angle>${-lidar_half_fov}</min_angle><max_angle>${lidar_half_fov}</max_angle>
+        </horizontal></scan><range><min>${lidar_min_range}</min><max>${lidar_max_range}</max><resolution>${lidar_resolution}</resolution></range></lidar>
+      </sensor>
+    </gazebo>
+    <gazebo reference="imu_link">
+      <sensor name="imu" type="imu"><topic>/amr/imu</topic><gz_frame_id>imu_link</gz_frame_id>
+        <always_on>true</always_on><update_rate>${imu_rate}</update_rate>
+        <imu><orientation_reference_frame><localization>ENU</localization></orientation_reference_frame></imu>
+      </sensor>
+    </gazebo>
+    <gazebo reference="camera_link">
+      <sensor name="rgbd_camera" type="rgbd_camera">
+        <!-- Gazebo cameras look along +X; message coordinates use the optical frame. -->
+        <pose>${camera_length/2+camera_lens_gap} 0 0 0 0 0</pose>
+        <topic>/amr/camera</topic><gz_frame_id>camera_depth_frame</gz_frame_id>
+        <always_on>true</always_on><update_rate>${camera_rate}</update_rate>
+        <camera><horizontal_fov>${camera_fov}</horizontal_fov>
+          <image><width>${camera_image_width}</width><height>${camera_image_height}</height><format>R8G8B8</format></image>
+          <clip><near>${camera_near}</near><far>${camera_far}</far></clip>
+          <depth_camera><clip><near>${camera_near}</near><far>${camera_far}</far></clip></depth_camera>
+          <optical_frame_id>camera_optical_frame</optical_frame_id>
+        </camera>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

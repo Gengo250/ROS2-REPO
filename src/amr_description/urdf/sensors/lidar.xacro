@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="lidar" params="">
+    <link name="lidar_link">
+      <xacro:mesh_visual stem="lidar_housing" material="sensor"/>
+      <collision><geometry><cylinder radius="${lidar_radius}" length="${lidar_height}"/></geometry></collision>
+      <xacro:cylinder_inertial mass="${lidar_mass}" radius="${lidar_radius}" length="${lidar_height}"/>
+    </link>
+    <xacro:fixed_joint name="lidar_joint" parent="chassis_link" child="lidar_link" xyz="${lidar_x} 0 ${lidar_z-chassis_z}"/>
+    <link name="laser_frame"/>
+    <xacro:fixed_joint name="laser_frame_joint" parent="lidar_link" child="laser_frame" xyz="0 0 ${laser_z-lidar_z}"/>
+  </xacro:macro>
+</robot>

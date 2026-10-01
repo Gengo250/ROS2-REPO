@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="caster" params="side sign">
+    <link name="${side}_caster_link">
+      <xacro:mesh_visual stem="caster" material="rubber"/>
+      <collision><geometry><sphere radius="${caster_radius}"/></geometry></collision>
+      <xacro:sphere_inertial mass="${caster_mass}" radius="${caster_radius}"/>
+    </link>
+    <!-- Fixed low-friction ball contact approximates a passive omnidirectional support. -->
+    <xacro:fixed_joint name="${side}_caster_joint" parent="chassis_link" child="${side}_caster_link"
+                       xyz="${sign*caster_x} 0 ${caster_radius-chassis_z}"/>
+  </xacro:macro>
+  <xacro:macro name="casters" params=""><xacro:caster side="front" sign="1"/><xacro:caster side="rear" sign="-1"/></xacro:macro>
+</robot>

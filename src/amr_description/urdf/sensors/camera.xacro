@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="camera" params="">
+    <link name="camera_link">
+      <xacro:mesh_visual stem="camera_housing" material="sensor"/>
+      <collision><geometry><box size="${camera_length} ${camera_width} ${camera_height}"/></geometry></collision>
+      <xacro:box_inertial mass="${camera_mass}" x="${camera_length}" y="${camera_width}" z="${camera_height}"/>
+    </link>
+    <xacro:fixed_joint name="camera_joint" parent="chassis_link" child="camera_link" xyz="${camera_x} 0 ${camera_z-chassis_z}"/>
+    <link name="camera_optical_frame"/>
+    <!-- Harmonic PointCloudPacked uses +X forward at the lens, unlike image coordinates. -->
+    <link name="camera_depth_frame"/>
+    <xacro:fixed_joint name="camera_depth_joint" parent="camera_link" child="camera_depth_frame"
+                       xyz="${camera_length/2+camera_lens_gap} 0 0"/>
+    <!-- REP-103 optical frame: X right, Y down, Z forward. -->
+    <xacro:fixed_joint name="camera_optical_joint" parent="camera_link" child="camera_optical_frame"
+                       xyz="${camera_length/2+camera_lens_gap} 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+  </xacro:macro>
+</robot>

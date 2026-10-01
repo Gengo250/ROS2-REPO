@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="platform" params="">
+    <link name="platform_link">
+      <xacro:mesh_visual stem="platform" material="metal"/>
+      <xacro:platform_collision/>
+      <xacro:box_inertial mass="${platform_mass}" x="${platform_length}" y="${platform_width}" z="${platform_thickness}"/>
+    </link>
+    <xacro:fixed_joint name="platform_joint" parent="base_link" child="platform_link" xyz="0 0 ${platform_z}"/>
+  </xacro:macro>
+</robot>

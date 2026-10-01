@@ -1,0 +1,16 @@
+{
+  "joint_limits": {
+    "left_wheel_joint": {
+      "has_velocity_limits": true,
+      "max_velocity": 12.0,
+      "has_effort_limits": true,
+      "max_effort": 35.0
+    },
+    "right_wheel_joint": {
+      "has_velocity_limits": true,
+      "max_velocity": 12.0,
+      "has_effort_limits": true,
+      "max_effort": 35.0
+    }
+  }
+}

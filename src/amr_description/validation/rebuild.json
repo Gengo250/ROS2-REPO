@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "identical_stl_bytes_on_rebuild": true,
+  "unrelated_scene_preserved": true,
+  "generated_object_count": 11,
+  "alternative_dimensions_passed": {
+    "chassis_length": 1.0,
+    "chassis_width": 0.74,
+    "chassis_height": 0.26,
+    "platform_length": 0.92,
+    "platform_width": 0.67,
+    "track_width": 0.6,
+    "wheel_radius": 0.125
+  }
+}

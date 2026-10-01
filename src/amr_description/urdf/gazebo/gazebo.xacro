@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="contact" params="link mu">
+    <gazebo reference="${link}"><mu1>${mu}</mu1><mu2>${mu}</mu2></gazebo>
+  </xacro:macro>
+  <xacro:macro name="gazebo_properties" params="">
+    <gazebo><self_collide>false</self_collide></gazebo>
+    <xacro:contact link="left_wheel_link" mu="${drive_friction}"/>
+    <xacro:contact link="right_wheel_link" mu="${drive_friction}"/>
+    <xacro:contact link="front_caster_link" mu="${caster_friction}"/>
+    <xacro:contact link="rear_caster_link" mu="${caster_friction}"/>
+  </xacro:macro>
+</robot>

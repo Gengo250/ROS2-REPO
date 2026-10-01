@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="imu" params="debug">
+    <link name="imu_link">
+      <xacro:box_inertial mass="${imu_mass}" x="${imu_size}" y="${imu_size}" z="${imu_size}"/>
+      <xacro:if value="${debug}"><visual><geometry><box size="${imu_size} ${imu_size} ${imu_size}"/></geometry><material name="accent"/></visual></xacro:if>
+    </link>
+    <xacro:fixed_joint name="imu_joint" parent="chassis_link" child="imu_link" xyz="0 0 ${chassis_com_height-chassis_z}"/>
+  </xacro:macro>
+</robot>

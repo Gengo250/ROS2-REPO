@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="box_inertial" params="mass x y z xyz:='0 0 0'">
+    <inertial>
+      <origin xyz="${xyz}"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass*(y*y+z*z)/12}" ixy="0" ixz="0"
+               iyy="${mass*(x*x+z*z)/12}" iyz="0" izz="${mass*(x*x+y*y)/12}"/>
+    </inertial>
+  </xacro:macro>
+  <xacro:macro name="cylinder_inertial" params="mass radius length rpy:='0 0 0'">
+    <inertial>
+      <origin rpy="${rpy}"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass*(3*radius*radius+length*length)/12}" ixy="0" ixz="0"
+               iyy="${mass*(3*radius*radius+length*length)/12}" iyz="0" izz="${mass*radius*radius/2}"/>
+    </inertial>
+  </xacro:macro>
+  <xacro:macro name="sphere_inertial" params="mass radius">
+    <inertial><mass value="${mass}"/>
+      <inertia ixx="${2*mass*radius*radius/5}" ixy="0" ixz="0"
+               iyy="${2*mass*radius*radius/5}" iyz="0" izz="${2*mass*radius*radius/5}"/>
+    </inertial>
+  </xacro:macro>
+  <xacro:macro name="mesh_visual" params="stem material">
+    <visual><geometry><mesh filename="package://amr_description/meshes/visual/${stem}.stl" scale="1 1 1"/></geometry>
+      <material name="${material}"/>
+    </visual>
+  </xacro:macro>
+  <xacro:macro name="fixed_joint" params="name parent child xyz:='0 0 0' rpy:='0 0 0'">
+    <joint name="${name}" type="fixed"><parent link="${parent}"/><child link="${child}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+  </xacro:macro>
+</robot>

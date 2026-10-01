@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="chassis_collision" params="">
+    <!-- Three boxes leave the wheel pockets and front scanning bay unobstructed. -->
+    <collision name="core"><origin xyz="${core_x} 0 0"/>
+      <geometry><box size="${core_length} ${2*core_half_width} ${chassis_height}"/></geometry>
+    </collision>
+    <collision name="front_shoulders"><origin xyz="${front_collision_x} 0 0"/>
+      <geometry><box size="${front_collision_length} ${end_collision_width} ${chassis_height}"/></geometry>
+    </collision>
+    <collision name="rear_shoulders"><origin xyz="${rear_collision_x} 0 0"/>
+      <geometry><box size="${rear_collision_length} ${end_collision_width} ${chassis_height}"/></geometry>
+    </collision>
+  </xacro:macro>
+</robot>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="platform_collision" params="">
+    <collision><geometry><box size="${platform_length} ${platform_width} ${platform_thickness}"/></geometry></collision>
+  </xacro:macro>
+</robot>

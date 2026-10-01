@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="drive_wheel" params="side sign">
+    <link name="${side}_wheel_link">
+      <!-- The mesh already has its axle along Y; only cylinder primitives need a rotation. -->
+      <xacro:mesh_visual stem="wheel" material="rubber"/>
+      <xacro:wheel_collision/>
+      <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_radius}" length="${wheel_width}" rpy="${pi/2} 0 0"/>
+    </link>
+    <joint name="${side}_wheel_joint" type="continuous">
+      <parent link="chassis_link"/><child link="${side}_wheel_link"/>
+      <origin xyz="0 ${sign*wheel_y} ${wheel_z-chassis_z}"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="${wheel_max_effort}" velocity="${wheel_max_velocity}"/>
+      <dynamics damping="${wheel_damping}" friction="0"/>
+    </joint>
+  </xacro:macro>
+  <xacro:macro name="wheels" params=""><xacro:drive_wheel side="left" sign="1"/><xacro:drive_wheel side="right" sign="-1"/></xacro:macro>
+</robot>
