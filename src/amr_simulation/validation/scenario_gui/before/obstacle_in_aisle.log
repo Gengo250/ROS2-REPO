@@ -1,0 +1,196 @@
+[INFO] [launch]: All log files can be found below /home/gengo/.ros/log/2026-10-03-14-53-19-986488-gengo-29037
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gazebo-1]: process started with pid [29040]
+[INFO] [robot_state_publisher-2]: process started with pid [29041]
+[INFO] [parameter_bridge-3]: process started with pid [29043]
+[INFO] [create-4]: process started with pid [29044]
+[INFO] [gz-5]: process started with pid [29045]
+[INFO] [parameter_bridge-6]: process started with pid [29046]
+[INFO] [static_transform_publisher-7]: process started with pid [29047]
+[INFO] [static_transform_publisher-8]: process started with pid [29048]
+[static_transform_publisher-7] [INFO] [1791050000.423082268] [warehouse_camera_01_link_tf]: Spinning until stopped - publishing transform
+[static_transform_publisher-7] translation: ('-10.000000', '-8.500000', '4.400000')
+[static_transform_publisher-7] rotation: ('-0.107991', '0.238609', '0.397928', '0.879237')
+[static_transform_publisher-7] from 'world' to 'warehouse_camera_01_link'
+[robot_state_publisher-2] [INFO] [1791050000.426543408] [robot_state_publisher]: Robot initialized
+[static_transform_publisher-8] [INFO] [1791050000.438519917] [warehouse_camera_01_optical_frame_tf]: Spinning until stopped - publishing transform
+[static_transform_publisher-8] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-8] rotation: ('-0.500000', '0.500000', '-0.500000', '0.500000')
+[static_transform_publisher-8] from 'warehouse_camera_01_link' to 'warehouse_camera_01_optical_frame'
+[create-4] [INFO] [1791050000.449366914] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[parameter_bridge-3] [INFO] [1791050001.463909601] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791050001.464808880] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-6] [INFO] [1791050001.466342874] [warehouse_bridge]: Creating GZ->ROS Bridge: [/warehouse/camera_01/image (gz.msgs.Image) -> /warehouse/camera_01/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791050001.467811098] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/imu (gz.msgs.IMU) -> /imu/data (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791050001.468691944] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/image (gz.msgs.Image) -> /camera/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791050001.469625882] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/depth_image (gz.msgs.Image) -> /camera/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-6] [INFO] [1791050001.469704250] [warehouse_bridge]: Creating GZ->ROS Bridge: [/warehouse/camera_01/camera_info (gz.msgs.CameraInfo) -> /warehouse/camera_01/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791050001.470516905] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/camera_info (gz.msgs.CameraInfo) -> /camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791050001.471326087] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/points (gz.msgs.PointCloudPacked) -> /camera/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[create-4] [INFO] [1791050004.114825523] [ros_gz_sim]: Entity creation successful.
+[gazebo-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_obstacle_in_aisle.sdf[0m[1;32m].[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/warehouse/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/warehouse/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/warehouse/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/warehouse/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/warehouse/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/warehouse/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/warehouse/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/warehouse/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/warehouse/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/warehouse/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/warehouse[0m[1;32m/control], [[0m[1;32m/world/warehouse[0m[1;32m/control/state] and [[0m[1;32m/world/warehouse[0m[1;32m/playback/control][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[INFO] [create-4]: process has finished cleanly [pid 29044]
+[INFO] [spawner-9]: process started with pid [29204]
+[gazebo-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mwarehouse[0m[1;32m] initialized with [[0m[1;32mphysics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="rgbd_camera"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="imu"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="front_lidar"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [INFO] [1791050004.369830908] [gz_ros_control]: Loading controller_manager
+[gazebo-1] [INFO] [1791050004.380370170] [controller_manager]: Using ROS clock for triggering controller manager cycles.
+[gazebo-1] [WARN] [1791050004.380407424] [controller_manager]: The resource manager is not yet initialized, will wait for the robot description to initialize it..
+[gazebo-1] [INFO] [1791050004.387749108] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[gazebo-1] [WARN] [1791050004.387803453] [gz_ros_control]: Waiting RM to load and initialize hardware...
+[spawner-9] [INFO] [1791050004.671864082] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[gazebo-1] [WARN] [1791050005.388491103] [controller_manager]: Waiting for data on 'robot_description' topic to finish initialization
+[gazebo-1] [WARN] [1791050006.389614032] [gz_ros_control]: Waiting RM to load and initialize hardware...
+[gazebo-1] [WARN] [1791050006.389649532] [controller_manager]: Waiting for data on 'robot_description' topic to finish initialization
+[gazebo-1] [INFO] [1791050007.170488522] [controller_manager]: Received robot description from topic.
+[gazebo-1] [INFO] [1791050007.170576834] [controller_manager]: Enforcing command limits is enabled...
+[gazebo-1] [INFO] [1791050007.174346185] [gz_ros_control]: Using JointLimiter for joint 'right_wheel_joint' in hardware 'AMR_GazeboSystem' : '  has position limits: false [nan, nan]
+[gazebo-1]   has velocity limits: true [12]
+[gazebo-1]   has acceleration limits: false [nan]
+[gazebo-1]   has deceleration limits: false [nan]
+[gazebo-1]   has jerk limits: false [nan]
+[gazebo-1]   has effort limits: true [35]
+[gazebo-1]   angle wraparound: true'
+[gazebo-1] [INFO] [1791050007.174430670] [gz_ros_control]: Creating JointSaturationLimiter for joint 'right_wheel_joint' in hardware 'AMR_GazeboSystem'
+[gazebo-1] [INFO] [1791050007.174471320] [gz_ros_control]: Using JointLimiter for joint 'left_wheel_joint' in hardware 'AMR_GazeboSystem' : '  has position limits: false [nan, nan]
+[gazebo-1]   has velocity limits: true [12]
+[gazebo-1]   has acceleration limits: false [nan]
+[gazebo-1]   has deceleration limits: false [nan]
+[gazebo-1]   has jerk limits: false [nan]
+[gazebo-1]   has effort limits: true [35]
+[gazebo-1]   angle wraparound: true'
+[gazebo-1] [INFO] [1791050007.174480555] [gz_ros_control]: Creating JointSaturationLimiter for joint 'left_wheel_joint' in hardware 'AMR_GazeboSystem'
+[gazebo-1] [INFO] [1791050007.180045892] [gz_ros_control]: The position_proportional_gain has been set to: 0.1
+[gazebo-1] [INFO] [1791050007.180198843] [gz_ros_control]: Loading joint: left_wheel_joint
+[gazebo-1] [INFO] [1791050007.180224632] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1791050007.180236952] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1791050007.180246253] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1791050007.180260035] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1791050007.180266584] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1791050007.180307756] [gz_ros_control]: Loading joint: right_wheel_joint
+[gazebo-1] [INFO] [1791050007.180318280] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1791050007.180324877] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1791050007.180332143] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1791050007.180338046] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1791050007.180343853] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1791050007.181587368] [gz_ros_control]: Loading sensor: imu
+[gazebo-1] [INFO] [1791050007.181635028] [gz_ros_control]: 	State:
+[gazebo-1] [WARN] [1791050007.181641060] [gz_ros_control]: IMU sensor 'imu' not found in hardware_info, skipping.
+[gazebo-1] [INFO] [1791050007.182624146] [controller_manager]: Initialize hardware 'AMR_GazeboSystem' 
+[gazebo-1] [WARN] [1791050007.182663998] [controller_manager.hardware_component.system.AMR_GazeboSystem]: Executor is not available during hardware component initialization for 'AMR_GazeboSystem'. Skipping node creation!
+[gazebo-1] [INFO] [1791050007.182771868] [controller_manager]: Successful initialization of hardware 'AMR_GazeboSystem'
+[gazebo-1] [INFO] [1791050007.182955922] [controller_manager]: Activating component 'AMR_GazeboSystem'.
+[gazebo-1] [INFO] [1791050007.182980407] [resource_manager]: 'configure' hardware 'AMR_GazeboSystem' 
+[gazebo-1] [INFO] [1791050007.182989451] [gz_ros_control]: System Successfully configured!
+[gazebo-1] [INFO] [1791050007.182998400] [resource_manager]: Successful 'configure' of hardware 'AMR_GazeboSystem'
+[gazebo-1] [INFO] [1791050007.183010063] [resource_manager]: 'activate' hardware 'AMR_GazeboSystem' 
+[gazebo-1] [INFO] [1791050007.183037003] [resource_manager]: Successful 'activate' of hardware 'AMR_GazeboSystem'
+[gazebo-1] [WARN] [1791050007.183182249] [controller_manager]: Component 'AMR_GazeboSystem' does not have read or write statistics initialized, skipping registration.
+[gazebo-1] [INFO] [1791050007.183193332] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[spawner-9] [INFO] [1791050007.435746250] [spawner_joint_state_broadcaster]: Setting controller param "node_options_args" to "['--remap', '/diff_drive_controller/cmd_vel:=/cmd_vel', '--remap', '/diff_drive_controller/odom:=/odom']" for joint_state_broadcaster
+[gazebo-1] [INFO] [1791050007.521020103] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[gazebo-1] [INFO] [1791050007.521346533] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[gazebo-1] [INFO] [1791050007.528785650] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml -p use_sim_time:=true --param use_sim_time:=true --ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel --remap /diff_drive_controller/odom:=/odom 
+[spawner-9] [INFO] [1791050007.553834746] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[gazebo-1] [INFO] [1791050007.639183072] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[gazebo-1] [INFO] [1791050007.639501563] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[spawner-9] [INFO] [1791050007.667872117] [spawner_joint_state_broadcaster]: Setting controller param "node_options_args" to "['--remap', '/diff_drive_controller/cmd_vel:=/cmd_vel', '--remap', '/diff_drive_controller/odom:=/odom']" for diff_drive_controller
+[gazebo-1] [INFO] [1791050007.668381310] [controller_manager]: Loading controller : 'diff_drive_controller' of type 'diff_drive_controller/DiffDriveController'
+[gazebo-1] [INFO] [1791050007.668420159] [controller_manager]: Loading controller 'diff_drive_controller'
+[gazebo-1] [INFO] [1791050007.675782571] [controller_manager]: Controller 'diff_drive_controller' node arguments: --ros-args --params-file /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml -p use_sim_time:=true --param use_sim_time:=true --ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel --remap /diff_drive_controller/odom:=/odom 
+[spawner-9] [INFO] [1791050007.695822781] [spawner_joint_state_broadcaster]: Loaded diff_drive_controller
+[gazebo-1] [INFO] [1791050007.696156305] [controller_manager]: Configuring controller: 'diff_drive_controller'
+[gazebo-1] [INFO] [1791050007.714346113] [controller_manager]: Activating controllers: [ joint_state_broadcaster diff_drive_controller ]
+[gazebo-1] [1;33m[Wrn] [Component.hh:127] [0m[1;33mTrying to serialize component with data type [[0m[1;33mSt10shared_ptrIN3sdf3v147ElementEE[0m[1;33m], which doesn't have [0m[1;33m`operator<<`. Component will not be serialized.[0m[1;33m[0m
+[gazebo-1] [WARN] [1791050008.689490360] [gz_ros_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/wall[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/human_01[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/human_02[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/human_03[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mTrajectoryFollower[[0m[1;32mhuman_01[0m[1;32m] subscribed [0m[1;32mto pause messages on topic[[0m[1;32m/model/human_01/trajectory_follower/pause[0m[1;32m][0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mTrajectoryFollower[[0m[1;32mhuman_02[0m[1;32m] subscribed [0m[1;32mto pause messages on topic[[0m[1;32m/model/human_02/trajectory_follower/pause[0m[1;32m][0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/warehouse/scene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/warehouse/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/warehouse/state[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Ogre2Camera.cc:423] [0m[1;33mOgre2Camera::SetVisibilityMask: Mask bits [0m[1;33mc0000000[0m[1;33m are set but will be ignored as they conflict with the [0m[1;33mreserved bits used internally by the ogre2 backend.[0m[1;33m[0m
+[gazebo-1] [INFO] [1791050011.377338138] [controller_manager]: Successfully switched controllers!
+[spawner-9] [INFO] [1791050011.393157167] [spawner_joint_state_broadcaster]: Configured and activated all the parsed controllers list : ['joint_state_broadcaster', 'diff_drive_controller']!
+[INFO] [spawner-9]: process has finished cleanly [pid 29204]
+[gazebo-1] [WARN] [1791050012.919232784] [diff_drive_controller]: Velocity command timed out. Braking.
+[gazebo-1] [WARN] [1791050014.492889787] [diff_drive_controller]: Velocity command timed out. Braking.
+[gazebo-1] [WARN] [1791050015.987118710] [diff_drive_controller]: Velocity command timed out. Braking.
+[gz-5] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="rgbd_camera"]/gz_frame_id:<data-string>:L309]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-5] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="imu"]/gz_frame_id:<data-string>:L321]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-5] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="front_lidar"]/gz_frame_id:<data-string>:L344]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [WARN] [1791050017.560412078] [diff_drive_controller]: Velocity command timed out. Braking.
+[gazebo-1] [WARN] [1791050019.229209997] [diff_drive_controller]: Velocity command timed out. Braking.
+[gazebo-1] [WARN] [1791050021.076298159] [diff_drive_controller]: Velocity command timed out. Braking.
+[gazebo-1] [WARN] [1791050023.154762634] [diff_drive_controller]: Velocity command timed out. Braking.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [static_transform_publisher-8]: sending signal 'SIGINT' to process[static_transform_publisher-8]
+[INFO] [static_transform_publisher-7]: sending signal 'SIGINT' to process[static_transform_publisher-7]
+[INFO] [parameter_bridge-6]: sending signal 'SIGINT' to process[parameter_bridge-6]
+[INFO] [gz-5]: sending signal 'SIGINT' to process[gz-5]
+[INFO] [parameter_bridge-3]: sending signal 'SIGINT' to process[parameter_bridge-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[static_transform_publisher-8] [INFO] [1791050024.361607772] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[static_transform_publisher-7] [INFO] [1791050024.362849832] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-6] [INFO] [1791050024.365056343] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1791050024.369245846] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791050024.371285939] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [static_transform_publisher-8]: process has finished cleanly [pid 29048]
+[INFO] [static_transform_publisher-7]: process has finished cleanly [pid 29047]
+[INFO] [parameter_bridge-6]: process has finished cleanly [pid 29046]
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 29041]
+[INFO] [parameter_bridge-3]: process has finished cleanly [pid 29043]
+[INFO] [gz-5]: process has finished cleanly [pid 29045]
+[ERROR] [gazebo-1]: process[gazebo-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [gazebo-1]: sending signal 'SIGTERM' to process[gazebo-1]
+[ERROR] [gazebo-1]: process has died [pid 29040, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -r -v 3 -s --headless-rendering /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_obstacle_in_aisle.sdf --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_loaded_pallet">
+    <static>true</static>
+    <include>
+      <uri>model://wh_pallet</uri>
+      <name>pallet</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_box</uri>
+      <name>box_0_0_0</name>
+      <pose>-0.23 0 0.15 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_box</uri>
+      <name>box_0_1_0</name>
+      <pose>0.23 0 0.15 0 0 0</pose>
+    </include>
+  </model>
+</sdf>

@@ -1,0 +1,17 @@
+Arguments (pass arguments as '<name>:=<value>'):
+
+    'scenario':
+        no description given
+        (default: 'normal')
+
+    'gui':
+        no description given
+        (default: 'true')
+
+    'gui_renderer':
+        no description given
+        (default: 'ogre')
+
+    'rviz':
+        no description given
+        (default: 'false')

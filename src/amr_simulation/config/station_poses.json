@@ -1,0 +1,128 @@
+{
+  "frame_id": "world",
+  "note": "World ground truth. Register future SLAM map to world before using these poses as map goals.",
+  "stations": {
+    "pickup_station_01": {
+      "xyz_rpy": [
+        -10.9,
+        -5,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ],
+      "footprint": [
+        2.1,
+        2.4
+      ]
+    },
+    "pickup_station_02": {
+      "xyz_rpy": [
+        -10.9,
+        5,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ],
+      "footprint": [
+        2.1,
+        2.4
+      ]
+    },
+    "dropoff_station_01": {
+      "xyz_rpy": [
+        10.9,
+        -5,
+        0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        2.1,
+        2.4
+      ]
+    },
+    "dropoff_station_02": {
+      "xyz_rpy": [
+        10.9,
+        5,
+        0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        2.1,
+        2.4
+      ]
+    },
+    "charging_station": {
+      "xyz_rpy": [
+        11.7,
+        8.2,
+        0,
+        0,
+        0,
+        1.5707963267948966
+      ],
+      "footprint": [
+        2.6,
+        2.2
+      ]
+    },
+    "staging_area": {
+      "xyz_rpy": [
+        -10.2,
+        -7.3,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ],
+      "footprint": [
+        4.3,
+        2.6
+      ]
+    }
+  },
+  "spawns": [
+    {
+      "id": "amr_01_spawn",
+      "active": true,
+      "pose": [
+        -11,
+        0,
+        0.015,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "amr_02_spawn",
+      "active": false,
+      "pose": [
+        -11,
+        1.15,
+        0.015,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "amr_03_spawn",
+      "active": false,
+      "pose": [
+        -11,
+        -1.15,
+        0.015,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

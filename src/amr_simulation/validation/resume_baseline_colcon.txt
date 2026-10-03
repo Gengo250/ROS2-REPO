@@ -1,0 +1,179 @@
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< amr_description [0.25s]
+Finished <<< my_cpp_pkg [0.24s]
+Starting >>> amr_simulation
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+   Site: gengo
+   Build name: (empty)
+ Add coverage exclude regular expressions.
+Create new tag: 20261002-2006 - Experimental
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Test project /home/gengo/ros2_ws/build/amr_simulation
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: warehouse_generation
+
+1: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--package-name" "amr_simulation" "--output-file" "/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation.txt" "--command" "/usr/bin/python3" "-u" "-m" "pytest" "/home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py" "-o" "cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache" "--junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--junit-prefix=amr_simulation"
+1: Working Directory: /home/gengo/ros2_ws/build/amr_simulation
+1: Test timeout computed to be: 180
+1: -- run_test.py: invoking following command in '/home/gengo/ros2_ws/build/amr_simulation':
+1:  - /usr/bin/python3 -u -m pytest /home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py -o cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache --junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml --junit-prefix=amr_simulation
+1: ============================= test session starts ==============================
+1: platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+1: cachedir: build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache
+1: rootdir: /home/gengo/ros2_ws
+1: plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+1: collected 10 items
+1: 
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+cachedir: /home/gengo/ros2_ws/build/my_py_pkg/.pytest_cache
+rootdir: /home/gengo/ros2_ws/src/my_py_pkg
+plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+collected 3 items
+
+test/test_copyright.py s                                                 [ 33%]
+1: ../../src/amr_simulation/tests/test_generation.py ..........             [100%]
+1: 
+1: - generated xml file: /home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml -
+1: ============================== 10 passed in 0.23s ==============================
+1: -- run_test.py: return code 0
+1: -- run_test.py: verify result file '/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml'
+test/test_flake8.py F                                                    [ 66%]
+1/1 Test #1: warehouse_generation .............   Passed    0.78 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+pytest    =   0.78 sec*proc (1 test)
+
+Total Test time (real) =   0.78 sec
+Finished <<< amr_simulation [0.81s]
+test/test_pep257.py .                                                    [100%]
+
+=================================== FAILURES ===================================
+_________________________________ test_flake8 __________________________________
+test/test_flake8.py:23: in test_flake8
+    assert rc == 0, \
+E   AssertionError: Found 12 code style errors / warnings:
+E     ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+E     ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+E     ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+E     ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+E     ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+E     ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+E   assert 1 == 0
+----------------------------- Captured stdout call -----------------------------
+
+./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+def main(args=None):
+^
+
+./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+    main()          ^
+
+./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+from example_interfaces.msg import String
+^
+
+./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+class RobotNewsStation(Node):
+^
+
+./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+def main(args=None):
+^
+
+./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+if __name__ == '__main__':
+^
+
+./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+    main()          ^
+
+./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+from example_interfaces.msg import String
+^
+
+./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    main()          ^
+
+3     CNL100 Class definition does not have a new line.
+3     E302 expected 2 blank lines, found 1
+1     E305 expected 2 blank lines after class or function definition, found 1
+2     I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+3     W292 no newline at end of file
+
+8 files checked
+12 errors
+
+'C'-type errors: 3
+'E'-type errors: 4
+'I'-type errors: 2
+'W'-type errors: 3
+
+Checked files:
+
+* ./setup.py
+* ./my_py_pkg/smartphone.py
+* ./my_py_pkg/robot_news_station.py
+* ./my_py_pkg/__init__.py
+* ./my_py_pkg/my_first_node.py
+* ./test/test_flake8.py
+* ./test/test_pep257.py
+* ./test/test_copyright.py
+------ generated xml file: /home/gengo/ros2_ws/build/my_py_pkg/pytest.xml ------
+=========================== short test summary info ============================
+FAILED test/test_flake8.py::test_flake8 - AssertionError: Found 12 code style...
+==================== 1 failed, 1 passed, 1 skipped in 0.32s ====================
+Finished <<< my_py_pkg [1.12s]	[ with test failures ]
+
+Summary: 4 packages finished [1.38s]
+  1 package had test failures: my_py_pkg
+build/my_py_pkg/pytest.xml: 3 tests, 0 errors, 1 failure, 1 skipped
+- my_py_pkg.test.test_flake8 test_flake8
+  <<< failure message
+    AssertionError: Found 12 code style errors / warnings:
+      ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+      ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+      ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+      ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    assert 1 == 0
+  >>>
+
+Summary: 14 tests, 0 errors, 1 failure, 1 skipped

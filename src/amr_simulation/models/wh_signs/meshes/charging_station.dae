@@ -1,0 +1,13 @@
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<asset><unit name="meter" meter="1"/><up_axis>Z_UP</up_axis></asset>
+<library_images><image id="img"><init_from>charging_station.png</init_from></image></library_images>
+<library_effects><effect id="fx"><profile_COMMON><newparam sid="surface"><surface type="2D"><init_from>img</init_from></surface></newparam><newparam sid="sampler"><sampler2D><source>surface</source></sampler2D></newparam><technique sid="common"><phong><diffuse><texture texture="sampler" texcoord="UVMap"/></diffuse></phong></technique></profile_COMMON></effect></library_effects>
+<library_materials><material id="mat"><instance_effect url="#fx"/></material></library_materials>
+<library_geometries><geometry id="quad"><mesh>
+<source id="pos"><float_array id="positions" count="12">-0.95 -0.2 0 0.95 -0.2 0 0.95 0.2 0 -0.95 0.2 0</float_array><technique_common><accessor source="#positions" count="4" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source>
+<source id="uv"><float_array id="uvs" count="8">0 0 1 0 1 1 0 1</float_array><technique_common><accessor source="#uvs" count="4" stride="2"><param name="S" type="float"/><param name="T" type="float"/></accessor></technique_common></source>
+<source id="normal"><float_array id="normals" count="3">0 0 1</float_array><technique_common><accessor source="#normals" count="1" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source>
+<vertices id="vertices"><input semantic="POSITION" source="#pos"/></vertices>
+<triangles count="2" material="mat"><input semantic="VERTEX" source="#vertices" offset="0"/><input semantic="TEXCOORD" source="#uv" offset="1" set="0"/><input semantic="NORMAL" source="#normal" offset="2"/><p>0 0 0 1 1 0 2 2 0 0 0 0 2 2 0 3 3 0</p></triangles>
+</mesh></geometry></library_geometries>
+<library_visual_scenes><visual_scene id="scene"><node><instance_geometry url="#quad"><bind_material><technique_common><instance_material symbol="mat" target="#mat"><bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/></instance_material></technique_common></bind_material></instance_geometry></node></visual_scene></library_visual_scenes><scene><instance_visual_scene url="#scene"/></scene></COLLADA>

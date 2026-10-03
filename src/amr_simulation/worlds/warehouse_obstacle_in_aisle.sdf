@@ -1,0 +1,726 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="warehouse">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="physics" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact" />
+    <scene>
+      <ambient>0.42 0.43 0.45 1</ambient>
+      <background>0.17 0.21 0.26 1</background>
+      <shadows>true</shadows>
+    </scene>
+    <light name="daylight" type="directional">
+      <pose>0 0 10 0 0 0</pose>
+      <direction>-0.4 0.2 -1</direction>
+      <diffuse>0.65 0.63 0.59 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <cast_shadows>true</cast_shadows>
+    </light>
+    <light name="overhead_0" type="point">
+      <pose>-10 -4 4.65 0 0 0</pose>
+      <diffuse>0.55 0.57 0.6 1</diffuse>
+      <cast_shadows>false</cast_shadows>
+      <attenuation>
+        <range>11</range>
+        <constant>1</constant>
+        <linear>0.035</linear>
+        <quadratic>0.012</quadratic>
+      </attenuation>
+    </light>
+    <light name="overhead_1" type="point">
+      <pose>0 -4 4.65 0 0 0</pose>
+      <diffuse>0.55 0.57 0.6 1</diffuse>
+      <cast_shadows>false</cast_shadows>
+      <attenuation>
+        <range>11</range>
+        <constant>1</constant>
+        <linear>0.035</linear>
+        <quadratic>0.012</quadratic>
+      </attenuation>
+    </light>
+    <light name="overhead_2" type="point">
+      <pose>10 -4 4.65 0 0 0</pose>
+      <diffuse>0.55 0.57 0.6 1</diffuse>
+      <cast_shadows>false</cast_shadows>
+      <attenuation>
+        <range>11</range>
+        <constant>1</constant>
+        <linear>0.035</linear>
+        <quadratic>0.012</quadratic>
+      </attenuation>
+    </light>
+    <light name="overhead_3" type="point">
+      <pose>-10 4 4.65 0 0 0</pose>
+      <diffuse>0.55 0.57 0.6 1</diffuse>
+      <cast_shadows>false</cast_shadows>
+      <attenuation>
+        <range>11</range>
+        <constant>1</constant>
+        <linear>0.035</linear>
+        <quadratic>0.012</quadratic>
+      </attenuation>
+    </light>
+    <light name="overhead_4" type="point">
+      <pose>0 4 4.65 0 0 0</pose>
+      <diffuse>0.55 0.57 0.6 1</diffuse>
+      <cast_shadows>false</cast_shadows>
+      <attenuation>
+        <range>11</range>
+        <constant>1</constant>
+        <linear>0.035</linear>
+        <quadratic>0.012</quadratic>
+      </attenuation>
+    </light>
+    <light name="overhead_5" type="point">
+      <pose>10 4 4.65 0 0 0</pose>
+      <diffuse>0.55 0.57 0.6 1</diffuse>
+      <cast_shadows>false</cast_shadows>
+      <attenuation>
+        <range>11</range>
+        <constant>1</constant>
+        <linear>0.035</linear>
+        <quadratic>0.012</quadratic>
+      </attenuation>
+    </light>
+    <include>
+      <uri>model://wh_building</uri>
+      <name>warehouse_structure</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+    <model name="warehouse_camera_01">
+      <static>true</static>
+      <pose>-10 -8.5 0 0 0 0</pose>
+      <link name="mount">
+        <visual name="mast_visual">
+          <pose>0 0 2.2 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.055</radius>
+              <length>4.4</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <collision name="mast_collision">
+          <pose>0 0 2.2 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.055</radius>
+              <length>4.4</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="housing_visual">
+          <pose>-0.125276387432 -0.142606210009 4.51121733507 0 0.53 0.85</pose>
+          <geometry>
+            <box>
+              <size>0.24 0.16 0.16</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <collision name="housing_collision">
+          <pose>-0.125276387432 -0.142606210009 4.51121733507 0 0.53 0.85</pose>
+          <geometry>
+            <box>
+              <size>0.24 0.16 0.16</size>
+            </box>
+          </geometry>
+        </collision>
+        <sensor name="camera" type="camera">
+          <pose>0 0 4.4 0 0.53 0.85</pose>
+          <topic>/warehouse/camera_01/image</topic>
+          <always_on>true</always_on>
+          <update_rate>10</update_rate>
+          <camera>
+            <horizontal_fov>1.4</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>40</far>
+            </clip>
+            <optical_frame_id>warehouse_camera_01_optical_frame</optical_frame_id>
+          </camera>
+        </sensor>
+      </link>
+    </model>
+    <model name="human_01">
+      <static>false</static>
+      <pose>-8.7 3 0 0 0 1.57079632679</pose>
+      <link name="body">
+        <inertial>
+          <pose>0 0 0.25 0 0 0</pose>
+          <mass>80</mass>
+          <inertia>
+            <ixx>12</ixx>
+            <iyy>12</iyy>
+            <izz>3.2</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name="body_collision">
+          <pose>0 0 0.875 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.28</radius>
+              <length>1.75</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.05</mu>
+                <mu2>0.05</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="leg_-1_visual">
+          <pose>0 -0.1344 0.4025 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.224 0.182 0.805</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.15 0.22 1</ambient>
+            <diffuse>0.1 0.15 0.22 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="shoe_-1_visual">
+          <pose>0.028 -0.1344 0.039375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.308 0.196 0.07875</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="arm_-1_visual">
+          <pose>0 -0.2324 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1344 0.126 0.5425</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="leg_1_visual">
+          <pose>0 0.1344 0.4025 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.224 0.182 0.805</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.15 0.22 1</ambient>
+            <diffuse>0.1 0.15 0.22 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="shoe_1_visual">
+          <pose>0.028 0.1344 0.039375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.308 0.196 0.07875</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="arm_1_visual">
+          <pose>0 0.2324 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1344 0.126 0.5425</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="torso_visual">
+          <pose>0 0 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.322 0.392 0.56</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="reflective_band_visual">
+          <pose>0 0 1.015 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3248 0.3948 0.049</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.91 0.93 0.94 1</ambient>
+            <diffuse>0.91 0.93 0.94 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="head_visual">
+          <pose>0 0 1.61 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.14</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>0.62 0.4 0.26 1</ambient>
+            <diffuse>0.62 0.4 0.26 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="helmet_visual">
+          <pose>0 0 1.7164 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1484</radius>
+              <length>0.042</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <sensor name="human_01_contact" type="contact">
+          <always_on>true</always_on>
+          <update_rate>20</update_rate>
+          <topic>/warehouse/contacts/human_01</topic>
+          <contact>
+            <collision>body_collision</collision>
+            <topic>/warehouse/contacts/human_01</topic>
+          </contact>
+        </sensor>
+      </link>
+      <plugin filename="gz-sim-trajectory-follower-system" name="gz::sim::systems::TrajectoryFollower">
+        <link_name>body</link_name>
+        <loop>true</loop>
+        <force>46</force>
+        <torque>15</torque>
+        <range_tolerance>0.3</range_tolerance>
+        <bearing_tolerance>5</bearing_tolerance>
+        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>
+        <waypoints>
+          <waypoint>-8.7 6</waypoint>
+          <waypoint>-8.7 3</waypoint>
+        </waypoints>
+      </plugin>
+    </model>
+    <model name="human_02">
+      <static>false</static>
+      <pose>3.9 -5.5 0 0 0 1.57079632679</pose>
+      <link name="body">
+        <inertial>
+          <pose>0 0 0.25 0 0 0</pose>
+          <mass>80</mass>
+          <inertia>
+            <ixx>12</ixx>
+            <iyy>12</iyy>
+            <izz>3.2</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name="body_collision">
+          <pose>0 0 0.875 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.28</radius>
+              <length>1.75</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.05</mu>
+                <mu2>0.05</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="leg_-1_visual">
+          <pose>0 -0.1344 0.4025 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.224 0.182 0.805</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.15 0.22 1</ambient>
+            <diffuse>0.1 0.15 0.22 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="shoe_-1_visual">
+          <pose>0.028 -0.1344 0.039375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.308 0.196 0.07875</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="arm_-1_visual">
+          <pose>0 -0.2324 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1344 0.126 0.5425</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="leg_1_visual">
+          <pose>0 0.1344 0.4025 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.224 0.182 0.805</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.15 0.22 1</ambient>
+            <diffuse>0.1 0.15 0.22 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="shoe_1_visual">
+          <pose>0.028 0.1344 0.039375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.308 0.196 0.07875</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="arm_1_visual">
+          <pose>0 0.2324 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1344 0.126 0.5425</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="torso_visual">
+          <pose>0 0 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.322 0.392 0.56</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="reflective_band_visual">
+          <pose>0 0 1.015 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3248 0.3948 0.049</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.91 0.93 0.94 1</ambient>
+            <diffuse>0.91 0.93 0.94 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="head_visual">
+          <pose>0 0 1.61 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.14</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>0.62 0.4 0.26 1</ambient>
+            <diffuse>0.62 0.4 0.26 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="helmet_visual">
+          <pose>0 0 1.7164 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1484</radius>
+              <length>0.042</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <sensor name="human_02_contact" type="contact">
+          <always_on>true</always_on>
+          <update_rate>20</update_rate>
+          <topic>/warehouse/contacts/human_02</topic>
+          <contact>
+            <collision>body_collision</collision>
+            <topic>/warehouse/contacts/human_02</topic>
+          </contact>
+        </sensor>
+      </link>
+      <plugin filename="gz-sim-trajectory-follower-system" name="gz::sim::systems::TrajectoryFollower">
+        <link_name>body</link_name>
+        <loop>true</loop>
+        <force>46</force>
+        <torque>15</torque>
+        <range_tolerance>0.3</range_tolerance>
+        <bearing_tolerance>5</bearing_tolerance>
+        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>
+        <waypoints>
+          <waypoint>3.9 5.5</waypoint>
+          <waypoint>3.9 -5.5</waypoint>
+        </waypoints>
+      </plugin>
+    </model>
+    <model name="human_03">
+      <static>true</static>
+      <pose>11.5 0 0 0 0 3.14159265359</pose>
+      <link name="body">
+        <inertial>
+          <pose>0 0 0.25 0 0 0</pose>
+          <mass>80</mass>
+          <inertia>
+            <ixx>12</ixx>
+            <iyy>12</iyy>
+            <izz>3.2</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name="body_collision">
+          <pose>0 0 0.875 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.28</radius>
+              <length>1.75</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.05</mu>
+                <mu2>0.05</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="leg_-1_visual">
+          <pose>0 -0.1344 0.4025 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.224 0.182 0.805</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.15 0.22 1</ambient>
+            <diffuse>0.1 0.15 0.22 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="shoe_-1_visual">
+          <pose>0.028 -0.1344 0.039375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.308 0.196 0.07875</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="arm_-1_visual">
+          <pose>0 -0.2324 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1344 0.126 0.5425</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="leg_1_visual">
+          <pose>0 0.1344 0.4025 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.224 0.182 0.805</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.15 0.22 1</ambient>
+            <diffuse>0.1 0.15 0.22 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="shoe_1_visual">
+          <pose>0.028 0.1344 0.039375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.308 0.196 0.07875</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.17 0.23 0.29 1</ambient>
+            <diffuse>0.17 0.23 0.29 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="arm_1_visual">
+          <pose>0 0.2324 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1344 0.126 0.5425</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="torso_visual">
+          <pose>0 0 1.085 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.322 0.392 0.56</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="reflective_band_visual">
+          <pose>0 0 1.015 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3248 0.3948 0.049</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.91 0.93 0.94 1</ambient>
+            <diffuse>0.91 0.93 0.94 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="head_visual">
+          <pose>0 0 1.61 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.14</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>0.62 0.4 0.26 1</ambient>
+            <diffuse>0.62 0.4 0.26 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <visual name="helmet_visual">
+          <pose>0 0 1.7164 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1484</radius>
+              <length>0.042</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>1 0.76 0.08 1</ambient>
+            <diffuse>1 0.76 0.08 1</diffuse>
+            <specular>0.06 0.06 0.06 1</specular>
+          </material>
+        </visual>
+        <sensor name="human_03_contact" type="contact">
+          <always_on>true</always_on>
+          <update_rate>20</update_rate>
+          <topic>/warehouse/contacts/human_03</topic>
+          <contact>
+            <collision>body_collision</collision>
+            <topic>/warehouse/contacts/human_03</topic>
+          </contact>
+        </sensor>
+      </link>
+    </model>
+    <include>
+      <uri>model://wh_loaded_pallet</uri>
+      <name>aisle_pallet</name>
+      <pose>-5.35 -4.5 0 0 0 0</pose>
+    </include>
+  </world>
+</sdf>

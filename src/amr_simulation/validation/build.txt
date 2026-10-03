@@ -1,0 +1,10 @@
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< my_cpp_pkg [0.27s]
+Finished <<< amr_description [0.30s]
+Starting >>> amr_simulation
+Finished <<< amr_simulation [0.27s]
+Finished <<< my_py_pkg [1.49s]
+
+Summary: 4 packages finished [1.66s]

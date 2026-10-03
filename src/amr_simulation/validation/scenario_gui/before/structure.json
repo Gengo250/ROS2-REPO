@@ -1,0 +1,72 @@
+{
+  "warehouse_obstacle_in_aisle": {
+    "sha256": "efe31ea805008d7cd757b3b12514139b3eb16dc64a2f821d0b9badfceccaeaa9",
+    "includes": [
+      [
+        "warehouse_structure",
+        "0 0 0 0 0 0",
+        "model://wh_building"
+      ],
+      [
+        "aisle_pallet",
+        "-5.35 -4.5 0 0 0 0",
+        "model://wh_loaded_pallet"
+      ]
+    ],
+    "human_pose": "-8.7 3 0 0 0 1.57079632679",
+    "waypoints": [
+      "-8.7 6",
+      "-8.7 3"
+    ]
+  },
+  "warehouse_person_crossing": {
+    "sha256": "742a789b1b943ad4709d2f779c870f304f2f3007aa3528d72739b13b7439ea89",
+    "includes": [
+      [
+        "warehouse_structure",
+        "0 0 0 0 0 0",
+        "model://wh_building"
+      ]
+    ],
+    "human_pose": "-8.7 -2.5 0 0 0 1.57079632679",
+    "waypoints": [
+      "-8.7 2.5",
+      "-8.7 -2.5"
+    ]
+  },
+  "warehouse_corridor_blocked": {
+    "sha256": "177f8587b2b63aa24b3edf2155041afb74898dcbb3cc8fbf50e8db4ae4bc65b4",
+    "includes": [
+      [
+        "warehouse_structure",
+        "0 0 0 0 0 0",
+        "model://wh_building"
+      ],
+      [
+        "corridor_barrier",
+        "-4.5 -4.5 0.6 0 0 0",
+        "model://wh_barrier"
+      ]
+    ],
+    "human_pose": "-8.7 3 0 0 0 1.57079632679",
+    "waypoints": [
+      "-8.7 6",
+      "-8.7 3"
+    ]
+  },
+  "warehouse_normal": {
+    "sha256": "0aa521f6f7364172b21f8ea2c2b317ca72f357b8abbb79634699fff8e0181250",
+    "includes": [
+      [
+        "warehouse_structure",
+        "0 0 0 0 0 0",
+        "model://wh_building"
+      ]
+    ],
+    "human_pose": "-8.7 3 0 0 0 1.57079632679",
+    "waypoints": [
+      "-8.7 6",
+      "-8.7 3"
+    ]
+  }
+}

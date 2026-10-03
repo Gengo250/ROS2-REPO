@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "config_sha256": "a867c76ce3564390335cd36837f2f3627c7f100821cf8db85be482caa1432c96",
+  "source_sha256": {
+    "config/warehouse_layout.json": "a867c76ce3564390335cd36837f2f3627c7f100821cf8db85be482caa1432c96",
+    "config/scenarios/normal.json": "c47bc2258dc8c5b2098427ae8a144c9fe0275054996734c64d876deb2f5a60e9",
+    "config/scenarios/person_crossing.json": "4a9d3e5519937d469fe0163ab00e0bc42754e66d3b09a08927490f9789730a55",
+    "config/scenarios/obstacle_in_aisle.json": "59b532c1ce46eea35120564e16ce2a0fd88182962c4e00cc8bd53438a813e869",
+    "config/scenarios/corridor_blocked.json": "b9ba0ca19f3f4eee0639194ff5ca834a9fe0ed203921981f5ca5ee85e6c8e320"
+  },
+  "amr_config_sha256": "8766a42676c695a84993e09f9f6e3614062648cb3c6c2caa3a32f500c934069b",
+  "amr_dimensions": {
+    "chassis_length": 0.95,
+    "chassis_width": 0.7,
+    "chassis_height": 0.25
+  },
+  "turning_diameter_with_clearance": 1.7800423721205947,
+  "racks": 16,
+  "pallets_normal": 38,
+  "boxes_normal": 76,
+  "humans": 3
+}
+{
+  "status": "passed",
+  "deterministic": true,
+  "idempotent": true,
+  "network_assets": false,
+  "manifest_sha256": "f779b37675f16ad4d04aef1192fdb78b058013a4bb8234fc1521f8b6a453ff40",
+  "sdf_files": [
+    "models/wh_barrier/model.sdf",
+    "models/wh_box/model.sdf",
+    "models/wh_building/model.sdf",
+    "models/wh_loaded_pallet/model.sdf",
+    "models/wh_pallet/model.sdf",
+    "models/wh_rack/model.sdf",
+    "worlds/warehouse_corridor_blocked.sdf",
+    "worlds/warehouse_normal.sdf",
+    "worlds/warehouse_obstacle_in_aisle.sdf",
+    "worlds/warehouse_person_crossing.sdf"
+  ],
+  "counts": {
+    "racks": 16,
+    "pallets_normal": 38,
+    "boxes_normal": 76,
+    "humans": 3
+  },
+  "turning_diameter_with_clearance": 1.7800423721205947,
+  "aisle_widths": {
+    "main_cross_aisle": 4,
+    "north_cross_aisle": 3,
+    "south_cross_aisle": 3,
+    "aisle_01": 3,
+    "aisle_02": 3,
+    "aisle_03": 3,
+    "west_service_aisle": 3,
+    "east_service_aisle": 3
+  }
+}
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< my_cpp_pkg [0.26s]
+Finished <<< amr_description [0.29s]
+Starting >>> amr_simulation
+Finished <<< my_py_pkg [1.47s]
+Finished <<< amr_simulation [1.43s]
+
+Summary: 4 packages finished [1.87s]
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< my_cpp_pkg [0.21s]
+Finished <<< amr_description [0.21s]
+Starting >>> amr_simulation
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+   Site: gengo
+   Build name: (empty)
+ Add coverage exclude regular expressions.
+Create new tag: 20261003-1947 - Experimental
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Test project /home/gengo/ros2_ws/build/amr_simulation
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: warehouse_generation
+
+1: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--package-name" "amr_simulation" "--output-file" "/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation.txt" "--command" "/usr/bin/python3" "-u" "-m" "pytest" "/home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py" "-o" "cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache" "--junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--junit-prefix=amr_simulation"
+1: Working Directory: /home/gengo/ros2_ws/build/amr_simulation
+1: Test timeout computed to be: 180
+1: -- run_test.py: invoking following command in '/home/gengo/ros2_ws/build/amr_simulation':
+1:  - /usr/bin/python3 -u -m pytest /home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py -o cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache --junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml --junit-prefix=amr_simulation
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+cachedir: /home/gengo/ros2_ws/build/my_py_pkg/.pytest_cache
+rootdir: /home/gengo/ros2_ws/src/my_py_pkg
+plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+collected 3 items
+
+1: ============================= test session starts ==============================
+1: platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+test/test_copyright.py s                                                 [ 33%]
+1: cachedir: build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache
+1: rootdir: /home/gengo/ros2_ws
+1: plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+1: collected 16 items
+1: 
+test/test_flake8.py F                                                    [ 66%]
+test/test_pep257.py .                                                    [100%]
+
+=================================== FAILURES ===================================
+_________________________________ test_flake8 __________________________________
+test/test_flake8.py:23: in test_flake8
+    assert rc == 0, \
+E   AssertionError: Found 12 code style errors / warnings:
+E     ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+E     ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+E     ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+E     ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+E     ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+E     ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+E   assert 1 == 0
+----------------------------- Captured stdout call -----------------------------
+
+./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+def main(args=None):
+^
+
+./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+    main()          ^
+
+./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+from example_interfaces.msg import String
+^
+
+./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+class RobotNewsStation(Node):
+^
+
+./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+def main(args=None):
+^
+
+./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+if __name__ == '__main__':
+^
+
+./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+    main()          ^
+
+./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+from example_interfaces.msg import String
+^
+
+./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    main()          ^
+
+3     CNL100 Class definition does not have a new line.
+3     E302 expected 2 blank lines, found 1
+1     E305 expected 2 blank lines after class or function definition, found 1
+2     I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+3     W292 no newline at end of file
+
+8 files checked
+12 errors
+
+'C'-type errors: 3
+'E'-type errors: 4
+'I'-type errors: 2
+'W'-type errors: 3
+
+Checked files:
+
+* ./setup.py
+* ./my_py_pkg/smartphone.py
+* ./my_py_pkg/robot_news_station.py
+* ./my_py_pkg/__init__.py
+* ./my_py_pkg/my_first_node.py
+* ./test/test_flake8.py
+* ./test/test_pep257.py
+* ./test/test_copyright.py
+------ generated xml file: /home/gengo/ros2_ws/build/my_py_pkg/pytest.xml ------
+=========================== short test summary info ============================
+FAILED test/test_flake8.py::test_flake8 - AssertionError: Found 12 code style...
+==================== 1 failed, 1 passed, 1 skipped in 0.24s ====================
+Finished <<< my_py_pkg [0.86s]	[ with test failures ]
+1: ../../src/amr_simulation/tests/test_generation.py ................       [100%]
+1: 
+1: - generated xml file: /home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml -
+1: ============================== 16 passed in 0.61s ==============================
+1: -- run_test.py: return code 0
+1: -- run_test.py: verify result file '/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml'
+1/2 Test #1: warehouse_generation .............   Passed    1.08 sec
+test 2
+    Start 2: warehouse_launch
+
+2: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml" "--package-name" "amr_simulation" "--output-file" "/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_launch.txt" "--command" "/usr/bin/python3" "-u" "-m" "pytest" "/home/gengo/ros2_ws/src/amr_simulation/tests/test_launch.py" "-o" "cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_launch/.cache" "--junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml" "--junit-prefix=amr_simulation"
+2: Working Directory: /home/gengo/ros2_ws/build/amr_simulation
+2: Test timeout computed to be: 180
+2: -- run_test.py: invoking following command in '/home/gengo/ros2_ws/build/amr_simulation':
+2:  - /usr/bin/python3 -u -m pytest /home/gengo/ros2_ws/src/amr_simulation/tests/test_launch.py -o cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_launch/.cache --junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml --junit-prefix=amr_simulation
+2: ============================= test session starts ==============================
+2: platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+2: cachedir: build/amr_simulation/ament_cmake_pytest/warehouse_launch/.cache
+2: rootdir: /home/gengo/ros2_ws
+2: plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+2: collected 9 items
+2: 
+2: ../../src/amr_simulation/tests/test_launch.py .........                  [100%]
+2: 
+2: - generated xml file: /home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml -
+2: ============================== 9 passed in 0.44s ===============================
+2: -- run_test.py: return code 0
+2: -- run_test.py: verify result file '/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml'
+2/2 Test #2: warehouse_launch .................   Passed    0.89 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+pytest    =   1.97 sec*proc (2 tests)
+
+Total Test time (real) =   1.97 sec
+Finished <<< amr_simulation [1.99s]
+
+Summary: 4 packages finished [2.35s]
+  1 package had test failures: my_py_pkg
+build/my_py_pkg/pytest.xml: 3 tests, 0 errors, 1 failure, 1 skipped
+- my_py_pkg.test.test_flake8 test_flake8
+  <<< failure message
+    AssertionError: Found 12 code style errors / warnings:
+      ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+      ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+      ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+      ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    assert 1 == 0
+  >>>
+
+Summary: 30 tests, 0 errors, 1 failure, 1 skipped
+Workspace contains test failures; see workspace_test_results.txt (baseline: my_py_pkg flake8).
+Summary: 27 tests, 0 errors, 0 failures, 0 skipped
+ORIGINAL AMR REGRESSION PASSED
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+GUI+LIFECYCLE PASS normal
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+GUI+LIFECYCLE PASS person_crossing
+GUI+LIFECYCLE PASS obstacle_in_aisle
+GUI+LIFECYCLE PASS corridor_blocked
+PASS: AMR entity exists in Gazebo scene
+PASS: runtime barrier matches selected scenario
+PASS: runtime aisle load matches selected scenario
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: straight motion in main corridor
+PASS: odometry agrees with ground truth translation
+PASS: TwistStamped timeout stops AMR
+PASS: in-place turn
+PASS: curved motion
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: passes through rack aisle into main corridor
+PASS: rack corridor traversal stays centred
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: pillar LiDAR distance 0.778 m (expected 0.785)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: wall LiDAR distance 1.260 m (expected 1.260)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_box">
+    <static>true</static>
+    <link name="body">
+      <visual name="carton_visual">
+        <pose>0 0 0.225 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.44 0.48 0.45</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.65 0.47 0.27 1</ambient>
+          <diffuse>0.65 0.47 0.27 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="carton_collision">
+        <pose>0 0 0.225 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.44 0.48 0.45</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="tape_visual">
+        <pose>0 0 0.45125 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.04 0.48 0.0025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.86 0.73 0.47 1</ambient>
+          <diffuse>0.86 0.73 0.47 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,461 @@
+{
+  "amr_simulation": {
+    "worlds/warehouse_obstacle_in_aisle.sdf": {
+      "source_sha256": "efe31ea805008d7cd757b3b12514139b3eb16dc64a2f821d0b9badfceccaeaa9",
+      "installed_sha256": "efe31ea805008d7cd757b3b12514139b3eb16dc64a2f821d0b9badfceccaeaa9",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/worlds/warehouse_obstacle_in_aisle.sdf"
+    },
+    "worlds/warehouse_person_crossing.sdf": {
+      "source_sha256": "742a789b1b943ad4709d2f779c870f304f2f3007aa3528d72739b13b7439ea89",
+      "installed_sha256": "742a789b1b943ad4709d2f779c870f304f2f3007aa3528d72739b13b7439ea89",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/worlds/warehouse_person_crossing.sdf"
+    },
+    "worlds/warehouse_corridor_blocked.sdf": {
+      "source_sha256": "177f8587b2b63aa24b3edf2155041afb74898dcbb3cc8fbf50e8db4ae4bc65b4",
+      "installed_sha256": "177f8587b2b63aa24b3edf2155041afb74898dcbb3cc8fbf50e8db4ae4bc65b4",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/worlds/warehouse_corridor_blocked.sdf"
+    },
+    "worlds/warehouse_normal.sdf": {
+      "source_sha256": "0aa521f6f7364172b21f8ea2c2b317ca72f357b8abbb79634699fff8e0181250",
+      "installed_sha256": "0aa521f6f7364172b21f8ea2c2b317ca72f357b8abbb79634699fff8e0181250",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/worlds/warehouse_normal.sdf"
+    },
+    "config/warehouse_gui_normal.config": {
+      "source_sha256": "c759b6e479b3ec6eecd650939074ec5453be634ba3cae0baa2b1332b5577c44a",
+      "installed_sha256": "c759b6e479b3ec6eecd650939074ec5453be634ba3cae0baa2b1332b5577c44a",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_gui_normal.config"
+    },
+    "config/warehouse_bridge.yaml": {
+      "source_sha256": "57e20ec963a0a22ceb944d21c04afd74973a87febd72cd875fd3020553e490b5",
+      "installed_sha256": "57e20ec963a0a22ceb944d21c04afd74973a87febd72cd875fd3020553e490b5",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_bridge.yaml"
+    },
+    "config/generated_manifest.json": {
+      "source_sha256": "aaa9dc056558941cc9b37510b4396c8355ffb47cf1a322d84daf51e25d69af14",
+      "installed_sha256": "aaa9dc056558941cc9b37510b4396c8355ffb47cf1a322d84daf51e25d69af14",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/generated_manifest.json"
+    },
+    "config/warehouse_gui_person_crossing.config": {
+      "source_sha256": "64f20988ceecab98f8fa4c5c2cf5e5d6bdb95d9c939c0a4d64d205d870c5453f",
+      "installed_sha256": "64f20988ceecab98f8fa4c5c2cf5e5d6bdb95d9c939c0a4d64d205d870c5453f",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_gui_person_crossing.config"
+    },
+    "config/station_poses.json": {
+      "source_sha256": "6f346fb2ad2acb066ca5fc2679f109f1a3b3d92e4ea607bff568f2e908563bb0",
+      "installed_sha256": "6f346fb2ad2acb066ca5fc2679f109f1a3b3d92e4ea607bff568f2e908563bb0",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/station_poses.json"
+    },
+    "config/warehouse_gui_obstacle_in_aisle.config": {
+      "source_sha256": "1ed19f57998db86d1362ae4940ff50f2f66f223b13bde7cfe150920f377bb3cd",
+      "installed_sha256": "1ed19f57998db86d1362ae4940ff50f2f66f223b13bde7cfe150920f377bb3cd",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_gui_obstacle_in_aisle.config"
+    },
+    "config/warehouse_gui.config": {
+      "source_sha256": "04070c5c7be4bbe07a1bf243872c9056635564eae1675f177a63b8a8caf6632a",
+      "installed_sha256": "04070c5c7be4bbe07a1bf243872c9056635564eae1675f177a63b8a8caf6632a",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_gui.config"
+    },
+    "config/warehouse_layout.json": {
+      "source_sha256": "1d2b77bdbd1aa141f98c24df8c6426b3c9944022b619a0fccfce10d35dd5db4d",
+      "installed_sha256": "1d2b77bdbd1aa141f98c24df8c6426b3c9944022b619a0fccfce10d35dd5db4d",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_layout.json"
+    },
+    "config/warehouse_gui_corridor_blocked.config": {
+      "source_sha256": "e3178cd1f715c377a5d2227e1138f78f15b7ac3e5acb7fd017a7499d4e77a1c5",
+      "installed_sha256": "e3178cd1f715c377a5d2227e1138f78f15b7ac3e5acb7fd017a7499d4e77a1c5",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_gui_corridor_blocked.config"
+    },
+    "config/warehouse_layout.svg": {
+      "source_sha256": "8cbc45af0567e6a8713490ac3e103255ad695da70e75c95b7544f4f1d685d2fb",
+      "installed_sha256": "8cbc45af0567e6a8713490ac3e103255ad695da70e75c95b7544f4f1d685d2fb",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/warehouse_layout.svg"
+    },
+    "config/scenarios/normal.json": {
+      "source_sha256": "c47bc2258dc8c5b2098427ae8a144c9fe0275054996734c64d876deb2f5a60e9",
+      "installed_sha256": "c47bc2258dc8c5b2098427ae8a144c9fe0275054996734c64d876deb2f5a60e9",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/scenarios/normal.json"
+    },
+    "config/scenarios/obstacle_in_aisle.json": {
+      "source_sha256": "59b532c1ce46eea35120564e16ce2a0fd88182962c4e00cc8bd53438a813e869",
+      "installed_sha256": "59b532c1ce46eea35120564e16ce2a0fd88182962c4e00cc8bd53438a813e869",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/scenarios/obstacle_in_aisle.json"
+    },
+    "config/scenarios/corridor_blocked.json": {
+      "source_sha256": "b9ba0ca19f3f4eee0639194ff5ca834a9fe0ed203921981f5ca5ee85e6c8e320",
+      "installed_sha256": "b9ba0ca19f3f4eee0639194ff5ca834a9fe0ed203921981f5ca5ee85e6c8e320",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/scenarios/corridor_blocked.json"
+    },
+    "config/scenarios/person_crossing.json": {
+      "source_sha256": "4a9d3e5519937d469fe0163ab00e0bc42754e66d3b09a08927490f9789730a55",
+      "installed_sha256": "4a9d3e5519937d469fe0163ab00e0bc42754e66d3b09a08927490f9789730a55",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/config/scenarios/person_crossing.json"
+    },
+    "models/wh_rack/model.config": {
+      "source_sha256": "53b54af2467cd7b4e378d2e445ac39f6868d6a8ef429339e43b96c7cd354fb03",
+      "installed_sha256": "53b54af2467cd7b4e378d2e445ac39f6868d6a8ef429339e43b96c7cd354fb03",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_rack/model.config"
+    },
+    "models/wh_rack/model.sdf": {
+      "source_sha256": "c674243df6a10e44f91095209089ef74cb7df1eabb9e20b7aeaad1bc7fe5ce40",
+      "installed_sha256": "c674243df6a10e44f91095209089ef74cb7df1eabb9e20b7aeaad1bc7fe5ce40",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_rack/model.sdf"
+    },
+    "models/wh_barrier/model.config": {
+      "source_sha256": "5ac339f31b95acae17a9f8be5850955f8a5cc3897e78021870348e0a098151c8",
+      "installed_sha256": "5ac339f31b95acae17a9f8be5850955f8a5cc3897e78021870348e0a098151c8",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_barrier/model.config"
+    },
+    "models/wh_barrier/model.sdf": {
+      "source_sha256": "8fa123effa4fdb6fbc4775aaff8783d35507b2350e90c408f0d621ff8da82f63",
+      "installed_sha256": "8fa123effa4fdb6fbc4775aaff8783d35507b2350e90c408f0d621ff8da82f63",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_barrier/model.sdf"
+    },
+    "models/wh_building/model.config": {
+      "source_sha256": "dcf36aa03c475471b3246adbcd52b9a608782bce0cc057d1bf2287e2967006ae",
+      "installed_sha256": "dcf36aa03c475471b3246adbcd52b9a608782bce0cc057d1bf2287e2967006ae",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_building/model.config"
+    },
+    "models/wh_building/model.sdf": {
+      "source_sha256": "b6c49bf8a7eafa164d92bd92be42305aa854ef8ada04203230317ae7b9f0fbae",
+      "installed_sha256": "b6c49bf8a7eafa164d92bd92be42305aa854ef8ada04203230317ae7b9f0fbae",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_building/model.sdf"
+    },
+    "models/wh_box/model.config": {
+      "source_sha256": "a92054374f2833d94fe697b233cc99cd0106f580854e1ad164468f0129984b77",
+      "installed_sha256": "a92054374f2833d94fe697b233cc99cd0106f580854e1ad164468f0129984b77",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_box/model.config"
+    },
+    "models/wh_box/model.sdf": {
+      "source_sha256": "6ab4e32e94b755497817168a47d9ae9960878f10ecd7dd181e92c4db704df15e",
+      "installed_sha256": "6ab4e32e94b755497817168a47d9ae9960878f10ecd7dd181e92c4db704df15e",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_box/model.sdf"
+    },
+    "models/wh_loaded_pallet/model.config": {
+      "source_sha256": "75d1fa2906d2874e222139ec6bdfe7b99a1766f0ed21d3740a5ed1a2d9669b99",
+      "installed_sha256": "75d1fa2906d2874e222139ec6bdfe7b99a1766f0ed21d3740a5ed1a2d9669b99",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_loaded_pallet/model.config"
+    },
+    "models/wh_loaded_pallet/model.sdf": {
+      "source_sha256": "1cf90ae5f97d64b549902148d4f6bb684363d3cf1e7e13dff29fc7818dc3ee47",
+      "installed_sha256": "1cf90ae5f97d64b549902148d4f6bb684363d3cf1e7e13dff29fc7818dc3ee47",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_loaded_pallet/model.sdf"
+    },
+    "models/wh_pallet/model.config": {
+      "source_sha256": "b952c64c3a9f70c08d5d5705e5d49f0fa5323c828ea96f97136f6977c3bb9700",
+      "installed_sha256": "b952c64c3a9f70c08d5d5705e5d49f0fa5323c828ea96f97136f6977c3bb9700",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_pallet/model.config"
+    },
+    "models/wh_pallet/model.sdf": {
+      "source_sha256": "6d3f4f6f46a044407aa3729fb70d91245b8883aed2c444200f0a09fac26cf780",
+      "installed_sha256": "6d3f4f6f46a044407aa3729fb70d91245b8883aed2c444200f0a09fac26cf780",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_pallet/model.sdf"
+    },
+    "models/wh_signs/meshes/staging_area.dae": {
+      "source_sha256": "2f588da400d3d98758ebcf75feaa8c58e85bfc221ef2a3dffe9adedc2d668530",
+      "installed_sha256": "2f588da400d3d98758ebcf75feaa8c58e85bfc221ef2a3dffe9adedc2d668530",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/staging_area.dae"
+    },
+    "models/wh_signs/meshes/staging_area.png": {
+      "source_sha256": "f939cbe9c3cad8c78ccc23eb45fc864ac06ea8b3a534aa4c2d94c095c76cdf63",
+      "installed_sha256": "f939cbe9c3cad8c78ccc23eb45fc864ac06ea8b3a534aa4c2d94c095c76cdf63",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/staging_area.png"
+    },
+    "models/wh_signs/meshes/dropoff_station_01.dae": {
+      "source_sha256": "2c7fcff8c2edad79b5c49f2f51cad15f9af877b3e7070693677c6df2e710d597",
+      "installed_sha256": "2c7fcff8c2edad79b5c49f2f51cad15f9af877b3e7070693677c6df2e710d597",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/dropoff_station_01.dae"
+    },
+    "models/wh_signs/meshes/dropoff_station_02.png": {
+      "source_sha256": "a4049bd140d5d067371e2c2a513f5f740d24930cd255917010c350d4237ef48d",
+      "installed_sha256": "a4049bd140d5d067371e2c2a513f5f740d24930cd255917010c350d4237ef48d",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/dropoff_station_02.png"
+    },
+    "models/wh_signs/meshes/dropoff_station_02.dae": {
+      "source_sha256": "a418b078dc227dbff0aba7360c1bd60630a21be1ea690753fc5e0e74d6c28758",
+      "installed_sha256": "a418b078dc227dbff0aba7360c1bd60630a21be1ea690753fc5e0e74d6c28758",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/dropoff_station_02.dae"
+    },
+    "models/wh_signs/meshes/dropoff_station_01.png": {
+      "source_sha256": "0125df6597765af6bd1a4d5f5205e2539a78ce192d3827d4320fb2f4cf81d19f",
+      "installed_sha256": "0125df6597765af6bd1a4d5f5205e2539a78ce192d3827d4320fb2f4cf81d19f",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/dropoff_station_01.png"
+    },
+    "models/wh_signs/meshes/pickup_station_02.dae": {
+      "source_sha256": "6098a50ba2d8b4592f044a9fa1b2835c785fe3cab5fa7255804d067a7c15aec1",
+      "installed_sha256": "6098a50ba2d8b4592f044a9fa1b2835c785fe3cab5fa7255804d067a7c15aec1",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/pickup_station_02.dae"
+    },
+    "models/wh_signs/meshes/charging_station.png": {
+      "source_sha256": "659b99a8d24dc17ebc1ca970692650b2b92c6d8ec1aa3d5ab5f1fb015bb04c45",
+      "installed_sha256": "659b99a8d24dc17ebc1ca970692650b2b92c6d8ec1aa3d5ab5f1fb015bb04c45",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/charging_station.png"
+    },
+    "models/wh_signs/meshes/pickup_station_01.png": {
+      "source_sha256": "523e6f974cfa4439b6d4fb2a1cc1c86b9317c6428330e00197fcb268ef63c380",
+      "installed_sha256": "523e6f974cfa4439b6d4fb2a1cc1c86b9317c6428330e00197fcb268ef63c380",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/pickup_station_01.png"
+    },
+    "models/wh_signs/meshes/pickup_station_02.png": {
+      "source_sha256": "654f22e0a2850b8c3f564a7a96d57fe9c0e8e085dc6f77846ed9d3ee3c1ec42c",
+      "installed_sha256": "654f22e0a2850b8c3f564a7a96d57fe9c0e8e085dc6f77846ed9d3ee3c1ec42c",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/pickup_station_02.png"
+    },
+    "models/wh_signs/meshes/charging_station.dae": {
+      "source_sha256": "da1d3e98f9ffa6181db44158d2962c286e9c1df388c9186b75937720e7263a37",
+      "installed_sha256": "da1d3e98f9ffa6181db44158d2962c286e9c1df388c9186b75937720e7263a37",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/charging_station.dae"
+    },
+    "models/wh_signs/meshes/pickup_station_01.dae": {
+      "source_sha256": "23deed5178356bb803237fd7a9cce900e3e16fc549b78ce1ff80d70a17d9b5a6",
+      "installed_sha256": "23deed5178356bb803237fd7a9cce900e3e16fc549b78ce1ff80d70a17d9b5a6",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/models/wh_signs/meshes/pickup_station_01.dae"
+    },
+    "launch/warehouse.launch.py": {
+      "source_sha256": "1e4794b298fce98f0379f1acc3797514d40bb97e0f7a021d692ba691f183a3c6",
+      "installed_sha256": "1e4794b298fce98f0379f1acc3797514d40bb97e0f7a021d692ba691f183a3c6",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/launch/warehouse.launch.py"
+    },
+    "scripts/run_acceptance.py": {
+      "source_sha256": "66413ee8dcde97e916925c7be583a0a0e5fe8592545bb033c9f5ce9e4121c472",
+      "installed_sha256": "66413ee8dcde97e916925c7be583a0a0e5fe8592545bb033c9f5ce9e4121c472",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/run_acceptance.py"
+    },
+    "scripts/build_warehouse.sh": {
+      "source_sha256": "9d82fe721b1b5cbea092f20c115c9842a0fd88101a79ac780751b87dc9c3509b",
+      "installed_sha256": "9d82fe721b1b5cbea092f20c115c9842a0fd88101a79ac780751b87dc9c3509b",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/build_warehouse.sh"
+    },
+    "scripts/validate_runtime.py": {
+      "source_sha256": "4ec61a5de085f7b8acd02ba888fc88b1794425658016e3e3f91be5a6ac4615a0",
+      "installed_sha256": "4ec61a5de085f7b8acd02ba888fc88b1794425658016e3e3f91be5a6ac4615a0",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/validate_runtime.py"
+    },
+    "scripts/generate_warehouse.py": {
+      "source_sha256": "d80c5964540e8cd9298ccdda1e7e015bdb320e234e85799170c7e74d9768ee95",
+      "installed_sha256": "d80c5964540e8cd9298ccdda1e7e015bdb320e234e85799170c7e74d9768ee95",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/generate_warehouse.py"
+    },
+    "scripts/validate_warehouse.py": {
+      "source_sha256": "99831d8ee3ae831e72672d6de6642d2292ede1afe932d8000cdcc630534ed45e",
+      "installed_sha256": "99831d8ee3ae831e72672d6de6642d2292ede1afe932d8000cdcc630534ed45e",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/validate_warehouse.py"
+    },
+    "scripts/render_layout.py": {
+      "source_sha256": "d760e6dec80ae611cb66fe8333d114cda8af43d7b40441fd7787fa15a2336444",
+      "installed_sha256": "d760e6dec80ae611cb66fe8333d114cda8af43d7b40441fd7787fa15a2336444",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/render_layout.py"
+    },
+    "scripts/validate_repeatability.py": {
+      "source_sha256": "591e87e62ab7c250407b31edff4e160cc8cced3b7be07919d6a777774b4ca410",
+      "installed_sha256": "591e87e62ab7c250407b31edff4e160cc8cced3b7be07919d6a777774b4ca410",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/validate_repeatability.py"
+    },
+    "scripts/report_warehouse.py": {
+      "source_sha256": "996a6d6998f89d324f4bcbe6a7cff7d47bde9c3050ebc1e372c8c21acc987ca3",
+      "installed_sha256": "996a6d6998f89d324f4bcbe6a7cff7d47bde9c3050ebc1e372c8c21acc987ca3",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/report_warehouse.py"
+    },
+    "scripts/validate_scenario_gui.py": {
+      "source_sha256": "6fcd26e47b774fe04f31ad5b4a282d1a00414d44c59df134bea84221985e29d5",
+      "installed_sha256": "6fcd26e47b774fe04f31ad5b4a282d1a00414d44c59df134bea84221985e29d5",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/validate_scenario_gui.py"
+    },
+    "scripts/validate_gui.py": {
+      "source_sha256": "4a306c6a998f6f913a8fb4b7373d9249c55f47ae6d9393d3aac4bd51d7bf4bfa",
+      "installed_sha256": "4a306c6a998f6f913a8fb4b7373d9249c55f47ae6d9393d3aac4bd51d7bf4bfa",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/validate_gui.py"
+    },
+    "scripts/validate_amr_regression.py": {
+      "source_sha256": "4b7139c58ab125a7e49cad23822aec7d2c3d7c47e73b627a48d9e2504f1e0eb2",
+      "installed_sha256": "4b7139c58ab125a7e49cad23822aec7d2c3d7c47e73b627a48d9e2504f1e0eb2",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_simulation/scripts/validate_amr_regression.py"
+    }
+  },
+  "amr_description": {
+    "worlds/warehouse_test.sdf": {
+      "source_sha256": "d58288efdf0e03b2e6ee5d243c5b1189ed2613f666d950b981471bc6c8177036",
+      "installed_sha256": "d58288efdf0e03b2e6ee5d243c5b1189ed2613f666d950b981471bc6c8177036",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/worlds/warehouse_test.sdf"
+    },
+    "config/bridge.yaml": {
+      "source_sha256": "72c7732a9b0976e0d09373345ffa80247a7bfda7788de042bac49bcf99decc32",
+      "installed_sha256": "72c7732a9b0976e0d09373345ffa80247a7bfda7788de042bac49bcf99decc32",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/config/bridge.yaml"
+    },
+    "config/controllers.yaml": {
+      "source_sha256": "e57adf51ccf27259f45f2e05c6fd03d84c2ad7c91fc558cf9a519b7fc856992a",
+      "installed_sha256": "e57adf51ccf27259f45f2e05c6fd03d84c2ad7c91fc558cf9a519b7fc856992a",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/config/controllers.yaml"
+    },
+    "config/gazebo_gui.config": {
+      "source_sha256": "85be5969baa290fe239569728296c303c5861abdc71827bb30e200b62819f20e",
+      "installed_sha256": "85be5969baa290fe239569728296c303c5861abdc71827bb30e200b62819f20e",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/config/gazebo_gui.config"
+    },
+    "config/joint_limits.yaml": {
+      "source_sha256": "d711fa1a6325d723fee2eee2ee8bf09d12d8e32c2d7cb89a9b23169ddde51d29",
+      "installed_sha256": "d711fa1a6325d723fee2eee2ee8bf09d12d8e32c2d7cb89a9b23169ddde51d29",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/config/joint_limits.yaml"
+    },
+    "config/amr_dimensions.json": {
+      "source_sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575",
+      "installed_sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/config/amr_dimensions.json"
+    },
+    "launch/display.launch.py": {
+      "source_sha256": "7f8f38765d587f99507d9a6a9713acb203a6c61817b3617f122bb554ed3f7a80",
+      "installed_sha256": "7f8f38765d587f99507d9a6a9713acb203a6c61817b3617f122bb554ed3f7a80",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/launch/display.launch.py"
+    },
+    "launch/sim.launch.py": {
+      "source_sha256": "177f36842f87e92427d72809661dfe0b7408ace7d4f639cfc46f95644bdba94a",
+      "installed_sha256": "177f36842f87e92427d72809661dfe0b7408ace7d4f639cfc46f95644bdba94a",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/launch/sim.launch.py"
+    },
+    "scripts/validate_runtime.py": {
+      "source_sha256": "d8ac5063e1ce693cb1b2328c5c132397cf0df975d626ec2d21643d6aa4413d1d",
+      "installed_sha256": "d8ac5063e1ce693cb1b2328c5c132397cf0df975d626ec2d21643d6aa4413d1d",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/validate_runtime.py"
+    },
+    "scripts/validate_urdf.py": {
+      "source_sha256": "107ae2bc2433b84f850d1e935b6fb272fbf44d3183c89208db60db4a9698c97f",
+      "installed_sha256": "107ae2bc2433b84f850d1e935b6fb272fbf44d3183c89208db60db4a9698c97f",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/validate_urdf.py"
+    },
+    "scripts/build_amr.sh": {
+      "source_sha256": "9463ceae3bde6e1dda9770e88bce6f4137259946e39e4adb201b6edc89a87617",
+      "installed_sha256": "9463ceae3bde6e1dda9770e88bce6f4137259946e39e4adb201b6edc89a87617",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/build_amr.sh"
+    },
+    "scripts/amr_parameters.py": {
+      "source_sha256": "f5eee0560a352751bb951f8b6c53c1e03ab6bf4c9a4e88f7e839bb9efc175a72",
+      "installed_sha256": "f5eee0560a352751bb951f8b6c53c1e03ab6bf4c9a4e88f7e839bb9efc175a72",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/amr_parameters.py"
+    },
+    "scripts/smoke_test.py": {
+      "source_sha256": "cff025604214a595d8d5c8668a1cae7853127c307ceef5b94b34c3372b2ea9cf",
+      "installed_sha256": "cff025604214a595d8d5c8668a1cae7853127c307ceef5b94b34c3372b2ea9cf",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/smoke_test.py"
+    },
+    "scripts/validate_display.py": {
+      "source_sha256": "09515268538b1f89e64a9cc5e8459505ac54bc369e51fc0ec740f823d1ed2097",
+      "installed_sha256": "09515268538b1f89e64a9cc5e8459505ac54bc369e51fc0ec740f823d1ed2097",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/validate_display.py"
+    },
+    "scripts/validate_gazebo_gui.py": {
+      "source_sha256": "229ee587bf86e31a701237ec54190505b26ff45834e0f38f8b1b528bc1e08be7",
+      "installed_sha256": "229ee587bf86e31a701237ec54190505b26ff45834e0f38f8b1b528bc1e08be7",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/validate_gazebo_gui.py"
+    },
+    "scripts/blender/export_amr.py": {
+      "source_sha256": "c056b5403326b3765d31a964c39f5d5b7c41f0baf097d661bfb46524c5429ba5",
+      "installed_sha256": "c056b5403326b3765d31a964c39f5d5b7c41f0baf097d661bfb46524c5429ba5",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/blender/export_amr.py"
+    },
+    "scripts/blender/README.md": {
+      "source_sha256": "9cf66454cd5d69ef1d807f0522f6793e32410343360be6cb00d7180d28cbc072",
+      "installed_sha256": "9cf66454cd5d69ef1d807f0522f6793e32410343360be6cb00d7180d28cbc072",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/blender/README.md"
+    },
+    "scripts/blender/validate_amr.py": {
+      "source_sha256": "054f4a818c6689a0cda71687699588a3ade3e75fad3e21f5223033386183ed69",
+      "installed_sha256": "054f4a818c6689a0cda71687699588a3ade3e75fad3e21f5223033386183ed69",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/blender/validate_amr.py"
+    },
+    "scripts/blender/generate_amr.py": {
+      "source_sha256": "26281577944132302096f9ee19ae71df7346742ad95fd159f5ab88f8b0b02358",
+      "installed_sha256": "26281577944132302096f9ee19ae71df7346742ad95fd159f5ab88f8b0b02358",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/blender/generate_amr.py"
+    },
+    "scripts/blender/test_rebuild.py": {
+      "source_sha256": "b32cad5906c5b355500bdf2025086a0f5fad3a158a2f2dbd0c4352462c2e60f6",
+      "installed_sha256": "b32cad5906c5b355500bdf2025086a0f5fad3a158a2f2dbd0c4352462c2e60f6",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/blender/test_rebuild.py"
+    },
+    "scripts/blender/render_amr.py": {
+      "source_sha256": "2dacfa6fdb7ed159b16d9a4103c3b8ea733a23fef3cf7e2d46449cde7101a789",
+      "installed_sha256": "2dacfa6fdb7ed159b16d9a4103c3b8ea733a23fef3cf7e2d46449cde7101a789",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/scripts/blender/render_amr.py"
+    },
+    "urdf/amr.urdf.xacro": {
+      "source_sha256": "d1b495bd3e7f06ff42da08287e099577c7682623542fc11cfb802a29a1fc768b",
+      "installed_sha256": "d1b495bd3e7f06ff42da08287e099577c7682623542fc11cfb802a29a1fc768b",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/amr.urdf.xacro"
+    },
+    "urdf/dimensions.xacro": {
+      "source_sha256": "e3f3ad831c3bf4df964bf282adc9e2408edff613242df5ad5a3dd72d7220e238",
+      "installed_sha256": "e3f3ad831c3bf4df964bf282adc9e2408edff613242df5ad5a3dd72d7220e238",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/dimensions.xacro"
+    },
+    "urdf/inertials.xacro": {
+      "source_sha256": "5bde65ff7e18ecad8c1b585497037e7a7ecb794622edc6f23466d899aae3be9b",
+      "installed_sha256": "5bde65ff7e18ecad8c1b585497037e7a7ecb794622edc6f23466d899aae3be9b",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/inertials.xacro"
+    },
+    "urdf/sensors/lidar.xacro": {
+      "source_sha256": "884b57950d08b17314af661058dae93f9b510cdcd394ea8aba65238b3e19fa37",
+      "installed_sha256": "884b57950d08b17314af661058dae93f9b510cdcd394ea8aba65238b3e19fa37",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/sensors/lidar.xacro"
+    },
+    "urdf/sensors/imu.xacro": {
+      "source_sha256": "6aeec1d1702a94275d93a9b823e1a7698b37503b0a18c4a28b4a3e29808d3c01",
+      "installed_sha256": "6aeec1d1702a94275d93a9b823e1a7698b37503b0a18c4a28b4a3e29808d3c01",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/sensors/imu.xacro"
+    },
+    "urdf/sensors/camera.xacro": {
+      "source_sha256": "13a533b603043e0ab5b8103af4a75c2ca17e92ff6d31034a7e9b96fad4a2d5f3",
+      "installed_sha256": "13a533b603043e0ab5b8103af4a75c2ca17e92ff6d31034a7e9b96fad4a2d5f3",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/sensors/camera.xacro"
+    },
+    "urdf/collision/platform_collision.xacro": {
+      "source_sha256": "57a587f164f68a9a97c761814b138d7c3b0b83ae60acb9c967598c1f9779da60",
+      "installed_sha256": "57a587f164f68a9a97c761814b138d7c3b0b83ae60acb9c967598c1f9779da60",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/collision/platform_collision.xacro"
+    },
+    "urdf/collision/wheels_collision.xacro": {
+      "source_sha256": "871f2f5a88444156e4672490d5994488fb5b858fc64f649fbf72ecba4fc6b033",
+      "installed_sha256": "871f2f5a88444156e4672490d5994488fb5b858fc64f649fbf72ecba4fc6b033",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/collision/wheels_collision.xacro"
+    },
+    "urdf/collision/chassis_collision.xacro": {
+      "source_sha256": "f3af8a0ea295be3970165d9870d65e9cf691a33f3ed338bcde07c33e1e854de9",
+      "installed_sha256": "f3af8a0ea295be3970165d9870d65e9cf691a33f3ed338bcde07c33e1e854de9",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/collision/chassis_collision.xacro"
+    },
+    "urdf/gazebo/sensors_gazebo.xacro": {
+      "source_sha256": "a8b3cd38871a07c3dfe4519608ff5a5dc1455cb16cd1fb936f23cf18f0ccb7b8",
+      "installed_sha256": "a8b3cd38871a07c3dfe4519608ff5a5dc1455cb16cd1fb936f23cf18f0ccb7b8",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/gazebo/sensors_gazebo.xacro"
+    },
+    "urdf/gazebo/gazebo.xacro": {
+      "source_sha256": "b58382ed868c154adcfb227a5597aaa7b11e4d23b326c78d4a170c98677110ee",
+      "installed_sha256": "b58382ed868c154adcfb227a5597aaa7b11e4d23b326c78d4a170c98677110ee",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/gazebo/gazebo.xacro"
+    },
+    "urdf/gazebo/ros2_control.xacro": {
+      "source_sha256": "0ef2c9f5891b9c7a96a0467f437c6b957e73482ccfed1f52bb06a7e83e9d74c1",
+      "installed_sha256": "0ef2c9f5891b9c7a96a0467f437c6b957e73482ccfed1f52bb06a7e83e9d74c1",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/gazebo/ros2_control.xacro"
+    },
+    "urdf/components/wheels.xacro": {
+      "source_sha256": "11e06382ff5af9b9027a734d780ceb71fb56dd8272fe09e46d5c041563b18b85",
+      "installed_sha256": "11e06382ff5af9b9027a734d780ceb71fb56dd8272fe09e46d5c041563b18b85",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/components/wheels.xacro"
+    },
+    "urdf/components/platform.xacro": {
+      "source_sha256": "221cc4a3f95b69af04aac27f31ff564b7a95374ae768470ba9fe59ea576ac886",
+      "installed_sha256": "221cc4a3f95b69af04aac27f31ff564b7a95374ae768470ba9fe59ea576ac886",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/components/platform.xacro"
+    },
+    "urdf/components/chassis.xacro": {
+      "source_sha256": "12568f300dd482951dd545889e87af9b95ce4b88096401c417b4a9f6f8f7cbfa",
+      "installed_sha256": "12568f300dd482951dd545889e87af9b95ce4b88096401c417b4a9f6f8f7cbfa",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/components/chassis.xacro"
+    },
+    "urdf/components/casters.xacro": {
+      "source_sha256": "9754c9a9d53189ea1fea62f7230cceecb6e701181ed2e26c96adad5fa5c92801",
+      "installed_sha256": "9754c9a9d53189ea1fea62f7230cceecb6e701181ed2e26c96adad5fa5c92801",
+      "installed_realpath": "/home/gengo/ros2_ws/src/amr_description/urdf/components/casters.xacro"
+    }
+  }
+}

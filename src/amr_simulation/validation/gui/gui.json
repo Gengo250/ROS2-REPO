@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "gui_renderer": "ogre",
+  "sensor_renderer": "ogre2",
+  "manifest_sha256": "775ee9b1b904ce8152d47eb2d5b52da10df38790e04feea6c10ed7e49c948db0",
+  "capture": "warehouse_gui.png",
+  "interaction": "read-only screenshot, no input automation"
+}

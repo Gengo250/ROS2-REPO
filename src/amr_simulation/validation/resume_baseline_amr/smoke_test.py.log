@@ -1,0 +1,103 @@
+PASS: display nodes, all TFs, wheel joint states and nonblank RViz capture
+PASS: /scan contains fresh samples
+PASS: /imu/data contains fresh samples
+PASS: /camera/image_raw contains fresh samples
+PASS: /camera/depth/image_raw contains fresh samples
+PASS: /camera/camera_info contains fresh samples
+PASS: /camera/points contains fresh samples
+PASS: /odom contains fresh samples
+PASS: /joint_states contains fresh samples
+PASS: scan frame is laser_frame
+PASS: IMU frame is imu_link
+PASS: /camera/image_raw optical frame
+PASS: /camera/depth/image_raw optical frame
+PASS: /camera/camera_info optical frame
+PASS: point cloud uses +X-forward lens frame
+PASS: all physical and sensor TFs resolve from base_link
+PASS: scan sample count
+PASS: LiDAR sees known obstacle at expected distance
+PASS: LiDAR has no near self returns in the test world
+PASS: depth encoding is float metres
+PASS: RGB-D depth sees the known obstacle
+PASS: PointCloud2 coordinates agree with +X-forward frame and depth
+PASS: IMU at rest measures gravity consistently
+PASS: base settled on floor without sinking
+PASS: initial roll and pitch stable
+PASS: positive command moves physical robot along +X
+PASS: encoder odometry agrees with physical translation
+PASS: command timeout brakes the base
+PASS: wheels stop after timeout
+PASS: positive angular command turns counter-clockwise
+PASS: floor contact maintained after drive and turn
+PASS: roll and pitch stable after motion
+{
+  "status": "passed",
+  "config_sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575",
+  "topic_samples": {
+    "/imu/data": 1167,
+    "/camera/camera_info": 183,
+    "/scan": 183,
+    "/joint_states": 1164,
+    "/camera/depth/image_raw": 177,
+    "/camera/points": 178,
+    "/camera/image_raw": 176,
+    "/odom": 566
+  },
+  "lidar_centre_m": 2.3600361347198486,
+  "depth_centre_m": 2.323000431060791,
+  "pointcloud_centre_depth_frame_m": {
+    "x": 2.323000431060791,
+    "y": -0.002785052638500929,
+    "z": -0.0027852896600961685
+  },
+  "initial_pose": {
+    "name": "warehouse_amr",
+    "id": 14,
+    "position": {
+      "x": 7.371673431123682e-20,
+      "y": 2.2934279080669793e-20,
+      "z": -3.9144782175612266e-07
+    },
+    "orientation": {
+      "x": -4.829582554988881e-19,
+      "y": 9.432687347713971e-11,
+      "z": 2.0988932106896992e-20,
+      "w": 1
+    }
+  },
+  "forward_pose": {
+    "name": "warehouse_amr",
+    "id": 14,
+    "position": {
+      "x": 0.562017606053151,
+      "y": 2.9371474337325096e-16,
+      "z": -4.183108659082849e-09
+    },
+    "orientation": {
+      "x": -3.860951951991663e-16,
+      "y": 4.3368302243014663e-10,
+      "z": 1.098721324113239e-15,
+      "w": 1
+    }
+  },
+  "turned_pose": {
+    "name": "warehouse_amr",
+    "id": 14,
+    "position": {
+      "x": 0.5620288600907479,
+      "y": -2.166394476014415e-05,
+      "z": -4.18398034766207e-09
+    },
+    "orientation": {
+      "x": -5.769108217100018e-11,
+      "y": 7.517161322509202e-11,
+      "z": 0.5743825512364394,
+      "w": 0.8185870050490167
+    }
+  },
+  "translation_m": 0.562017606053151,
+  "odom_translation_m": 0.5620149999984262,
+  "turn_radians": 1.2236993244139573,
+  "simulation_seconds_at_completion": 12.062
+}
+AMR ACCEPTANCE PASSED: all

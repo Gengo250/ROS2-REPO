@@ -1,0 +1,20 @@
+build/my_py_pkg/pytest.xml: 3 tests, 0 errors, 1 failure, 1 skipped
+- my_py_pkg.test.test_flake8 test_flake8
+  <<< failure message
+    AssertionError: Found 12 code style errors / warnings:
+      ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+      ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+      ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+      ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    assert 1 == 0
+  >>>
+
+Summary: 30 tests, 0 errors, 1 failure, 1 skipped

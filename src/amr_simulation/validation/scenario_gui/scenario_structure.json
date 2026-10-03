@@ -1,0 +1,88 @@
+{
+  "warehouse_corridor_blocked": {
+    "sha256": "177f8587b2b63aa24b3edf2155041afb74898dcbb3cc8fbf50e8db4ae4bc65b4",
+    "world": "warehouse",
+    "models": [
+      "warehouse_camera_01",
+      "human_01",
+      "human_02",
+      "human_03"
+    ],
+    "includes": [
+      {
+        "name": "warehouse_structure",
+        "uri": "model://wh_building",
+        "pose": "0 0 0 0 0 0"
+      },
+      {
+        "name": "corridor_barrier",
+        "uri": "model://wh_barrier",
+        "pose": "-4.5 -4.5 0.6 0 0 0"
+      }
+    ],
+    "human_01_pose": "-8.7 3 0 0 0 1.57079632679",
+    "human_01_follower": "<plugin filename=\"gz-sim-trajectory-follower-system\" name=\"gz::sim::systems::TrajectoryFollower\">\n        <link_name>body</link_name>\n        <loop>true</loop>\n        <force>46</force>\n        <torque>15</torque>\n        <range_tolerance>0.3</range_tolerance>\n        <bearing_tolerance>5</bearing_tolerance>\n        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>\n        <waypoints>\n          <waypoint>-8.7 6</waypoint>\n          <waypoint>-8.7 3</waypoint>\n        </waypoints>\n      </plugin>\n    "
+  },
+  "warehouse_normal": {
+    "sha256": "0aa521f6f7364172b21f8ea2c2b317ca72f357b8abbb79634699fff8e0181250",
+    "world": "warehouse",
+    "models": [
+      "warehouse_camera_01",
+      "human_01",
+      "human_02",
+      "human_03"
+    ],
+    "includes": [
+      {
+        "name": "warehouse_structure",
+        "uri": "model://wh_building",
+        "pose": "0 0 0 0 0 0"
+      }
+    ],
+    "human_01_pose": "-8.7 3 0 0 0 1.57079632679",
+    "human_01_follower": "<plugin filename=\"gz-sim-trajectory-follower-system\" name=\"gz::sim::systems::TrajectoryFollower\">\n        <link_name>body</link_name>\n        <loop>true</loop>\n        <force>46</force>\n        <torque>15</torque>\n        <range_tolerance>0.3</range_tolerance>\n        <bearing_tolerance>5</bearing_tolerance>\n        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>\n        <waypoints>\n          <waypoint>-8.7 6</waypoint>\n          <waypoint>-8.7 3</waypoint>\n        </waypoints>\n      </plugin>\n    "
+  },
+  "warehouse_obstacle_in_aisle": {
+    "sha256": "efe31ea805008d7cd757b3b12514139b3eb16dc64a2f821d0b9badfceccaeaa9",
+    "world": "warehouse",
+    "models": [
+      "warehouse_camera_01",
+      "human_01",
+      "human_02",
+      "human_03"
+    ],
+    "includes": [
+      {
+        "name": "warehouse_structure",
+        "uri": "model://wh_building",
+        "pose": "0 0 0 0 0 0"
+      },
+      {
+        "name": "aisle_pallet",
+        "uri": "model://wh_loaded_pallet",
+        "pose": "-5.35 -4.5 0 0 0 0"
+      }
+    ],
+    "human_01_pose": "-8.7 3 0 0 0 1.57079632679",
+    "human_01_follower": "<plugin filename=\"gz-sim-trajectory-follower-system\" name=\"gz::sim::systems::TrajectoryFollower\">\n        <link_name>body</link_name>\n        <loop>true</loop>\n        <force>46</force>\n        <torque>15</torque>\n        <range_tolerance>0.3</range_tolerance>\n        <bearing_tolerance>5</bearing_tolerance>\n        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>\n        <waypoints>\n          <waypoint>-8.7 6</waypoint>\n          <waypoint>-8.7 3</waypoint>\n        </waypoints>\n      </plugin>\n    "
+  },
+  "warehouse_person_crossing": {
+    "sha256": "742a789b1b943ad4709d2f779c870f304f2f3007aa3528d72739b13b7439ea89",
+    "world": "warehouse",
+    "models": [
+      "warehouse_camera_01",
+      "human_01",
+      "human_02",
+      "human_03"
+    ],
+    "includes": [
+      {
+        "name": "warehouse_structure",
+        "uri": "model://wh_building",
+        "pose": "0 0 0 0 0 0"
+      }
+    ],
+    "human_01_pose": "-8.7 -2.5 0 0 0 1.57079632679",
+    "human_01_follower": "<plugin filename=\"gz-sim-trajectory-follower-system\" name=\"gz::sim::systems::TrajectoryFollower\">\n        <link_name>body</link_name>\n        <loop>true</loop>\n        <force>46</force>\n        <torque>15</torque>\n        <range_tolerance>0.3</range_tolerance>\n        <bearing_tolerance>5</bearing_tolerance>\n        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>\n        <waypoints>\n          <waypoint>-8.7 2.5</waypoint>\n          <waypoint>-8.7 -2.5</waypoint>\n        </waypoints>\n      </plugin>\n    "
+  }
+}

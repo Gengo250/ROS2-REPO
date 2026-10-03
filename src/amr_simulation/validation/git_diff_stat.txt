@@ -1,0 +1,5 @@
+ src/amr_description/launch/sim.launch.py    |  52 +++++++++++++++++++++-------
+ src/amr_description/validation/gazebo.png   | Bin 43550 -> 43549 bytes
+ src/amr_description/validation/runtime.json |  46 ++++++++++++------------
+ src/amr_description/validation/urdf.json    |   2 +-
+ 4 files changed, 64 insertions(+), 36 deletions(-)

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_pallet">
+    <static>true</static>
+    <link name="body">
+      <collision name="pallet_collision">
+        <pose>0 0 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 1.15 0.15</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="slat_0_visual">
+        <pose>0 -0.46 0.1375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 0.184 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="slat_1_visual">
+        <pose>0 -0.23 0.1375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 0.184 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="slat_2_visual">
+        <pose>0 0 0.1375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 0.184 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="slat_3_visual">
+        <pose>0 0.23 0.1375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 0.184 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="slat_4_visual">
+        <pose>0 0.46 0.1375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1 0.184 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="runner_0_visual">
+        <pose>-0.44 0 0.0625 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 1.15 0.125</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="runner_1_visual">
+        <pose>0 0 0.0625 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 1.15 0.125</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="runner_2_visual">
+        <pose>0.44 0 0.0625 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 1.15 0.125</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

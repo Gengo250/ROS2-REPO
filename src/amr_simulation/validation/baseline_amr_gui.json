@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "capture": "gazebo.png",
+  "gui_render_engine": "Ogre",
+  "sensor_render_engine": "Ogre2",
+  "automated_ui_interactions": 0
+}

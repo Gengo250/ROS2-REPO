@@ -1,0 +1,494 @@
+{
+  "schema_version": 1,
+  "config_sha256": "9a2b7a5bcedb8e4be3e0c64be4ab6db097363b9f182e0196e464bcfb3022f987",
+  "source_sha256": {
+    "config/warehouse_layout.json": "9a2b7a5bcedb8e4be3e0c64be4ab6db097363b9f182e0196e464bcfb3022f987",
+    "config/scenarios/normal.json": "c47bc2258dc8c5b2098427ae8a144c9fe0275054996734c64d876deb2f5a60e9",
+    "config/scenarios/person_crossing.json": "4a9d3e5519937d469fe0163ab00e0bc42754e66d3b09a08927490f9789730a55",
+    "config/scenarios/obstacle_in_aisle.json": "59b532c1ce46eea35120564e16ce2a0fd88182962c4e00cc8bd53438a813e869",
+    "config/scenarios/corridor_blocked.json": "b9ba0ca19f3f4eee0639194ff5ca834a9fe0ed203921981f5ca5ee85e6c8e320"
+  },
+  "amr_config_sha256": "8766a42676c695a84993e09f9f6e3614062648cb3c6c2caa3a32f500c934069b",
+  "amr_dimensions": {
+    "chassis_length": 0.95,
+    "chassis_width": 0.7,
+    "chassis_height": 0.25
+  },
+  "turning_diameter_with_clearance": 1.7800423721205947,
+  "racks": 16,
+  "pallets_normal": 38,
+  "boxes_normal": 76,
+  "humans": 3
+}
+{
+  "status": "passed",
+  "deterministic": true,
+  "idempotent": true,
+  "network_assets": false,
+  "manifest_sha256": "775ee9b1b904ce8152d47eb2d5b52da10df38790e04feea6c10ed7e49c948db0",
+  "sdf_files": [
+    "models/wh_barrier/model.sdf",
+    "models/wh_box/model.sdf",
+    "models/wh_building/model.sdf",
+    "models/wh_loaded_pallet/model.sdf",
+    "models/wh_pallet/model.sdf",
+    "models/wh_rack/model.sdf",
+    "worlds/warehouse_corridor_blocked.sdf",
+    "worlds/warehouse_normal.sdf",
+    "worlds/warehouse_obstacle_in_aisle.sdf",
+    "worlds/warehouse_person_crossing.sdf"
+  ],
+  "counts": {
+    "racks": 16,
+    "pallets_normal": 38,
+    "boxes_normal": 76,
+    "humans": 3
+  },
+  "turning_diameter_with_clearance": 1.7800423721205947,
+  "aisle_widths": {
+    "main_cross_aisle": 4,
+    "north_cross_aisle": 3,
+    "south_cross_aisle": 3,
+    "aisle_01": 3,
+    "aisle_02": 3,
+    "aisle_03": 3,
+    "west_service_aisle": 3,
+    "east_service_aisle": 3
+  }
+}
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< my_cpp_pkg [0.27s]
+Finished <<< amr_description [0.29s]
+Starting >>> amr_simulation
+Finished <<< amr_simulation [0.12s]
+Finished <<< my_py_pkg [1.54s]
+
+Summary: 4 packages finished [1.70s]
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< my_cpp_pkg [0.20s]
+Finished <<< amr_description [0.21s]
+Starting >>> amr_simulation
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+   Site: gengo
+   Build name: (empty)
+ Add coverage exclude regular expressions.
+Create new tag: 20261003-1626 - Experimental
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Test project /home/gengo/ros2_ws/build/amr_simulation
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: warehouse_generation
+
+1: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--package-name" "amr_simulation" "--output-file" "/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation.txt" "--command" "/usr/bin/python3" "-u" "-m" "pytest" "/home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py" "-o" "cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache" "--junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--junit-prefix=amr_simulation"
+1: Working Directory: /home/gengo/ros2_ws/build/amr_simulation
+1: Test timeout computed to be: 180
+1: -- run_test.py: invoking following command in '/home/gengo/ros2_ws/build/amr_simulation':
+1:  - /usr/bin/python3 -u -m pytest /home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py -o cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache --junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml --junit-prefix=amr_simulation
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+cachedir: /home/gengo/ros2_ws/build/my_py_pkg/.pytest_cache
+rootdir: /home/gengo/ros2_ws/src/my_py_pkg
+plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+collected 3 items
+
+1: ============================= test session starts ==============================
+1: platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+test/test_copyright.py s                                                 [ 33%]
+1: cachedir: build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache
+1: rootdir: /home/gengo/ros2_ws
+1: plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+1: collected 16 items
+1: 
+test/test_flake8.py F                                                    [ 66%]
+test/test_pep257.py .                                                    [100%]
+
+=================================== FAILURES ===================================
+_________________________________ test_flake8 __________________________________
+test/test_flake8.py:23: in test_flake8
+    assert rc == 0, \
+E   AssertionError: Found 12 code style errors / warnings:
+E     ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+E     ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+E     ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+E     ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+E     ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+E     ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+E     ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+E     ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+E   assert 1 == 0
+----------------------------- Captured stdout call -----------------------------
+
+./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+def main(args=None):
+^
+
+./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+    main()          ^
+
+./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+from example_interfaces.msg import String
+^
+
+./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+class RobotNewsStation(Node):
+^
+
+./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+def main(args=None):
+^
+
+./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+if __name__ == '__main__':
+^
+
+./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+    main()          ^
+
+./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+from example_interfaces.msg import String
+^
+
+./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+    def __init__(self):
+^
+
+./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    main()          ^
+
+3     CNL100 Class definition does not have a new line.
+3     E302 expected 2 blank lines, found 1
+1     E305 expected 2 blank lines after class or function definition, found 1
+2     I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+3     W292 no newline at end of file
+
+8 files checked
+12 errors
+
+'C'-type errors: 3
+'E'-type errors: 4
+'I'-type errors: 2
+'W'-type errors: 3
+
+Checked files:
+
+* ./setup.py
+* ./my_py_pkg/smartphone.py
+* ./my_py_pkg/robot_news_station.py
+* ./my_py_pkg/__init__.py
+* ./my_py_pkg/my_first_node.py
+* ./test/test_flake8.py
+* ./test/test_pep257.py
+* ./test/test_copyright.py
+------ generated xml file: /home/gengo/ros2_ws/build/my_py_pkg/pytest.xml ------
+=========================== short test summary info ============================
+FAILED test/test_flake8.py::test_flake8 - AssertionError: Found 12 code style...
+==================== 1 failed, 1 passed, 1 skipped in 0.21s ====================
+Finished <<< my_py_pkg [0.78s]	[ with test failures ]
+1: ../../src/amr_simulation/tests/test_generation.py ................       [100%]
+1: 
+1: - generated xml file: /home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml -
+1: ============================== 16 passed in 0.54s ==============================
+1: -- run_test.py: return code 0
+1: -- run_test.py: verify result file '/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml'
+1/1 Test #1: warehouse_generation .............   Passed    0.96 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+pytest    =   0.96 sec*proc (1 test)
+
+Total Test time (real) =   0.96 sec
+Finished <<< amr_simulation [0.98s]
+
+Summary: 4 packages finished [1.32s]
+  1 package had test failures: my_py_pkg
+build/my_py_pkg/pytest.xml: 3 tests, 0 errors, 1 failure, 1 skipped
+- my_py_pkg.test.test_flake8 test_flake8
+  <<< failure message
+    AssertionError: Found 12 code style errors / warnings:
+      ./my_py_pkg/my_first_node.py:8:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/my_first_node.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/my_first_node.py:28:11: W292 no newline at end of file
+      ./my_py_pkg/robot_news_station.py:4:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/robot_news_station.py:6:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:7:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/robot_news_station.py:19:1: E302 expected 2 blank lines, found 1
+      ./my_py_pkg/robot_news_station.py:26:1: E305 expected 2 blank lines after class or function definition, found 1
+      ./my_py_pkg/robot_news_station.py:27:11: W292 no newline at end of file
+      ./my_py_pkg/smartphone.py:5:1: I100 Import statements are in the wrong order. 'from example_interfaces.msg import String' should be before 'from rclpy.node import Node'
+      ./my_py_pkg/smartphone.py:9:1: CNL100 Class definition does not have a new line.
+      ./my_py_pkg/smartphone.py:34:11: W292 no newline at end of file
+    assert 1 == 0
+  >>>
+
+Summary: 20 tests, 0 errors, 1 failure, 1 skipped
+Workspace contains test failures; see workspace_test_results.txt (baseline: my_py_pkg flake8).
+Summary: 17 tests, 0 errors, 0 failures, 0 skipped
+ORIGINAL AMR REGRESSION PASSED
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: straight motion in main corridor
+PASS: odometry agrees with ground truth translation
+PASS: TwistStamped timeout stops AMR
+PASS: in-place turn
+PASS: curved motion
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: passes through rack aisle into main corridor
+PASS: rack corridor traversal stays centred
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: pillar LiDAR distance 0.778 m (expected 0.785)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: wall LiDAR distance 1.260 m (expected 1.260)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: wall physical contact with AMR reported by Gazebo
+PASS: wall prevents AMR crossing perimeter
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: rack LiDAR distance 1.060 m (expected 1.060)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: rack collision prevents penetration
+PASS: rack blocks physical displacement
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: loaded_pallet_boxes LiDAR distance 1.120 m (expected 1.120)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: depth metric float encoding
+PASS: RGB-D measures logistics load
+PASS: point cloud and depth agree
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: human legs detected by GPU LiDAR
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: human_03 physical contact with AMR reported by Gazebo
+PASS: human collision prevents traversal
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: normal
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: human_01 crosses main AMR route y=0
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: person_crossing
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: temporary loaded pallet detected in aisle
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: aisle pallet collision prevents penetration
+PASS: aisle pallet blocks physical displacement
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: AMR passes remaining width beside aisle pallet
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: obstacle_in_aisle
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: barrier detected across blocked aisle
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: barrier physical contact with AMR reported by Gazebo
+PASS: barrier physically blocks corridor
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: corridor_blocked
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: human_01 crosses main AMR route y=0
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: person_crossing
+PHYSICAL HUMAN REPEATABILITY PASSED: {'human_01': {'max_position_difference_m': 0.0003910177671049982, 'mean_position_difference_m': 9.270148771006663e-05, 'compared_sim_seconds': 23.273, 'samples': 93}, 'human_02': {'max_position_difference_m': 0.0011233640001426792, 'mean_position_difference_m': 9.255582596335332e-05, 'compared_sim_seconds': 23.273, 'samples': 93}}
+GUI sample colours: 1 size: 1400 900
+GUI sample colours: 1 size: 1400 900
+GUI sample colours: 1 size: 1400 900
+GUI sample colours: 871 size: 1400 900
+WAREHOUSE GUI PASSED
+REPORT.md written from matching successful evidence
+Warehouse build and acceptance passed (runtime=true); workspace results recorded separately.

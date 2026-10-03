@@ -1,0 +1,944 @@
+{
+  "schema_version": 1,
+  "world_name": "warehouse",
+  "seed": 42,
+  "coordinates": {
+    "frame": "world",
+    "origin": "centre of interior floor, z=0 at finished floor",
+    "units": "metres_radians",
+    "x": "east",
+    "y": "north",
+    "z": "up"
+  },
+  "building": {
+    "length": 30.0,
+    "width": 20.0,
+    "height": 5.0,
+    "wall_thickness": 0.25,
+    "floor_thickness": 0.2,
+    "apron": 2.0,
+    "doors": [
+      {
+        "id": "receiving_door",
+        "wall": "west",
+        "centre": 0.0,
+        "width": 4.0,
+        "height": 3.6
+      },
+      {
+        "id": "dispatch_door",
+        "wall": "east",
+        "centre": 0.0,
+        "width": 4.0,
+        "height": 3.6
+      }
+    ],
+    "pillars": {
+      "size": [
+        0.35,
+        0.35
+      ],
+      "positions": [
+        [
+          -14.7,
+          -9.7
+        ],
+        [
+          -14.7,
+          -3.0
+        ],
+        [
+          -14.7,
+          3.0
+        ],
+        [
+          -14.7,
+          9.7
+        ],
+        [
+          0.0,
+          -9.7
+        ],
+        [
+          0.0,
+          9.7
+        ],
+        [
+          14.7,
+          -9.7
+        ],
+        [
+          14.7,
+          -3.0
+        ],
+        [
+          14.7,
+          3.0
+        ],
+        [
+          14.7,
+          9.7
+        ]
+      ]
+    },
+    "roof_beams": {
+      "x": [
+        -10.0,
+        0.0,
+        10.0
+      ],
+      "width": 0.18,
+      "height": 0.24
+    }
+  },
+  "navigation": {
+    "lateral_clearance": 0.3,
+    "inter_robot_clearance": 0.3,
+    "aisles": [
+      {
+        "id": "main_cross_aisle",
+        "centre": [
+          0,
+          0
+        ],
+        "size": [
+          30,
+          4
+        ],
+        "capacity": 3
+      },
+      {
+        "id": "north_cross_aisle",
+        "centre": [
+          0,
+          8.5
+        ],
+        "size": [
+          20,
+          3
+        ],
+        "capacity": 2
+      },
+      {
+        "id": "south_cross_aisle",
+        "centre": [
+          0,
+          -8.5
+        ],
+        "size": [
+          20,
+          3
+        ],
+        "capacity": 2
+      },
+      {
+        "id": "aisle_01",
+        "centre": [
+          -4.5,
+          0
+        ],
+        "size": [
+          3,
+          14
+        ],
+        "capacity": 2
+      },
+      {
+        "id": "aisle_02",
+        "centre": [
+          -0.3,
+          0
+        ],
+        "size": [
+          3,
+          14
+        ],
+        "capacity": 2
+      },
+      {
+        "id": "aisle_03",
+        "centre": [
+          3.9,
+          0
+        ],
+        "size": [
+          3,
+          14
+        ],
+        "capacity": 2
+      },
+      {
+        "id": "west_service_aisle",
+        "centre": [
+          -8.7,
+          0
+        ],
+        "size": [
+          3,
+          14
+        ],
+        "capacity": 2
+      },
+      {
+        "id": "east_service_aisle",
+        "centre": [
+          8.1,
+          0
+        ],
+        "size": [
+          3,
+          14
+        ],
+        "capacity": 2
+      }
+    ],
+    "open_areas": [
+      {
+        "id": "receiving",
+        "centre": [
+          -12,
+          0
+        ],
+        "size": [
+          5,
+          4
+        ]
+      },
+      {
+        "id": "dispatch",
+        "centre": [
+          12,
+          0
+        ],
+        "size": [
+          5,
+          4
+        ]
+      }
+    ],
+    "restricted_zones": [
+      {
+        "id": "electrical_clearance",
+        "centre": [
+          13.7,
+          8.5
+        ],
+        "size": [
+          1.4,
+          2
+        ],
+        "enabled": false
+      }
+    ],
+    "temporary_blocked_zones": [
+      {
+        "id": "aisle_01_block",
+        "centre": [
+          -4.5,
+          -4.5
+        ],
+        "size": [
+          3,
+          0.6
+        ],
+        "scenario": "corridor_blocked"
+      }
+    ]
+  },
+  "racks": {
+    "size": [
+      1.2,
+      2.5,
+      3.2
+    ],
+    "post": 0.08,
+    "beam_height": 0.12,
+    "shelf_thickness": 0.06,
+    "shelf_levels": [
+      0.12,
+      1.25,
+      2.4
+    ],
+    "collision_rail_height": 0.32,
+    "row_x": [
+      -6.6,
+      -2.4,
+      1.8,
+      6.0
+    ],
+    "bay_y": [
+      -5.75,
+      -3.25,
+      3.25,
+      5.75
+    ],
+    "loaded_levels": [
+      0,
+      1
+    ],
+    "pallets_per_level": 1
+  },
+  "pallet": {
+    "size": [
+      1.0,
+      1.15,
+      0.15
+    ],
+    "slat_count": 5,
+    "slat_thickness": 0.025,
+    "runner_width": 0.12
+  },
+  "box": {
+    "size": [
+      0.44,
+      0.48,
+      0.45
+    ],
+    "tape_width": 0.04
+  },
+  "load": {
+    "columns": 2,
+    "rows": 1,
+    "layers": 1,
+    "gap": 0.02
+  },
+  "floor_loads": [
+    {
+      "id": "pickup_load_01",
+      "pose": [
+        -13.1,
+        -5,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "pickup_load_02",
+      "pose": [
+        -13.1,
+        5,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "dropoff_load_01",
+      "pose": [
+        13.1,
+        -5,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "dropoff_load_02",
+      "pose": [
+        13.1,
+        5,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "staging_load_01",
+      "pose": [
+        -13.4,
+        -8.3,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "staging_load_02",
+      "pose": [
+        -11.8,
+        -8.3,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "stations": [
+    {
+      "id": "pickup_station_01",
+      "label": "PICKUP 01",
+      "pose": [
+        -10.9,
+        -5,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ],
+      "size": [
+        2.1,
+        2.4
+      ],
+      "colour": "pickup"
+    },
+    {
+      "id": "pickup_station_02",
+      "label": "PICKUP 02",
+      "pose": [
+        -10.9,
+        5,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ],
+      "size": [
+        2.1,
+        2.4
+      ],
+      "colour": "pickup"
+    },
+    {
+      "id": "dropoff_station_01",
+      "label": "DROPOFF 01",
+      "pose": [
+        10.9,
+        -5,
+        0,
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2.1,
+        2.4
+      ],
+      "colour": "dropoff"
+    },
+    {
+      "id": "dropoff_station_02",
+      "label": "DROPOFF 02",
+      "pose": [
+        10.9,
+        5,
+        0,
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2.1,
+        2.4
+      ],
+      "colour": "dropoff"
+    },
+    {
+      "id": "charging_station",
+      "label": "CHARGING",
+      "pose": [
+        11.7,
+        8.2,
+        0,
+        0,
+        0,
+        1.5707963267948966
+      ],
+      "size": [
+        2.6,
+        2.2
+      ],
+      "colour": "charging"
+    },
+    {
+      "id": "staging_area",
+      "label": "STAGING",
+      "pose": [
+        -12.4,
+        -8.3,
+        0,
+        0,
+        0,
+        0
+      ],
+      "size": [
+        4.3,
+        2.6
+      ],
+      "colour": "staging",
+      "goal_pose": [
+        -10.2,
+        -7.3,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ]
+    }
+  ],
+  "charger": {
+    "pose": [
+      11.7,
+      9.55,
+      0.45,
+      0,
+      0,
+      0
+    ],
+    "size": [
+      0.9,
+      0.35,
+      0.9
+    ]
+  },
+  "obstacles": {
+    "aisle_load": {
+      "id": "aisle_pallet",
+      "pose": [
+        -5.35,
+        -4.5,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "barrier": {
+      "id": "corridor_barrier",
+      "pose": [
+        -4.5,
+        -4.5,
+        0.6,
+        0,
+        0,
+        0
+      ],
+      "size": [
+        3.0,
+        0.6,
+        1.2
+      ],
+      "stripe_count": 10
+    }
+  },
+  "human_model": {
+    "height": 1.75,
+    "radius": 0.28,
+    "mass": 80,
+    "com_height": 0.25,
+    "inertia": [
+      12,
+      12,
+      3.2
+    ],
+    "friction": 0.05,
+    "leg_height_fraction": 0.46,
+    "head_radius_fraction": 0.08,
+    "force": 46.0,
+    "torque": 15.0,
+    "range_tolerance": 0.3,
+    "bearing_tolerance_degrees": 5.0,
+    "contact_rate": 20
+  },
+  "humans": [
+    {
+      "id": "human_01",
+      "pose": [
+        -8.7,
+        3.0,
+        0,
+        0,
+        0,
+        1.5707963267948966
+      ],
+      "route": [
+        [
+          -8.7,
+          6
+        ],
+        [
+          -8.7,
+          3
+        ]
+      ],
+      "moving": true,
+      "loop": true
+    },
+    {
+      "id": "human_02",
+      "pose": [
+        3.9,
+        -5.5,
+        0,
+        0,
+        0,
+        1.5707963267948966
+      ],
+      "route": [
+        [
+          3.9,
+          5.5
+        ],
+        [
+          3.9,
+          -5.5
+        ]
+      ],
+      "moving": true,
+      "loop": true
+    },
+    {
+      "id": "human_03",
+      "pose": [
+        11.5,
+        0,
+        0,
+        0,
+        0,
+        3.141592653589793
+      ],
+      "route": [],
+      "moving": false,
+      "loop": false
+    }
+  ],
+  "spawns": [
+    {
+      "id": "amr_01_spawn",
+      "active": true,
+      "pose": [
+        -11,
+        0,
+        0.015,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "amr_02_spawn",
+      "active": false,
+      "pose": [
+        -11,
+        1.15,
+        0.015,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "amr_03_spawn",
+      "active": false,
+      "pose": [
+        -11,
+        -1.15,
+        0.015,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "camera": {
+    "id": "warehouse_camera_01",
+    "pose": [
+      -10,
+      -8.5,
+      4.4,
+      0,
+      0.53,
+      0.85
+    ],
+    "width": 640,
+    "height": 480,
+    "horizontal_fov": 1.4,
+    "rate": 10,
+    "near": 0.1,
+    "far": 40,
+    "frame": "warehouse_camera_01_link",
+    "optical_frame": "warehouse_camera_01_optical_frame",
+    "topic": "/warehouse/camera_01",
+    "housing_size": [
+      0.24,
+      0.16,
+      0.16
+    ],
+    "mast_radius": 0.055
+  },
+  "lighting": {
+    "ambient": [
+      0.42,
+      0.43,
+      0.45,
+      1
+    ],
+    "background": [
+      0.17,
+      0.21,
+      0.26,
+      1
+    ],
+    "sun_diffuse": [
+      0.65,
+      0.63,
+      0.59,
+      1
+    ],
+    "sun_direction": [
+      -0.4,
+      0.2,
+      -1
+    ],
+    "overhead_positions": [
+      [
+        -10,
+        -4,
+        4.65
+      ],
+      [
+        0,
+        -4,
+        4.65
+      ],
+      [
+        10,
+        -4,
+        4.65
+      ],
+      [
+        -10,
+        4,
+        4.65
+      ],
+      [
+        0,
+        4,
+        4.65
+      ],
+      [
+        10,
+        4,
+        4.65
+      ]
+    ],
+    "overhead_diffuse": [
+      0.55,
+      0.57,
+      0.6,
+      1
+    ],
+    "range": 11,
+    "attenuation": [
+      1,
+      0.035,
+      0.012
+    ],
+    "fixture_size": [
+      1.1,
+      0.22,
+      0.08
+    ],
+    "shadows": true
+  },
+  "appearance": {
+    "floor": [
+      0.44,
+      0.46,
+      0.47,
+      1
+    ],
+    "wall": [
+      0.76,
+      0.79,
+      0.81,
+      1
+    ],
+    "steel": [
+      0.17,
+      0.23,
+      0.29,
+      1
+    ],
+    "rack_post": [
+      0.07,
+      0.24,
+      0.5,
+      1
+    ],
+    "rack_beam": [
+      0.94,
+      0.34,
+      0.06,
+      1
+    ],
+    "wood": [
+      0.5,
+      0.32,
+      0.14,
+      1
+    ],
+    "cardboard": [
+      0.65,
+      0.47,
+      0.27,
+      1
+    ],
+    "tape": [
+      0.86,
+      0.73,
+      0.47,
+      1
+    ],
+    "yellow": [
+      1,
+      0.76,
+      0.08,
+      1
+    ],
+    "pickup": [
+      0.05,
+      0.55,
+      0.4,
+      1
+    ],
+    "dropoff": [
+      0.08,
+      0.38,
+      0.75,
+      1
+    ],
+    "charging": [
+      0.45,
+      0.2,
+      0.65,
+      1
+    ],
+    "staging": [
+      0.75,
+      0.48,
+      0.06,
+      1
+    ],
+    "skin": [
+      0.62,
+      0.4,
+      0.26,
+      1
+    ],
+    "trousers": [
+      0.1,
+      0.15,
+      0.22,
+      1
+    ],
+    "white": [
+      0.91,
+      0.93,
+      0.94,
+      1
+    ],
+    "marking_width": 0.05,
+    "marking_height": 0.003,
+    "sign_size": [
+      1.9,
+      0.4
+    ],
+    "sign_pixels": [
+      512,
+      128
+    ],
+    "sign_font_size": 49,
+    "font": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+  },
+  "simulation": {
+    "max_step_size": 0.001,
+    "real_time_factor": 1,
+    "gravity": [
+      0,
+      0,
+      -9.81
+    ]
+  },
+  "gui": {
+    "camera_pose": [
+      0,
+      -12,
+      27,
+      0,
+      1.1525719972156676,
+      1.5707963267948966
+    ],
+    "width": 1600,
+    "height": 1000
+  },
+  "validation": {
+    "straight_seconds": 4,
+    "straight_speed": 0.3,
+    "turn_seconds": 2.5,
+    "turn_speed": 0.4,
+    "curve_seconds": 3,
+    "curve_speed": 0.25,
+    "curve_angular": 0.2,
+    "aisle_start": [
+      -4.5,
+      -6.5,
+      0.015,
+      0,
+      0,
+      1.5707963267948966
+    ],
+    "aisle_seconds": 12,
+    "aisle_speed": 0.45,
+    "wall_probe": [
+      2.0,
+      -8.3,
+      0.015,
+      0,
+      0,
+      -1.5707963267948966
+    ],
+    "rack_probe": [
+      -4.5,
+      -5.75,
+      0.015,
+      0,
+      0,
+      3.141592653589793
+    ],
+    "load_probe": [
+      -13.33,
+      -6.8,
+      0.015,
+      0,
+      0,
+      1.5707963267948966
+    ],
+    "human_probe": [
+      9.8,
+      0.12,
+      0.015,
+      0,
+      0,
+      0
+    ],
+    "contact_speed": 0.1,
+    "contact_seconds": 12,
+    "route_observation_seconds": 25,
+    "pillar_probe": [
+      0,
+      -8.3,
+      0.015,
+      0,
+      0,
+      -1.5707963267948966
+    ],
+    "aisle_pass_x": -4.2
+  }
+}

@@ -1,0 +1,1 @@
+{"name": "person_crossing", "description": "human_01 repeatedly crosses the receiving/main intersection", "aisle_obstacle": false, "corridor_blocked": false, "human_overrides": {"human_01": {"pose": [-8.7, -2.5, 0, 0, 0, 1.5707963267948966], "route": [[-8.7, 2.5], [-8.7, -2.5]]}}}

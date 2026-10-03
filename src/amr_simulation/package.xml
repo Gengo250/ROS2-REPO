@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>amr_simulation</name>
+  <version>0.1.0</version>
+  <description>Deterministic industrial warehouse for the existing Jazzy/Harmonic AMR.</description>
+  <maintainer email="gengo@example.com">gengo</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>python3-pil</build_depend>
+  <build_depend>fonts-dejavu-core</build_depend>
+  <exec_depend>amr_description</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>python3-pil</exec_depend>
+  <exec_depend>fonts-dejavu-core</exec_depend>
+  <exec_depend>rosgraph_msgs</exec_depend>
+  <test_depend>gz_transport_vendor</test_depend>
+  <test_depend>gz_msgs_vendor</test_depend>
+  <test_depend>ament_cmake_pytest</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>python3-pyqt5</test_depend>
+  <test_depend>python3-psutil</test_depend>
+  <test_depend>xvfb</test_depend>
+  <test_depend>x11-utils</test_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>
