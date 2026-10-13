@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_cone">
+    <static>true</static>
+    <link name="body">
+      <visual name="base_visual">
+        <pose>0 0 0.03 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.42 0.42 0.06</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.15 0.22 1</ambient>
+          <diffuse>0.1 0.15 0.22 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="base_collision">
+        <pose>0 0 0.03 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.42 0.42 0.06</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="ring_0_visual">
+        <pose>0 0 0.122 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.17</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.94 0.34 0.06 1</ambient>
+          <diffuse>0.94 0.34 0.06 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="ring_0_collision">
+        <pose>0 0 0.122 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.17</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="ring_1_visual">
+        <pose>0 0 0.246 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.142</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.91 0.93 0.94 1</ambient>
+          <diffuse>0.91 0.93 0.94 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="ring_1_collision">
+        <pose>0 0 0.246 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.142</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="ring_2_visual">
+        <pose>0 0 0.37 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.114</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.94 0.34 0.06 1</ambient>
+          <diffuse>0.94 0.34 0.06 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="ring_2_collision">
+        <pose>0 0 0.37 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.114</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="ring_3_visual">
+        <pose>0 0 0.494 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.086</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.91 0.93 0.94 1</ambient>
+          <diffuse>0.91 0.93 0.94 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="ring_3_collision">
+        <pose>0 0 0.494 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.086</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="ring_4_visual">
+        <pose>0 0 0.618 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.058</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.94 0.34 0.06 1</ambient>
+          <diffuse>0.94 0.34 0.06 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="ring_4_collision">
+        <pose>0 0 0.618 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.058</radius>
+            <length>0.124</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

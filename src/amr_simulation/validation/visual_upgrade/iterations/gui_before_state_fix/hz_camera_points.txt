@@ -1,0 +1,7 @@
+WARNING: topic [/camera/points] does not appear to be published yet
+average rate: 2.089
+	min: 0.189s max: 1.265s std dev: 0.39964s window: 5
+average rate: 2.009
+	min: 0.189s max: 1.265s std dev: 0.38686s window: 7
+average rate: 2.208
+	min: 0.189s max: 1.265s std dev: 0.33895s window: 10

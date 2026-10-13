@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_tool_cart">
+    <static>true</static>
+    <link name="body">
+      <visual name="cabinet_visual">
+        <pose>0 0 0.57 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.8 0.52 0.7</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.08 0.38 0.75 1</ambient>
+          <diffuse>0.08 0.38 0.75 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="cabinet_collision">
+        <pose>0 0 0.57 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.8 0.52 0.7</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="top_visual">
+        <pose>0 0 0.96 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.85 0.55 0.07</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="top_collision">
+        <pose>0 0 0.96 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.85 0.55 0.07</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="drawer_0.38_visual">
+        <pose>0 -0.271 0.38 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.7 0.02 0.13</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="handle_0.38_visual">
+        <pose>0 -0.29 0.38 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.28 0.025 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.91 0.93 0.94 1</ambient>
+          <diffuse>0.91 0.93 0.94 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="drawer_0.55_visual">
+        <pose>0 -0.271 0.55 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.7 0.02 0.13</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="handle_0.55_visual">
+        <pose>0 -0.29 0.55 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.28 0.025 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.91 0.93 0.94 1</ambient>
+          <diffuse>0.91 0.93 0.94 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="drawer_0.72_visual">
+        <pose>0 -0.271 0.72 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.7 0.02 0.13</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="handle_0.72_visual">
+        <pose>0 -0.29 0.72 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.28 0.025 0.025</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.91 0.93 0.94 1</ambient>
+          <diffuse>0.91 0.93 0.94 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="caster_-0.3_-0.19_visual">
+        <pose>-0.3 -0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.15 0.22 1</ambient>
+          <diffuse>0.1 0.15 0.22 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="caster_-0.3_-0.19_collision">
+        <pose>-0.3 -0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="caster_-0.3_0.19_visual">
+        <pose>-0.3 0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.15 0.22 1</ambient>
+          <diffuse>0.1 0.15 0.22 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="caster_-0.3_0.19_collision">
+        <pose>-0.3 0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="caster_0.3_-0.19_visual">
+        <pose>0.3 -0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.15 0.22 1</ambient>
+          <diffuse>0.1 0.15 0.22 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="caster_0.3_-0.19_collision">
+        <pose>0.3 -0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="caster_0.3_0.19_visual">
+        <pose>0.3 0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.15 0.22 1</ambient>
+          <diffuse>0.1 0.15 0.22 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="caster_0.3_0.19_collision">
+        <pose>0.3 0.19 0.12 1.57079632679 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.07</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

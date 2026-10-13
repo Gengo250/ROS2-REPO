@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "manifest_sha256": "49badd1df24817b793f52a620cafbda4508d3834c9c16496d82780bb7a21e473",
+  "method": "Two independent worlds, linear interpolation at common simulation times; no person contact",
+  "tolerance_m": 0.05,
+  "humans": {
+    "human_01": {
+      "max_position_difference_m": 0.0033895760143610705,
+      "mean_position_difference_m": 0.00022461526943902573,
+      "compared_sim_seconds": 23.192,
+      "samples": 92
+    },
+    "human_02": {
+      "max_position_difference_m": 0.005006642595635812,
+      "mean_position_difference_m": 0.00023082699638263368,
+      "compared_sim_seconds": 23.192,
+      "samples": 92
+    }
+  }
+}

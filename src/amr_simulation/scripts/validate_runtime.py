@@ -285,6 +285,18 @@ class Acceptance:
             human_x = self.c['humans'][2]['pose'][0]
             self.require(after['position']['x']<human_x-self.c['human_model']['radius']-.35,'human collision prevents traversal')
             self.metrics['human_stopped_gap_m'] = human_x-after['position']['x']
+            cart = next(o for o in self.c['industrial_objects'] if o['id']=='receiving_cart')
+            cx,cy = cart['pose'][:2]
+            sx = self.c['industrial_assets'][cart['kind']]['size'][0]
+            self.set_pose([cx+1.5,cy,.015,0,0,math.pi])
+            scan = self.received['/scan']; centre = scan.ranges[len(scan.ranges)//2]
+            self.require(abs(centre-(1.5-sx/2-lidar_x))<.14,'industrial cart detected by LiDAR')
+            before = self.robot()
+            self.drive(.1,0,9); self.drive(0,0,.8)
+            self.require(self.robot()['position']['x']>cx+sx/2+self.amr['chassis_length']/2-.05,
+                         'industrial cart physically blocks AMR')
+            self.metrics['industrial_cart']={'scan_m':centre,'displacement_m':distance(before,self.robot())}
+            self.capture('/camera/image_raw','industrial_cart_rgb')
         elif self.scenario in ('obstacle_in_aisle','corridor_blocked'):
             pose = list(self.c['validation']['aisle_start'])
             self.set_pose(pose)

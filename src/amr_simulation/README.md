@@ -3,6 +3,24 @@
 ROS 2 Jazzy + Gazebo Harmonic (Sim 8), consumindo o AMR de `amr_description`.
 Não configura SLAM, localização, Nav2 ou gerenciamento de frota.
 
+Para abrir os cenários, controlar o AMR, inspecionar sensores e repetir todas as
+validações, consulte [COMANDOS_TESTE.md](COMANDOS_TESTE.md).
+
+Para abrir as imagens das câmeras, mantenha um cenário em execução e prepare
+cada terminal conforme a seção 1 do guia de testes. Execute cada comando em
+um terminal separado:
+
+```bash
+# Câmera fixa do galpão
+ros2 run rqt_image_view rqt_image_view /warehouse/camera_01/image_raw
+# Câmera RGB do AMR
+ros2 run rqt_image_view rqt_image_view /camera/image_raw
+# Imagem de profundidade do AMR
+ros2 run rqt_image_view rqt_image_view /camera/depth/image_raw
+```
+
+Veja os detalhes em [Abrir as câmeras](COMANDOS_TESTE.md#abrir-as-câmeras).
+
 A fonte da verdade é `config/warehouse_layout.json`, combinada com
 `config/scenarios/*.json` e as dimensões existentes de `amr_description`.
 O gerador produz modelos SDF locais, quatro composições leves de mundo, bridge,
@@ -106,14 +124,26 @@ Na etapa de SLAM será necessário registrar o frame do mapa em relação ao wor
 este pacote não publica uma transformação artificial `world → map/odom`.
 Zonas restritas e bloqueios temporários são metadados, sem implementação Nav2.
 
-As três pessoas são manequins físicos de primitivas SDF, com pernas visíveis
-no plano do LiDAR (z≈0,213 m) e colisão cilíndrica conservadora contínua.
-`human_01` e `human_02` usam o sistema nativo `TrajectoryFollower` por forças e
- torques; `human_03` é estática junto à expedição. Rotas, força, torque, atrito,
-inércia e tolerâncias são configuráveis. O movimento responde a contatos e não
-segue um cronograma rígido quando bloqueado; não há animação de marcha ou
-comportamento social. Reiniciar o cenário restaura suas condições iniciais.
-Actors não são usados porque não recebem forças de contato no Harmonic.
+As três pessoas mantêm corpos físicos de primitivas SDF e colisão cilíndrica
+contínua. `human_01` e `human_02` usam o plugin local `HumanSystem` do mesmo
+Gazebo: servo de velocidade por forças/torques, aceleração limitada, frenagem
+nos waypoints e curvas graduais. `human_03` continua estática na expedição.
+A velocidade desejada em m/s fica em `humans[].speed` (ou no override do
+cenário); ganhos e limites ficam em `human_model.motion`. As pernas e braços
+visuais alternam conforme o deslocamento físico real, com oscilação do tronco.
+Não existem comandos de pose/velocidade para forçar o corpo a atravessar contatos.
+A marcha para quando o corpo para. O envelope de colisão permanece conservador.
+
+A animação usa poses locais de visuais, atualizadas no servidor e transmitidas
+pelo SceneBroadcaster à GUI; não adiciona joints físicos nem assets externos.
+Ela também chega ao renderer Ogre2 dos sensores. Actors isolados não recebem
+forças de contato no Harmonic; a avaliação das alternativas e as evidências
+estão em [validation/visual_upgrade/REPORT.md](validation/visual_upgrade/REPORT.md).
+
+`industrial_assets` define peças de primitivas reutilizáveis; `industrial_objects`
+posiciona carrinhos, cones, lixeiras, caixas e empilhadeira estacionada. Objetos
+adicionais de um cenário podem ficar em `config/scenarios/*.json`. O gerador
+rejeita equipamentos permanentes sobre corredores, rotas humanas ou goals.
 
 `normal` mantém os corredores operacionais; `person_crossing` muda a rota de
 `human_01` para cruzar o eixo principal; `obstacle_in_aisle` coloca carga parcial
@@ -125,8 +155,8 @@ O pallet vazio tem 0,15 m, abaixo do feixe LiDAR: suas caixas/cargas e pallets
  elevados nos racks são detectáveis; RGB-D também vê pallets baixos. Isso é uma
 limitação geométrica real de um scanner 2D baixo, não ausência de colisão.
 O telhado é aberto para inspeção; paredes completas, pilares e vigas superiores
-permanecem presentes. Consulte [validation/REPORT.md](validation/REPORT.md)
-para medições, imagens, limitações e a falha preexistente de estilo em `my_py_pkg`.
+permanecem presentes. Consulte [validation/visual_upgrade/REPORT.md](validation/visual_upgrade/REPORT.md)
+para medições, imagens, limitações e resultados atualizados dos testes.
 
 
 Testes individuais (depois de `source install/setup.bash`):
@@ -143,8 +173,8 @@ colcon test --event-handlers console_direct+
 colcon test-result --verbose
 ```
 
-A suíte de `my_py_pkg` já apresentava uma falha flake8 antes deste trabalho;
-ela é reportada separadamente, sem alterar os exemplos. O teste de GUI abre o
+A falha flake8 preexistente em `my_py_pkg` foi corrigida apenas com ajustes de
+formatação; a suíte completa passou com um teste ignorado. O teste de GUI abre o
 Gazebo real em um display Xvfb isolado, captura a janela e encerra apenas seus
 próprios processos, sem automação de mouse/teclado.
 
@@ -152,7 +182,7 @@ Os testes de contato usam mensagens nativas Gazebo `/warehouse/contacts/wall`,
 `/warehouse/contacts/human_03` e `/warehouse/contacts/barrier`. No Sim 8, o tópico
 é configurado em `sensor/contact/topic`. Não são bridges ROS nem lógica de
 missão. Os reposicionamentos usados para isolar medições pertencem apenas aos
-testes; as pessoas se movem fisicamente pelo `TrajectoryFollower` nativo.
+testes; as pessoas se movem fisicamente pelo controlador `HumanSystem` local.
 As medições de deslocamento usam também ground truth, pois odometria de rodas
 não comprova deslocamento durante patinagem contra um obstáculo.
 

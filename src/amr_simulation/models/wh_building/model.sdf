@@ -1022,6 +1022,76 @@
       <name>staging_load_02</name>
       <pose>-11.8 -8.3 0 0 0 0</pose>
     </include>
+    <include>
+      <uri>model://wh_loaded_pallet</uri>
+      <name>dispatch_buffer_pallet</name>
+      <pose>13.4 -9 0 0 0 0.13</pose>
+    </include>
+    <include>
+      <uri>model://wh_loaded_pallet</uri>
+      <name>north_wall_pallet</name>
+      <pose>-11.2 7.4 0 0 0 -0.12</pose>
+    </include>
+    <include>
+      <uri>model://wh_parked_forklift</uri>
+      <name>receiving_forklift</name>
+      <pose>-12.7 2.9 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_industrial_cart</uri>
+      <name>receiving_cart</name>
+      <pose>-13.3 -2.9 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_stacked_crates</uri>
+      <name>dispatch_crates</name>
+      <pose>13.4 -7.6 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_industrial_cart</uri>
+      <name>dispatch_cart</name>
+      <pose>13.4 2.9 0 0 0 3.14159265359</pose>
+    </include>
+    <include>
+      <uri>model://wh_tool_cart</uri>
+      <name>charging_tools</name>
+      <pose>13.6 7.1 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_industrial_bin</uri>
+      <name>charging_bin</name>
+      <pose>14.05 8.8 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_industrial_bin</uri>
+      <name>receiving_bin</name>
+      <pose>-14 8.8 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_stacked_crates</uri>
+      <name>north_buffer_crates</name>
+      <pose>-12.7 8.7 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_industrial_cart</uri>
+      <name>north_buffer_cart</name>
+      <pose>-10.9 8.9 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_tool_cart</uri>
+      <name>staging_tools</name>
+      <pose>-14.1 -6.8 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_cone</uri>
+      <name>receiving_cone</name>
+      <pose>-10.9 2.5 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_cone</uri>
+      <name>dispatch_cone</name>
+      <pose>10.8 2.5 0 0 0 0</pose>
+    </include>
     <model name="pickup_station_01">
       <static>true</static>
       <pose>-10.9 -5 0 0 0 3.14159265359</pose>

@@ -1,11 +1,12 @@
 #! /usr/bin/env python3
 
+from example_interfaces.msg import String
 import rclpy
 from rclpy.node import Node
-from example_interfaces.msg import String
 
 
 class Smartphone(Node):
+
     def __init__(self):
         super().__init__('smartphone')
 

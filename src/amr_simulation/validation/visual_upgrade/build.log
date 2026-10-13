@@ -1,0 +1,256 @@
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+[ 33%] Built target smartphone
+[ 66%] Built target robot_news_station
+[100%] Built target cpp_node
+-- Install configuration: ""
+-- Execute custom install script
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/lib/my_cpp_pkg/cpp_node
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/lib/my_cpp_pkg/robot_news_station
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/lib/my_cpp_pkg/smartphone
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/ament_index/resource_index/package_run_dependencies/my_cpp_pkg
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/ament_index/resource_index/parent_prefix_path/my_cpp_pkg
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/environment/path.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/environment/path.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/local_setup.bash
+-- Install configuration: ""
+-- Execute custom install script
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/amr_dimensions.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/bridge.yaml
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/gazebo_gui.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/joint_limits.yaml
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/amr.urdf.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/collision/chassis_collision.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/collision/platform_collision.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/collision/wheels_collision.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/components/casters.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/components/chassis.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/components/platform.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/components/wheels.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/dimensions.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/gazebo/gazebo.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/gazebo/ros2_control.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/gazebo/sensors_gazebo.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/inertials.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/sensors/camera.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/sensors/imu.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/sensors/lidar.xacro
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/bumper_front.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/bumper_rear.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/camera_housing.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/caster.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/chassis.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/lidar_housing.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/platform.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/meshes/visual/wheel.stl
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/local_setup.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/local_setup.zsh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/local_setup.dsv
+-- Symlinking: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/package.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/launch/__pycache__/display.launch.cpython-312.pyc
+-- Symlinking: /home/gengo/ros2_ws/install/amr_description/share/amr_description/launch/__pycache__/sim.launch.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/ament_index/resource_index/packages/my_cpp_pkg
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/cmake/my_cpp_pkgConfig.cmake
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/cmake/my_cpp_pkgConfig-version.cmake
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/my_cpp_pkg/share/my_cpp_pkg/package.xml
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/launch/display.launch.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/launch/sim.launch.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/rviz/amr.rviz
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/worlds/warehouse_test.sdf
+Finished <<< my_cpp_pkg [0.53s]
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/amr_parameters.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/amr_parameters.cpython-313.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/smoke_test.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/validate_display.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/validate_gazebo_gui.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/validate_runtime.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/__pycache__/validate_urdf.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/amr_parameters.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/README.md
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/export_amr.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/export_amr.cpython-313.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/generate_amr.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/generate_amr.cpython-313.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/render_amr.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/test_rebuild.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/validate_amr.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/__pycache__/validate_amr.cpython-313.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/export_amr.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/generate_amr.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/render_amr.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/test_rebuild.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/blender/validate_amr.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/build_amr.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/smoke_test.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/validate_display.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/validate_gazebo_gui.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/validate_runtime.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/scripts/validate_urdf.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/ament_index/resource_index/package_run_dependencies/amr_description
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/ament_index/resource_index/parent_prefix_path/amr_description
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/environment/path.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/environment/path.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/local_setup.bash
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/local_setup.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/local_setup.zsh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/local_setup.dsv
+-- Symlinking: /home/gengo/ros2_ws/install/amr_description/share/amr_description/package.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/ament_index/resource_index/packages/amr_description
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/cmake/amr_descriptionConfig.cmake
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/cmake/amr_descriptionConfig-version.cmake
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_description/share/amr_description/package.xml
+Finished <<< amr_description [0.56s]
+Starting >>> amr_simulation
+[ 33%] Regenerating deterministic warehouse scenarios
+[100%] Built target warehouse_human_system
+{
+  "schema_version": 1,
+  "config_sha256": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71",
+  "source_sha256": {
+    "config/warehouse_layout.json": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71",
+    "config/scenarios/normal.json": "c47bc2258dc8c5b2098427ae8a144c9fe0275054996734c64d876deb2f5a60e9",
+    "config/scenarios/person_crossing.json": "7e951752e10ef3d3affe481a6cf89004cda4feb29937f09c61ede6b029cf1fea",
+    "config/scenarios/obstacle_in_aisle.json": "77b56870847320565036f0c61b369ca19724df0889bb91c05f45b8a319b70a5c",
+    "config/scenarios/corridor_blocked.json": "b9ba0ca19f3f4eee0639194ff5ca834a9fe0ed203921981f5ca5ee85e6c8e320"
+  },
+  "amr_config_sha256": "8766a42676c695a84993e09f9f6e3614062648cb3c6c2caa3a32f500c934069b",
+  "amr_dimensions": {
+    "chassis_length": 0.95,
+    "chassis_width": 0.7,
+    "chassis_height": 0.25
+  },
+  "turning_diameter_with_clearance": 1.7800423721205947,
+  "racks": 16,
+  "pallets_normal": 40,
+  "boxes_normal": 80,
+  "humans": 3
+}
+[100%] Built target generate_warehouse
+-- Install configuration: ""
+-- Execute custom install script
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/lib/libwarehouse_human_system.so
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/generated_manifest.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/scenarios/corridor_blocked.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/scenarios/normal.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/scenarios/obstacle_in_aisle.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/scenarios/person_crossing.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/station_poses.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_bridge.yaml
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_gui.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_gui_corridor_blocked.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_gui_normal.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_gui_obstacle_in_aisle.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_gui_person_crossing.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_layout.json
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/config/warehouse_layout.svg
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/launch/__pycache__/warehouse.launch.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/launch/warehouse.launch.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_barrier/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_barrier/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_box/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_box/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_building/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_building/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_cone/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_cone/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_industrial_bin/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_industrial_bin/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_industrial_cart/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_industrial_cart/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_loaded_pallet/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_loaded_pallet/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_pallet/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_pallet/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_parked_forklift/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_parked_forklift/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_rack/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_rack/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/charging_station.dae
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/charging_station.png
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/dropoff_station_01.dae
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/dropoff_station_01.png
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/dropoff_station_02.dae
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/dropoff_station_02.png
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/pickup_station_01.dae
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/pickup_station_01.png
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/pickup_station_02.dae
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/pickup_station_02.png
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/staging_area.dae
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_signs/meshes/staging_area.png
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_stacked_crates/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_stacked_crates/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_tool_cart/model.config
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/models/wh_tool_cart/model.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_corridor_blocked.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_normal.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_obstacle_in_aisle.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_person_crossing.sdf
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/generate_warehouse.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/render_layout.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/report_warehouse.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/run_acceptance.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/validate_amr_regression.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/validate_gui.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/validate_repeatability.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/validate_runtime.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/__pycache__/validate_warehouse.cpython-312.pyc
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/build_warehouse.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/generate_warehouse.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/measure_humans.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/render_layout.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/report_warehouse.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/run_acceptance.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_amr_regression.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_crossing_contact.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_gui.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_repeatability.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_runtime.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_scenario_gui.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/scripts/validate_warehouse.py
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/README.md
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/ament_index/resource_index/package_run_dependencies/amr_simulation
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/ament_index/resource_index/parent_prefix_path/amr_simulation
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/environment/path.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/environment/path.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/local_setup.bash
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/local_setup.sh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/local_setup.zsh
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/local_setup.dsv
+-- Symlinking: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/package.dsv
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/ament_index/resource_index/packages/amr_simulation
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/cmake/amr_simulationConfig.cmake
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/cmake/amr_simulationConfig-version.cmake
+-- Up-to-date symlink: /home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/package.xml
+Finished <<< amr_simulation [0.58s]
+running egg_info
+writing ../../build/my_py_pkg/my_py_pkg.egg-info/PKG-INFO
+writing dependency_links to ../../build/my_py_pkg/my_py_pkg.egg-info/dependency_links.txt
+writing entry points to ../../build/my_py_pkg/my_py_pkg.egg-info/entry_points.txt
+writing requirements to ../../build/my_py_pkg/my_py_pkg.egg-info/requires.txt
+writing top-level names to ../../build/my_py_pkg/my_py_pkg.egg-info/top_level.txt
+reading manifest file '../../build/my_py_pkg/my_py_pkg.egg-info/SOURCES.txt'
+writing manifest file '../../build/my_py_pkg/my_py_pkg.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/home/gengo/ros2_ws/install/my_py_pkg/lib/python3.12/site-packages/my_py_pkg-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/my_py_pkg/my_py_pkg.egg-info to /home/gengo/ros2_ws/install/my_py_pkg/lib/python3.12/site-packages/my_py_pkg-0.0.0-py3.12.egg-info
+running install_scripts
+Installing my_first_node script to /home/gengo/ros2_ws/install/my_py_pkg/lib/my_py_pkg
+Installing robot_news_station script to /home/gengo/ros2_ws/install/my_py_pkg/lib/my_py_pkg
+Installing smartphone script to /home/gengo/ros2_ws/install/my_py_pkg/lib/my_py_pkg
+writing list of installed files to '/home/gengo/ros2_ws/build/my_py_pkg/install.log'
+Finished <<< my_py_pkg [2.52s]
+
+Summary: 4 packages finished [2.79s]

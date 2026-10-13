@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "deterministic": true,
+  "idempotent": true,
+  "network_assets": false,
+  "manifest_sha256": "49badd1df24817b793f52a620cafbda4508d3834c9c16496d82780bb7a21e473",
+  "sdf_files": [
+    "models/wh_barrier/model.sdf",
+    "models/wh_box/model.sdf",
+    "models/wh_building/model.sdf",
+    "models/wh_cone/model.sdf",
+    "models/wh_industrial_bin/model.sdf",
+    "models/wh_industrial_cart/model.sdf",
+    "models/wh_loaded_pallet/model.sdf",
+    "models/wh_pallet/model.sdf",
+    "models/wh_parked_forklift/model.sdf",
+    "models/wh_rack/model.sdf",
+    "models/wh_stacked_crates/model.sdf",
+    "models/wh_tool_cart/model.sdf",
+    "worlds/warehouse_corridor_blocked.sdf",
+    "worlds/warehouse_normal.sdf",
+    "worlds/warehouse_obstacle_in_aisle.sdf",
+    "worlds/warehouse_person_crossing.sdf"
+  ],
+  "counts": {
+    "racks": 16,
+    "pallets_normal": 40,
+    "boxes_normal": 80,
+    "humans": 3
+  },
+  "turning_diameter_with_clearance": 1.7800423721205947,
+  "aisle_widths": {
+    "main_cross_aisle": 4,
+    "north_cross_aisle": 3,
+    "south_cross_aisle": 3,
+    "aisle_01": 3,
+    "aisle_02": 3,
+    "aisle_03": 3,
+    "west_service_aisle": 3,
+    "east_service_aisle": 3
+  }
+}

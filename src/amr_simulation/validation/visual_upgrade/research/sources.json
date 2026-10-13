@@ -1,0 +1,22 @@
+{
+  "installed_gazebo": "8.15.0",
+  "source_tag": "gz-sim8_8.15.0",
+  "sources": {
+    "TrajectoryFollower": {
+      "url": "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/systems/trajectory_follower/TrajectoryFollower.cc",
+      "sha256": "d9070da0ffabf32e61bd4ccc8039ed47adcf04885680d9e9eee5570b28d71a34"
+    },
+    "RenderUtil": {
+      "url": "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/rendering/RenderUtil.cc",
+      "sha256": "670bfe75aa6e296409aae4b238d78006ece24a61ca438c17b24c8626e45be613"
+    },
+    "SceneBroadcaster": {
+      "url": "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/systems/scene_broadcaster/SceneBroadcaster.cc",
+      "sha256": "579badac1909cb29a8d8bd25d5ea0d24139be29d8fafa184cdaef6cb483a4309"
+    },
+    "FollowActor": {
+      "url": "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/systems/follow_actor/FollowActor.cc",
+      "sha256": "eab860aa906c2d2124b1fd3d4f5c111753c7e53f6d3fd5c7007df18cc3b68149"
+    }
+  }
+}

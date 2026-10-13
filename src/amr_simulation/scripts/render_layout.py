@@ -37,6 +37,9 @@ def render(c, output, amr):
             label(x,y,f'R{i+1}.{j+1}',9,'white')
     for item in c['floor_loads']:
         rect(item['pose'][:2],c['pallet']['size'][:2],'#bc9760',yaw=item['pose'][5])
+    for item in c['industrial_objects']:
+        rect(item['pose'][:2],c['industrial_assets'][item['kind']]['size'][:2],
+             '#597d70',yaw=item['pose'][5])
     for p in c['building']['pillars']['positions']:
         rect(p,c['building']['pillars']['size'],'#38414a')
     for item in c['stations']:
@@ -58,7 +61,7 @@ def render(c, output, amr):
     el('circle',cx=x,cy=y,r=5,fill='#8044b0'); label(cam['pose'][0],cam['pose'][1]-.5,'CAM 01',9)
     label(0,0,'MAIN AISLE: 4 m / 3 AMRs',12)
     label(0,width/2+1.1,f'WAREHOUSE {length:g} m x {width:g} m — NORTH (+Y)',17)
-    label(0,-width/2-1,'Blue: racks | Brown: loads | Red: people/routes | Dots: station goals',12)
+    label(0,-width/2-1,'Blue: racks | Brown: loads | Green: equipment | Red: people | Dots: goals',12)
     label(0,-width/2-1.8,'Origin: floor centre (0, 0, 0). East: +X. Normal scenario; schematic plan.',12)
     ET.indent(root)
     Path(output).write_bytes(ET.tostring(root,encoding='utf-8',xml_declaration=True))

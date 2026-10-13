@@ -340,14 +340,34 @@
           </contact>
         </sensor>
       </link>
-      <plugin filename="gz-sim-trajectory-follower-system" name="gz::sim::systems::TrajectoryFollower">
-        <link_name>body</link_name>
+      <plugin filename="warehouse_human_system" name="amr_simulation::HumanSystem">
         <loop>true</loop>
-        <force>46</force>
-        <torque>15</torque>
-        <range_tolerance>0.3</range_tolerance>
-        <bearing_tolerance>5</bearing_tolerance>
-        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>
+        <speed>0.85</speed>
+        <acceleration>0.8</acceleration>
+        <braking>1.1</braking>
+        <response_time>0.28</response_time>
+        <max_force>140</max_force>
+        <max_torque>18</max_torque>
+        <yaw_rate>1.15</yaw_rate>
+        <yaw_gain>2.5</yaw_gain>
+        <yaw_response_time>0.22</yaw_response_time>
+        <yaw_friction>5</yaw_friction>
+        <heading_gate>0.45</heading_gate>
+        <arrival_speed>0.16</arrival_speed>
+        <stride_length>1.35</stride_length>
+        <leg_swing>0.48</leg_swing>
+        <arm_swing>0.38</arm_swing>
+        <bob_height>0.012</bob_height>
+        <animation_rate>30</animation_rate>
+        <gait_stop_speed>0.035</gait_stop_speed>
+        <gait_response_time>0.12</gait_response_time>
+        <mass>80</mass>
+        <friction>0.05</friction>
+        <gravity>9.81</gravity>
+        <yaw_inertia>3.2</yaw_inertia>
+        <range_tolerance>0.12</range_tolerance>
+        <leg_height>0.805</leg_height>
+        <shoulder_height>1.35625</shoulder_height>
         <waypoints>
           <waypoint>-8.7 6</waypoint>
           <waypoint>-8.7 3</waypoint>
@@ -528,14 +548,34 @@
           </contact>
         </sensor>
       </link>
-      <plugin filename="gz-sim-trajectory-follower-system" name="gz::sim::systems::TrajectoryFollower">
-        <link_name>body</link_name>
+      <plugin filename="warehouse_human_system" name="amr_simulation::HumanSystem">
         <loop>true</loop>
-        <force>46</force>
-        <torque>15</torque>
-        <range_tolerance>0.3</range_tolerance>
-        <bearing_tolerance>5</bearing_tolerance>
-        <zero_vel_on_bearing_reached>true</zero_vel_on_bearing_reached>
+        <speed>1.15</speed>
+        <acceleration>0.8</acceleration>
+        <braking>1.1</braking>
+        <response_time>0.28</response_time>
+        <max_force>140</max_force>
+        <max_torque>18</max_torque>
+        <yaw_rate>1.15</yaw_rate>
+        <yaw_gain>2.5</yaw_gain>
+        <yaw_response_time>0.22</yaw_response_time>
+        <yaw_friction>5</yaw_friction>
+        <heading_gate>0.45</heading_gate>
+        <arrival_speed>0.16</arrival_speed>
+        <stride_length>1.35</stride_length>
+        <leg_swing>0.48</leg_swing>
+        <arm_swing>0.38</arm_swing>
+        <bob_height>0.012</bob_height>
+        <animation_rate>30</animation_rate>
+        <gait_stop_speed>0.035</gait_stop_speed>
+        <gait_response_time>0.12</gait_response_time>
+        <mass>80</mass>
+        <friction>0.05</friction>
+        <gravity>9.81</gravity>
+        <yaw_inertia>3.2</yaw_inertia>
+        <range_tolerance>0.12</range_tolerance>
+        <leg_height>0.805</leg_height>
+        <shoulder_height>1.35625</shoulder_height>
         <waypoints>
           <waypoint>3.9 5.5</waypoint>
           <waypoint>3.9 -5.5</waypoint>
@@ -721,6 +761,11 @@
       <uri>model://wh_loaded_pallet</uri>
       <name>aisle_pallet</name>
       <pose>-5.35 -4.5 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://wh_cone</uri>
+      <name>aisle_warning_cone</name>
+      <pose>-5.35 -3.65 0 0 0 0</pose>
     </include>
   </world>
 </sdf>

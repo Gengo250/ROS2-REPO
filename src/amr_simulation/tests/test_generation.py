@@ -50,6 +50,18 @@ def test_rejects_larger_amr_without_widening_aisles():
     with pytest.raises(ValueError,match='clearance'): validate(c,amr)
 
 
+@pytest.mark.parametrize('change', ['fast_human', 'negative_acceleration', 'blocked_aisle',
+                                    'equipment_on_route', 'equipment_on_goal'])
+def test_visual_upgrade_safety_contracts(change):
+    c, amr = load_config()
+    if change == 'fast_human': c['humans'][0]['speed'] = 2
+    if change == 'negative_acceleration': c['human_model']['motion']['acceleration'] = -1
+    if change == 'blocked_aisle': c['industrial_objects'][0]['pose'][:2] = [-11, 0]
+    if change == 'equipment_on_route': c['humans'][0]['route'][0] = [-13.3, -2.9]
+    if change == 'equipment_on_goal': c['industrial_objects'][0]['pose'][:2] = [-10.9, 5]
+    with pytest.raises(ValueError): validate(c, amr)
+
+
 def test_scenario_composition_and_physical_people():
     c,_ = load_config()
     for path in sorted((ROOT/'config/scenarios').glob('*.json')):

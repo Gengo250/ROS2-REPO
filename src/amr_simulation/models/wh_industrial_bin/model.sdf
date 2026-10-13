@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_industrial_bin">
+    <static>true</static>
+    <link name="body">
+      <visual name="bin_visual">
+        <pose>0 0 0.43 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.29</radius>
+            <length>0.82</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.05 0.55 0.4 1</ambient>
+          <diffuse>0.05 0.55 0.4 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="bin_collision">
+        <pose>0 0 0.43 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.29</radius>
+            <length>0.82</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="lid_visual">
+        <pose>0 0 0.89 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.325</radius>
+            <length>0.1</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="lid_collision">
+        <pose>0 0 0.89 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.325</radius>
+            <length>0.1</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="label_visual">
+        <pose>0 -0.293 0.6 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.3 0.02 0.18</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.91 0.93 0.94 1</ambient>
+          <diffuse>0.91 0.93 0.94 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

@@ -6,16 +6,17 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import argparse
 
 from ament_index_python.packages import get_package_share_directory
 from generate_warehouse import ROOT
 
 
-def run():
+def run(output=ROOT/'validation/amr_regression'):
     source=ROOT.parent/'amr_description'
     if not source.is_dir():
         source=Path(get_package_share_directory('amr_description'))
-    output=ROOT/'validation/amr_regression'; output.mkdir(parents=True,exist_ok=True)
+    output.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='warehouse_amr_regression_') as temp:
         amr=Path(temp)/'amr_description'; shutil.copytree(source,amr)
         (amr/'validation').mkdir(exist_ok=True)
@@ -28,4 +29,6 @@ def run():
 
 
 if __name__=='__main__':
-    run()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',type=Path,default=ROOT/'validation/amr_regression')
+    run(parser.parse_args().output)

@@ -1,0 +1,219 @@
+PASS: AMR entity exists in Gazebo scene
+PASS: runtime barrier matches selected scenario
+PASS: runtime aisle load matches selected scenario
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: straight motion in main corridor
+PASS: odometry agrees with ground truth translation
+PASS: TwistStamped timeout stops AMR
+PASS: in-place turn
+PASS: curved motion
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: passes through rack aisle into main corridor
+PASS: rack corridor traversal stays centred
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: pillar LiDAR distance 0.778 m (expected 0.785)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: wall LiDAR distance 1.260 m (expected 1.260)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: wall physical contact with AMR reported by Gazebo
+PASS: wall prevents AMR crossing perimeter
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: rack LiDAR distance 1.060 m (expected 1.060)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: rack collision prevents penetration
+PASS: rack blocks physical displacement
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: loaded_pallet_boxes LiDAR distance 1.120 m (expected 1.120)
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: depth metric float encoding
+PASS: RGB-D measures logistics load
+PASS: point cloud and depth agree
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: human legs detected by GPU LiDAR
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: human_03 physical contact with AMR reported by Gazebo
+PASS: human collision prevents traversal
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: industrial cart detected by LiDAR
+PASS: industrial cart physically blocks AMR
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: normal
+PASS: AMR entity exists in Gazebo scene
+PASS: runtime barrier matches selected scenario
+PASS: runtime aisle load matches selected scenario
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: human_01 crosses main AMR route y=0
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: person_crossing
+PASS: AMR entity exists in Gazebo scene
+PASS: runtime barrier matches selected scenario
+PASS: runtime aisle load matches selected scenario
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: temporary loaded pallet detected in aisle
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: aisle pallet collision prevents penetration
+PASS: aisle pallet blocks physical displacement
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: AMR passes remaining width beside aisle pallet
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: obstacle_in_aisle
+PASS: AMR entity exists in Gazebo scene
+PASS: runtime barrier matches selected scenario
+PASS: runtime aisle load matches selected scenario
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: test reposition accepted
+PASS: test reposition reached without drift
+PASS: barrier detected across blocked aisle
+PASS: /camera/image_raw RGB encoding
+PASS: /camera/image_raw nonblank rendered image
+PASS: barrier physical contact with AMR reported by Gazebo
+PASS: barrier physically blocks corridor
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: corridor_blocked

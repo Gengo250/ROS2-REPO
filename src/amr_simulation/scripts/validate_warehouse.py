@@ -32,7 +32,7 @@ def validate_tree(path):
     return tree
 
 
-def run(root=ROOT, check_sdf=True):
+def run(root=ROOT, check_sdf=True, output=None):
     root = Path(root)
     c, amr = load_config(root/'config/warehouse_layout.json')
     manifest = json.loads((root/'config/generated_manifest.json').read_text())
@@ -59,8 +59,9 @@ def run(root=ROOT, check_sdf=True):
               'sdf_files':checked, 'counts':{k:manifest[k] for k in ('racks','pallets_normal','boxes_normal','humans')},
               'turning_diameter_with_clearance':manifest['turning_diameter_with_clearance'],
               'aisle_widths':{v['id']:min(v['size']) for v in c['navigation']['aisles']}}
-    (root/'validation').mkdir(exist_ok=True)
-    (root/'validation/static.json').write_text(json.dumps(report,indent=2)+'\n')
+    output = Path(output) if output else root/'validation/static.json'
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
     return report
 
@@ -68,5 +69,6 @@ def run(root=ROOT, check_sdf=True):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,default=ROOT)
+    parser.add_argument('--output',type=Path)
     args = parser.parse_args()
-    run(args.root)
+    run(args.root, output=args.output)

@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.8)
 project(amr_simulation)
 find_package(ament_cmake REQUIRED)
+find_package(gz_sim_vendor REQUIRED)
+find_package(gz-sim8 REQUIRED)
+add_library(warehouse_human_system SHARED src/HumanSystem.cc)
+target_compile_features(warehouse_human_system PRIVATE cxx_std_17)
+target_link_libraries(warehouse_human_system gz-sim8::gz-sim8)
+install(TARGETS warehouse_human_system LIBRARY DESTINATION lib)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 # Generate before both copy-install and symlink-install. A plain colcon build
 # must never silently install worlds compiled from an earlier configuration.
@@ -10,7 +16,7 @@ add_custom_target(generate_warehouse ALL
   COMMENT "Regenerating deterministic warehouse scenarios")
 install(DIRECTORY config launch models worlds scripts
   DESTINATION share/${PROJECT_NAME} PATTERN "__pycache__" EXCLUDE)
-install(FILES README.md DESTINATION share/${PROJECT_NAME})
+install(FILES README.md COMANDOS_TESTE.md DESTINATION share/${PROJECT_NAME})
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(warehouse_generation tests/test_generation.py TIMEOUT 180)

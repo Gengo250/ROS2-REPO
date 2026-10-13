@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="wh_stacked_crates">
+    <static>true</static>
+    <link name="body">
+      <visual name="base_visual">
+        <pose>0 0 0.06 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.95 0.8 0.12</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.5 0.32 0.14 1</ambient>
+          <diffuse>0.5 0.32 0.14 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="base_collision">
+        <pose>0 0 0.06 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.95 0.8 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="crate_0_visual">
+        <pose>0 0 0.305 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.9 0.75 0.37</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.65 0.47 0.27 1</ambient>
+          <diffuse>0.65 0.47 0.27 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="crate_0_collision">
+        <pose>0 0 0.305 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.9 0.75 0.37</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="strap_0_-0.33_visual">
+        <pose>-0.33 0 0.305 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.035 0.754 0.372</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="strap_0_0.33_visual">
+        <pose>0.33 0 0.305 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.035 0.754 0.372</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="crate_1_visual">
+        <pose>0 0 0.695 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.9 0.75 0.37</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.65 0.47 0.27 1</ambient>
+          <diffuse>0.65 0.47 0.27 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="crate_1_collision">
+        <pose>0 0 0.695 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.9 0.75 0.37</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="strap_1_-0.33_visual">
+        <pose>-0.33 0 0.695 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.035 0.754 0.372</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="strap_1_0.33_visual">
+        <pose>0.33 0 0.695 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.035 0.754 0.372</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="crate_2_visual">
+        <pose>0 0 1.085 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.9 0.75 0.37</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.65 0.47 0.27 1</ambient>
+          <diffuse>0.65 0.47 0.27 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <collision name="crate_2_collision">
+        <pose>0 0 1.085 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.9 0.75 0.37</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="strap_2_-0.33_visual">
+        <pose>-0.33 0 1.085 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.035 0.754 0.372</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+      <visual name="strap_2_0.33_visual">
+        <pose>0.33 0 1.085 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.035 0.754 0.372</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.17 0.23 0.29 1</ambient>
+          <diffuse>0.17 0.23 0.29 1</diffuse>
+          <specular>0.06 0.06 0.06 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

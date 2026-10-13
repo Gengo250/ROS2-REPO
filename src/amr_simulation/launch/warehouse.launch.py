@@ -6,7 +6,7 @@ import os
 import uuid
 from pathlib import Path
 
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_directory, get_package_prefix
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, OpaqueFunction, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -57,6 +57,9 @@ def setup(context):
         # their create/scene requests or supply the GUI with an older world.
         SetEnvironmentVariable('GZ_PARTITION', partition := os.environ.get(
             'GZ_PARTITION') or 'warehouse_'+uuid.uuid4().hex),
+        SetEnvironmentVariable('GZ_SIM_SYSTEM_PLUGIN_PATH', os.pathsep.join(filter(None, [
+            str(Path(get_package_prefix('amr_simulation'))/'lib'),
+            os.environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')]))),
         LogInfo(msg=f'Warehouse scenario={scenario}; world={args["world"]}; '
                 f'sha256={hashlib.sha256(Path(args["world"]).read_bytes()).hexdigest()}; '
                 f'spawn={spawn}; GZ_PARTITION={partition}'),

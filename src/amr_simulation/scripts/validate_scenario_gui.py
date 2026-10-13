@@ -103,6 +103,7 @@ def scene(scenario, out):
         assert math.hypot(a.robot()['position']['x']+11,a.robot()['position']['y'])<.03
         time.sleep(3)
         capture(scenario+'_overview')
+        capture(scenario)
         # Measure actual receipt rates as well as timestamp validity.
         hz_jobs=[]
         if scenario=='normal':
@@ -165,11 +166,16 @@ def scene(scenario, out):
             before=a.robot(); a.drive(0,0,2)
             report['stop_drift_m']=distance(before,a.robot()); assert report['stop_drift_m']<.02
         elif scenario=='person_crossing':
-            view([-14,-5,9],[-9,0,.3])
+            view([-14,-5,6],[-9,0,.3])
             a.until(lambda:a.poses['human_01']['position']['y'] < -1.4,150)
             capture('person_crossing_t0')
+            capture('human_motion_t0')
+            a.until(lambda:abs(a.poses['human_01']['position']['y']) < .15,150)
+            capture('human_motion_t1')
             a.until(lambda:a.poses['human_01']['position']['y'] > 1.4,150)
             capture('person_crossing_t1')
+            capture('human_motion_t2')
+            capture(scenario)
             # Directed moving-human sensor probe, after all GUI captures.
             a.set_pose([-10.5,0,.015,0,0,0])
             a.until(lambda:abs(a.poses['human_01']['position']['y'])<.12,150)
@@ -180,6 +186,7 @@ def scene(scenario, out):
         else:
             view([-4.5,-10,6],[-4.5,-4.5,.1])
             capture(scenario+'_closeup')
+            capture(scenario)
         report['topic_samples']=dict(a.counts)
         report['human_trajectories']=a.history
         report['status']='passed'

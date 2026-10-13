@@ -150,7 +150,7 @@ def validate(c, amr):
     for i, (x,y,sx,sy) in enumerate(obstacles):
         for X,Y,SX,SY in obstacles[i+1:]:
             require(abs(x-X) >= (sx+SX)/2-1e-6 or abs(y-Y) >= (sy+SY)/2-1e-6, 'Racks overlap')
-    ids = [s['id'] for key in ('stations', 'spawns', 'humans', 'floor_loads') for s in c[key]]
+    ids = [s['id'] for key in ('stations', 'spawns', 'humans', 'floor_loads', 'industrial_objects') for s in c[key]]
     require(len(ids) == len(set(ids)), 'Duplicate identity')
     require(all(re.fullmatch('[a-z][a-z0-9_]*', name) for name in ids+[c['world_name']]), 'Invalid identity')
     nav = c['navigation']
@@ -185,7 +185,28 @@ def validate(c, amr):
     require(cam['rate'] > 0 and all(isinstance(cam[k], int) and cam[k] > 0 for k in ('width','height')), 'Invalid camera acquisition')
     h = c['human_model']
     require(h['mass'] > 0 and h['radius'] > 0 and h['height'] > 0 and min(h['inertia']) > 0, 'Invalid human physics')
-    require(h['force'] > 0 and h['torque'] > 0 and h['friction'] >= 0, 'Invalid human drive')
+    require(h['friction'] >= 0 and h['range_tolerance'] > 0, 'Invalid human drive')
+    require(all(value > 0 for value in h['motion'].values()), 'Invalid human motion parameter')
+    require(all(value > 0 for value in h['animation'].values()), 'Invalid human animation parameter')
+    for human in c['humans']:
+        require(0 < human.get('speed', h['motion']['speed']) <= 1.4, 'Human speed must be in (0, 1.4] m/s')
+    for item in c['industrial_objects']:
+        require(item['kind'] in c['industrial_assets'], 'Unknown industrial asset')
+        require(len(item['pose']) == 6, 'Industrial pose must contain XYZ RPY')
+        sx, sy = c['industrial_assets'][item['kind']]['size'][:2]
+        x, y, _, _, _, yaw = item['pose']
+        bx, by = abs(math.cos(yaw))*sx+abs(math.sin(yaw))*sy, abs(math.sin(yaw))*sx+abs(math.cos(yaw))*sy
+        require(abs(x)+bx/2 < b['length']/2 and abs(y)+by/2 < b['width']/2,
+                'Industrial object outside walls: '+item['id'])
+        for aisle in nav['aisles']:
+            ax, ay = aisle['centre']; aw, ah = aisle['size']
+            require(abs(x-ax) >= (bx+aw)/2 or abs(y-ay) >= (by+ah)/2,
+                    'Permanent industrial object blocks aisle: '+item['id'])
+    for asset in c['industrial_assets'].values():
+        require(len(asset['size']) == 3 and min(asset['size']) > 0, 'Invalid industrial bounds')
+        require(bool(asset['parts']), 'Empty industrial asset')
+        for part in asset['parts']:
+            require(min(part['size']) > 0, 'Invalid industrial geometry')
     # Check every docking/spawn envelope against all permanent obstructions.
     radius = math.hypot(amr['chassis_length'], amr['chassis_width'])/2
     for item in c['stations']+c['spawns']:
@@ -210,6 +231,7 @@ def static_bounds(c):
         cs,sn = abs(math.cos(pose[5])),abs(math.sin(pose[5]))
         return (*pose[:2],cs*size[0]+sn*size[1],sn*size[0]+cs*size[1])
     return (rack_bounds(c)
+            + [bound(item['pose'],c['industrial_assets'][item['kind']]['size']) for item in c['industrial_objects']]
             + [bound(load['pose'],c['pallet']['size']) for load in c['floor_loads']]
             + [(*xy,*c['building']['pillars']['size']) for xy in c['building']['pillars']['positions']]
             + [bound(c['charger']['pose'],c['charger']['size'])]
@@ -237,6 +259,12 @@ def validate_route(c, human):
 
 def make_assets(c, output):
     a = c['appearance']; ps = c['pallet']['size']; bs = c['box']['size']
+    for kind, asset in c['industrial_assets'].items():
+        industrial = model('wh_'+kind); body = tag(industrial, 'link', name='body')
+        for part in asset['parts']:
+            shape(body, part['name'], part['size'], part['xyz'], a[part['colour']],
+                  part['collision'], part['kind'], part['rpy'])
+        write_model(output, kind, industrial)
     p = model('wh_pallet'); link = tag(p, 'link', name='body')
     # One simple collision, slats/runners only in the visual representation.
     col = tag(link, 'collision', name='pallet_collision')
@@ -300,6 +328,9 @@ def add_contact(link, name, collision, rate, topic):
 
 def human_model(c, human):
     h = c['human_model']; a = c['appearance']; height = h['height']; radius = h['radius']
+    speed = human.get('speed', h['motion']['speed'])
+    if not math.isfinite(speed) or not 0 < speed <= 1.4:
+        raise ValueError('Human speed must be in (0, 1.4] m/s: '+human['id'])
     m = model(human['id'], not human['moving'], human['pose']); link = tag(m,'link',name='body')
     inertia = tag(link,'inertial'); tag(inertia,'pose',[0,0,h['com_height'],0,0,0]); tag(inertia,'mass',h['mass'])
     tensor = tag(inertia,'inertia')
@@ -322,11 +353,14 @@ def human_model(c, human):
     shape(link,'helmet',[head_r*1.06,head_r*0.3],[0,0,height-head_r*0.24],a['yellow'],False,'cylinder')
     add_contact(link,human['id'],'body_collision',h['contact_rate'],'/warehouse/contacts/'+human['id'])
     if human['moving']:
-        plugin = tag(m,'plugin',filename='gz-sim-trajectory-follower-system',name='gz::sim::systems::TrajectoryFollower')
-        tag(plugin,'link_name','body'); tag(plugin,'loop',human['loop'])
-        for key in ('force','torque','range_tolerance'): tag(plugin,key,h[key])
-        tag(plugin,'bearing_tolerance',h['bearing_tolerance_degrees'])
-        tag(plugin,'zero_vel_on_bearing_reached',True)
+        plugin = tag(m,'plugin',filename='warehouse_human_system',name='amr_simulation::HumanSystem')
+        tag(plugin,'loop',human['loop'])
+        parameters = {**h['motion'], **h['animation'],
+                      'speed':speed,
+                      'mass':h['mass'], 'friction':h['friction'], 'gravity':abs(c['simulation']['gravity'][2]),
+                      'yaw_inertia':h['inertia'][2], 'range_tolerance':h['range_tolerance'],
+                      'leg_height':leg_h, 'shoulder_height':height*(.62+.31/2)}
+        for key, value in parameters.items(): tag(plugin, key, value)
         waypoints = tag(plugin,'waypoints')
         for point in human['route']: tag(waypoints,'waypoint',point)
     return m
@@ -410,6 +444,7 @@ def building_model(c, output):
             ident = f'rack_{row+1:02d}_{bay+1:02d}'
             include(m,'rack',ident,[x,y,0,0,0,0])
     for load in c['floor_loads']: include(m,'loaded_pallet',load['id'],load['pose'])
+    for item in c['industrial_objects']: include(m,item['kind'],item['id'],item['pose'])
     for station in c['stations']:
         station_model = model(station['id'],pose=station['pose']); sl = tag(station_model,'link',name='markings')
         sx,sy = station['size']; z = a['marking_height']/2; colour = a[station['colour']]
@@ -471,6 +506,8 @@ def make_world(c, scenario):
         o = c['obstacles']['aisle_load']; include(w,'loaded_pallet',o['id'],o['pose'])
     if scenario['corridor_blocked']:
         o = c['obstacles']['barrier']; include(w,'barrier',o['id'],o['pose'])
+    for item in scenario.get('industrial_objects', []):
+        include(w,item['kind'],item['id'],item['pose'])
     return sdf
 
 

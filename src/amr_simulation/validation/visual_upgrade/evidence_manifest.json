@@ -1,0 +1,32 @@
+{
+  "gazebo_version": "8.15.0",
+  "ros_distro": "jazzy",
+  "plugin_sha256": "1b6349089e10b95e5eceb3f2f13a8088e2cf9f8c328599bce230b0c730d13a44",
+  "manifest_sha256": "49badd1df24817b793f52a620cafbda4508d3834c9c16496d82780bb7a21e473",
+  "git_head": "9945fc54d35b930e5b60558493bed432eaed575d",
+  "amr_source_changes": [],
+  "screenshots": {
+    "amr_after_motion.png": "1bf563ac0cf0a6d06175b714b21dc9f9910b2b3a8a9e77711aaf6192a4104133",
+    "amr_before_motion.png": "3d28dc570100d3a0e18f1ca823a870e8ce5e5b3be9f97cadbbb4c2bcc2ac1267",
+    "corridor_blocked.png": "9237ebb09a3d0a6940e13ce59e935c8a98b08a15fd50b9baa46d6c26b558ca01",
+    "corridor_blocked_amr.png": "6896457c1304f84b030434d02edbc1ba5764327cd1215ca5252e97959795795d",
+    "corridor_blocked_closeup.png": "1fb3a26f47abefc8b9ddd21aa5a52b3a20f61c4d31113587d36ec883ca83dcb9",
+    "corridor_blocked_overview.png": "2d1deea5b63f21eec3543a785806e507fdd8ad65762f199f5ad3739a9d8ad965",
+    "human_motion_t0.png": "23f6774b731f783c77956b82262636c9d79b4ea66a807200fcf6d8d3cbdea41e",
+    "human_motion_t1.png": "17c54f06af8b9a4ef96c6bb3654174f31b7b21cd3ca85f435852395ce92e0621",
+    "human_motion_t2.png": "aa7e5472f87b4203479d38ff9ecce2600da8062da9b3f7296dbaa603c5e8c1db",
+    "normal.png": "c4bd0ac60e92708c63d1428737a9eb7565c742dfa85e85b22bb4ceb8309c4046",
+    "normal_amr.png": "622142a0f9932a26b11a961875c21258f3218aebd0dbff3d3949795bc2b29128",
+    "normal_overview.png": "6e7ce1c5fd0b128e7e1a4dc7bdb54ce83c741292388ae4abef9239c0d60eef89",
+    "obstacle_in_aisle.png": "4ba5117cb4fd455f47006f4e7c84122f0f2f7616ed3f3b804c10c33f8bf3b5bb",
+    "obstacle_in_aisle_amr.png": "8551464ed6b00e12dcf63b161dbe6f89d9250e59d251fb1ef61fdfd2429eae28",
+    "obstacle_in_aisle_closeup.png": "564cc7d4327f932c6821be04723172f88936d89293be97c66108db901b1a5246",
+    "obstacle_in_aisle_overview.png": "b9f9da11f53241b9f56b35442b6ec01ddf0828d27be588b7939280804b772dc2",
+    "person_crossing.png": "05b0a235f5090ef49409d31925d69f5a6acb609eb44e96a8bf7e3e17c243c7de",
+    "person_crossing_amr.png": "84cc8403bc5554286f1793f698303fa39bc4aef2e93d4d1de6e1b9fa73a721d4",
+    "person_crossing_overview.png": "18db6d8f29cc31a75174d9e7afac51b3d8032d53d1fa7e5449f665dd671123d7",
+    "person_crossing_t0.png": "2157d3b18f519de3a76086e18c2f4411e96e59886fd81b5124882e5e61a287c6",
+    "person_crossing_t1.png": "d2e74340cb0cde66c91f1870dcc1836184e02df3b483676d55d6d48a73e20c9d",
+    "warehouse_camera.png": "607ea1cd572b44e96e7447708be72174773b11aabbb4707ab5daa0c8f92c4b1e"
+  }
+}

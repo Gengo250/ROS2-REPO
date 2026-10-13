@@ -3,6 +3,8 @@
 from bisect import bisect_left
 import json
 import math
+import argparse
+from pathlib import Path
 
 from generate_warehouse import ROOT
 from run_acceptance import run
@@ -17,8 +19,7 @@ def interpolate(samples, name, time):
     return [p0[k]+alpha*(p1[k]-p0[k]) for k in ('x','y','z')]
 
 
-def validate():
-    base=ROOT/'validation'
+def validate(base=ROOT/'validation'):
     original=json.loads((base/'person_crossing/runtime.json').read_text())
     run(['person_crossing'],base/'repeat')
     repeated=json.loads((base/'repeat/person_crossing/runtime.json').read_text())
@@ -43,4 +44,6 @@ def validate():
 
 
 if __name__=='__main__':
-    validate()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output-root',type=Path,default=ROOT/'validation')
+    validate(parser.parse_args().output_root)

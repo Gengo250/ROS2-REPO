@@ -1,0 +1,86 @@
+{
+  "functional_status": "passed",
+  "workspace_tests": {
+    "reported_tests": 35,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 1
+  },
+  "headless": {
+    "normal": {
+      "status": "passed",
+      "checks": 87
+    },
+    "person_crossing": {
+      "status": "passed",
+      "checks": 37
+    },
+    "obstacle_in_aisle": {
+      "status": "passed",
+      "checks": 48
+    },
+    "corridor_blocked": {
+      "status": "passed",
+      "checks": 43
+    }
+  },
+  "gui": {
+    "normal": "passed",
+    "person_crossing": "passed",
+    "obstacle_in_aisle": "passed",
+    "corridor_blocked": "passed"
+  },
+  "repeatability": {
+    "status": "passed",
+    "manifest_sha256": "49badd1df24817b793f52a620cafbda4508d3834c9c16496d82780bb7a21e473",
+    "method": "Two independent worlds, linear interpolation at common simulation times; no person contact",
+    "tolerance_m": 0.05,
+    "humans": {
+      "human_01": {
+        "max_position_difference_m": 0.0033895760143610705,
+        "mean_position_difference_m": 0.00022461526943902573,
+        "compared_sim_seconds": 23.192,
+        "samples": 92
+      },
+      "human_02": {
+        "max_position_difference_m": 0.005006642595635812,
+        "mean_position_difference_m": 0.00023082699638263368,
+        "compared_sim_seconds": 23.192,
+        "samples": 92
+      }
+    }
+  },
+  "amr_regression": "passed",
+  "moving_human_contact": "passed",
+  "measurement_verification": "passed",
+  "shutdown_limitation": "corridor_blocked headless passed 43 functional checks but Gazebo required SIGKILL during shutdown",
+  "remaining_simulation_processes": [],
+  "changed_files": [
+    "src/amr_simulation/CMakeLists.txt",
+    "src/amr_simulation/README.md",
+    "src/amr_simulation/config/generated_manifest.json",
+    "src/amr_simulation/config/scenarios/obstacle_in_aisle.json",
+    "src/amr_simulation/config/scenarios/person_crossing.json",
+    "src/amr_simulation/config/warehouse_layout.json",
+    "src/amr_simulation/config/warehouse_layout.svg",
+    "src/amr_simulation/launch/warehouse.launch.py",
+    "src/amr_simulation/models/wh_building/model.sdf",
+    "src/amr_simulation/package.xml",
+    "src/amr_simulation/scripts/generate_warehouse.py",
+    "src/amr_simulation/scripts/render_layout.py",
+    "src/amr_simulation/scripts/validate_amr_regression.py",
+    "src/amr_simulation/scripts/validate_crossing_contact.py",
+    "src/amr_simulation/scripts/validate_repeatability.py",
+    "src/amr_simulation/scripts/validate_runtime.py",
+    "src/amr_simulation/scripts/validate_scenario_gui.py",
+    "src/amr_simulation/scripts/validate_warehouse.py",
+    "src/amr_simulation/tests/test_generation.py",
+    "src/amr_simulation/worlds/warehouse_corridor_blocked.sdf",
+    "src/amr_simulation/worlds/warehouse_normal.sdf",
+    "src/amr_simulation/worlds/warehouse_obstacle_in_aisle.sdf",
+    "src/amr_simulation/worlds/warehouse_person_crossing.sdf",
+    "src/my_py_pkg/my_py_pkg/my_first_node.py",
+    "src/my_py_pkg/my_py_pkg/robot_news_station.py",
+    "src/my_py_pkg/my_py_pkg/smartphone.py"
+  ]
+}

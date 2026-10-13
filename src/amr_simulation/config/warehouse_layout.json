@@ -368,6 +368,28 @@
         0,
         0
       ]
+    },
+    {
+      "id": "dispatch_buffer_pallet",
+      "pose": [
+        13.4,
+        -9,
+        0,
+        0,
+        0,
+        0.13
+      ]
+    },
+    {
+      "id": "north_wall_pallet",
+      "pose": [
+        -11.2,
+        7.4,
+        0,
+        0,
+        0,
+        -0.12
+      ]
     }
   ],
   "stations": [
@@ -540,11 +562,31 @@
     "friction": 0.05,
     "leg_height_fraction": 0.46,
     "head_radius_fraction": 0.08,
-    "force": 46.0,
-    "torque": 15.0,
-    "range_tolerance": 0.3,
-    "bearing_tolerance_degrees": 5.0,
-    "contact_rate": 20
+    "range_tolerance": 0.12,
+    "contact_rate": 20,
+    "motion": {
+      "speed": 1.1,
+      "acceleration": 0.8,
+      "braking": 1.1,
+      "response_time": 0.28,
+      "max_force": 140.0,
+      "max_torque": 18.0,
+      "yaw_rate": 1.15,
+      "yaw_gain": 2.5,
+      "yaw_response_time": 0.22,
+      "yaw_friction": 5.0,
+      "heading_gate": 0.45,
+      "arrival_speed": 0.16
+    },
+    "animation": {
+      "stride_length": 1.35,
+      "leg_swing": 0.48,
+      "arm_swing": 0.38,
+      "bob_height": 0.012,
+      "animation_rate": 30.0,
+      "gait_stop_speed": 0.035,
+      "gait_response_time": 0.12
+    }
   },
   "humans": [
     {
@@ -568,7 +610,8 @@
         ]
       ],
       "moving": true,
-      "loop": true
+      "loop": true,
+      "speed": 0.85
     },
     {
       "id": "human_02",
@@ -591,7 +634,8 @@
         ]
       ],
       "moving": true,
-      "loop": true
+      "loop": true,
+      "speed": 1.15
     },
     {
       "id": "human_03",
@@ -940,5 +984,1385 @@
       -1.5707963267948966
     ],
     "aisle_pass_x": -4.2
-  }
+  },
+  "industrial_assets": {
+    "industrial_cart": {
+      "size": [
+        1.2,
+        0.75,
+        1.1
+      ],
+      "parts": [
+        {
+          "name": "deck",
+          "size": [
+            1.2,
+            0.75,
+            0.14
+          ],
+          "xyz": [
+            0,
+            0,
+            0.26
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_-0.44_-0.29",
+          "size": [
+            0.13,
+            0.09
+          ],
+          "xyz": [
+            -0.44,
+            -0.29,
+            0.13
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_-0.44_0.29",
+          "size": [
+            0.13,
+            0.09
+          ],
+          "xyz": [
+            -0.44,
+            0.29,
+            0.13
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_0.44_-0.29",
+          "size": [
+            0.13,
+            0.09
+          ],
+          "xyz": [
+            0.44,
+            -0.29,
+            0.13
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_0.44_0.29",
+          "size": [
+            0.13,
+            0.09
+          ],
+          "xyz": [
+            0.44,
+            0.29,
+            0.13
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "handle_post_-0.32",
+          "size": [
+            0.05,
+            0.05,
+            0.85
+          ],
+          "xyz": [
+            -0.53,
+            -0.32,
+            0.67
+          ],
+          "colour": "yellow",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "handle_post_0.32",
+          "size": [
+            0.05,
+            0.05,
+            0.85
+          ],
+          "xyz": [
+            -0.53,
+            0.32,
+            0.67
+          ],
+          "colour": "yellow",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "handle",
+          "size": [
+            0.06,
+            0.7,
+            0.06
+          ],
+          "xyz": [
+            -0.53,
+            0,
+            1.06
+          ],
+          "colour": "yellow",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "cargo",
+          "size": [
+            0.7,
+            0.53,
+            0.45
+          ],
+          "xyz": [
+            0.15,
+            0,
+            0.55
+          ],
+          "colour": "cardboard",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "tool_cart": {
+      "size": [
+        0.85,
+        0.55,
+        1.0
+      ],
+      "parts": [
+        {
+          "name": "cabinet",
+          "size": [
+            0.8,
+            0.52,
+            0.7
+          ],
+          "xyz": [
+            0,
+            0,
+            0.57
+          ],
+          "colour": "dropoff",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "top",
+          "size": [
+            0.85,
+            0.55,
+            0.07
+          ],
+          "xyz": [
+            0,
+            0,
+            0.96
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "drawer_0.38",
+          "size": [
+            0.7,
+            0.02,
+            0.13
+          ],
+          "xyz": [
+            0,
+            -0.271,
+            0.38
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "handle_0.38",
+          "size": [
+            0.28,
+            0.025,
+            0.025
+          ],
+          "xyz": [
+            0,
+            -0.29,
+            0.38
+          ],
+          "colour": "white",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "drawer_0.55",
+          "size": [
+            0.7,
+            0.02,
+            0.13
+          ],
+          "xyz": [
+            0,
+            -0.271,
+            0.55
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "handle_0.55",
+          "size": [
+            0.28,
+            0.025,
+            0.025
+          ],
+          "xyz": [
+            0,
+            -0.29,
+            0.55
+          ],
+          "colour": "white",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "drawer_0.72",
+          "size": [
+            0.7,
+            0.02,
+            0.13
+          ],
+          "xyz": [
+            0,
+            -0.271,
+            0.72
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "handle_0.72",
+          "size": [
+            0.28,
+            0.025,
+            0.025
+          ],
+          "xyz": [
+            0,
+            -0.29,
+            0.72
+          ],
+          "colour": "white",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "caster_-0.3_-0.19",
+          "size": [
+            0.1,
+            0.07
+          ],
+          "xyz": [
+            -0.3,
+            -0.19,
+            0.12
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "caster_-0.3_0.19",
+          "size": [
+            0.1,
+            0.07
+          ],
+          "xyz": [
+            -0.3,
+            0.19,
+            0.12
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "caster_0.3_-0.19",
+          "size": [
+            0.1,
+            0.07
+          ],
+          "xyz": [
+            0.3,
+            -0.19,
+            0.12
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "caster_0.3_0.19",
+          "size": [
+            0.1,
+            0.07
+          ],
+          "xyz": [
+            0.3,
+            0.19,
+            0.12
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "industrial_bin": {
+      "size": [
+        0.65,
+        0.65,
+        0.95
+      ],
+      "parts": [
+        {
+          "name": "bin",
+          "size": [
+            0.29,
+            0.82
+          ],
+          "xyz": [
+            0,
+            0,
+            0.43
+          ],
+          "colour": "pickup",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "lid",
+          "size": [
+            0.325,
+            0.1
+          ],
+          "xyz": [
+            0,
+            0,
+            0.89
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "label",
+          "size": [
+            0.3,
+            0.02,
+            0.18
+          ],
+          "xyz": [
+            0,
+            -0.293,
+            0.6
+          ],
+          "colour": "white",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "cone": {
+      "size": [
+        0.42,
+        0.42,
+        0.68
+      ],
+      "parts": [
+        {
+          "name": "base",
+          "size": [
+            0.42,
+            0.42,
+            0.06
+          ],
+          "xyz": [
+            0,
+            0,
+            0.03
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ring_0",
+          "size": [
+            0.17,
+            0.124
+          ],
+          "xyz": [
+            0,
+            0,
+            0.122
+          ],
+          "colour": "rack_beam",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ring_1",
+          "size": [
+            0.14200000000000002,
+            0.124
+          ],
+          "xyz": [
+            0,
+            0,
+            0.246
+          ],
+          "colour": "white",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ring_2",
+          "size": [
+            0.11400000000000002,
+            0.124
+          ],
+          "xyz": [
+            0,
+            0,
+            0.37
+          ],
+          "colour": "rack_beam",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ring_3",
+          "size": [
+            0.08600000000000001,
+            0.124
+          ],
+          "xyz": [
+            0,
+            0,
+            0.494
+          ],
+          "colour": "white",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ring_4",
+          "size": [
+            0.05800000000000001,
+            0.124
+          ],
+          "xyz": [
+            0,
+            0,
+            0.618
+          ],
+          "colour": "rack_beam",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "stacked_crates": {
+      "size": [
+        0.95,
+        0.8,
+        1.3
+      ],
+      "parts": [
+        {
+          "name": "base",
+          "size": [
+            0.95,
+            0.8,
+            0.12
+          ],
+          "xyz": [
+            0,
+            0,
+            0.06
+          ],
+          "colour": "wood",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "crate_0",
+          "size": [
+            0.9,
+            0.75,
+            0.37
+          ],
+          "xyz": [
+            0,
+            0,
+            0.305
+          ],
+          "colour": "cardboard",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "strap_0_-0.33",
+          "size": [
+            0.035,
+            0.754,
+            0.372
+          ],
+          "xyz": [
+            -0.33,
+            0,
+            0.305
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "strap_0_0.33",
+          "size": [
+            0.035,
+            0.754,
+            0.372
+          ],
+          "xyz": [
+            0.33,
+            0,
+            0.305
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "crate_1",
+          "size": [
+            0.9,
+            0.75,
+            0.37
+          ],
+          "xyz": [
+            0,
+            0,
+            0.6950000000000001
+          ],
+          "colour": "cardboard",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "strap_1_-0.33",
+          "size": [
+            0.035,
+            0.754,
+            0.372
+          ],
+          "xyz": [
+            -0.33,
+            0,
+            0.6950000000000001
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "strap_1_0.33",
+          "size": [
+            0.035,
+            0.754,
+            0.372
+          ],
+          "xyz": [
+            0.33,
+            0,
+            0.6950000000000001
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "crate_2",
+          "size": [
+            0.9,
+            0.75,
+            0.37
+          ],
+          "xyz": [
+            0,
+            0,
+            1.085
+          ],
+          "colour": "cardboard",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "strap_2_-0.33",
+          "size": [
+            0.035,
+            0.754,
+            0.372
+          ],
+          "xyz": [
+            -0.33,
+            0,
+            1.085
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "strap_2_0.33",
+          "size": [
+            0.035,
+            0.754,
+            0.372
+          ],
+          "xyz": [
+            0.33,
+            0,
+            1.085
+          ],
+          "colour": "steel",
+          "collision": false,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "parked_forklift": {
+      "size": [
+        2.5,
+        1.1,
+        2.15
+      ],
+      "parts": [
+        {
+          "name": "chassis",
+          "size": [
+            1.5,
+            1.05,
+            0.5
+          ],
+          "xyz": [
+            -0.4,
+            0,
+            0.5
+          ],
+          "colour": "yellow",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "rear",
+          "size": [
+            0.5,
+            1.05,
+            0.7
+          ],
+          "xyz": [
+            -0.9,
+            0,
+            0.85
+          ],
+          "colour": "yellow",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "seat",
+          "size": [
+            0.4,
+            0.48,
+            0.12
+          ],
+          "xyz": [
+            -0.4,
+            0,
+            1.03
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "seat_back",
+          "size": [
+            0.1,
+            0.48,
+            0.4
+          ],
+          "xyz": [
+            -0.6,
+            0,
+            1.24
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_-0.85_-0.46",
+          "size": [
+            0.26,
+            0.18
+          ],
+          "xyz": [
+            -0.85,
+            -0.46,
+            0.28
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_-0.85_0.46",
+          "size": [
+            0.26,
+            0.18
+          ],
+          "xyz": [
+            -0.85,
+            0.46,
+            0.28
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_0.12_-0.46",
+          "size": [
+            0.26,
+            0.18
+          ],
+          "xyz": [
+            0.12,
+            -0.46,
+            0.28
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "wheel_0.12_0.46",
+          "size": [
+            0.26,
+            0.18
+          ],
+          "xyz": [
+            0.12,
+            0.46,
+            0.28
+          ],
+          "colour": "trousers",
+          "collision": true,
+          "kind": "cylinder",
+          "rpy": [
+            1.57079632679,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "mast_-0.38",
+          "size": [
+            0.12,
+            0.1,
+            1.9
+          ],
+          "xyz": [
+            0.39,
+            -0.38,
+            1.1
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "fork_-0.38",
+          "size": [
+            0.95,
+            0.13,
+            0.07
+          ],
+          "xyz": [
+            0.78,
+            -0.38,
+            0.105
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "mast_0.38",
+          "size": [
+            0.12,
+            0.1,
+            1.9
+          ],
+          "xyz": [
+            0.39,
+            0.38,
+            1.1
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "fork_0.38",
+          "size": [
+            0.95,
+            0.13,
+            0.07
+          ],
+          "xyz": [
+            0.78,
+            0.38,
+            0.105
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "roof_post_-0.92_-0.43",
+          "size": [
+            0.055,
+            0.055,
+            1.25
+          ],
+          "xyz": [
+            -0.92,
+            -0.43,
+            1.5
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "roof_post_-0.92_0.43",
+          "size": [
+            0.055,
+            0.055,
+            1.25
+          ],
+          "xyz": [
+            -0.92,
+            0.43,
+            1.5
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "roof_post_0.15_-0.43",
+          "size": [
+            0.055,
+            0.055,
+            1.25
+          ],
+          "xyz": [
+            0.15,
+            -0.43,
+            1.5
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "roof_post_0.15_0.43",
+          "size": [
+            0.055,
+            0.055,
+            1.25
+          ],
+          "xyz": [
+            0.15,
+            0.43,
+            1.5
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "roof",
+          "size": [
+            1.3,
+            1.05,
+            0.08
+          ],
+          "xyz": [
+            -0.4,
+            0,
+            2.11
+          ],
+          "colour": "steel",
+          "collision": true,
+          "kind": "box",
+          "rpy": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  },
+  "industrial_objects": [
+    {
+      "kind": "parked_forklift",
+      "id": "receiving_forklift",
+      "pose": [
+        -12.7,
+        2.9,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "industrial_cart",
+      "id": "receiving_cart",
+      "pose": [
+        -13.3,
+        -2.9,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "stacked_crates",
+      "id": "dispatch_crates",
+      "pose": [
+        13.4,
+        -7.6,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "industrial_cart",
+      "id": "dispatch_cart",
+      "pose": [
+        13.4,
+        2.9,
+        0,
+        0,
+        0,
+        3.14159265359
+      ]
+    },
+    {
+      "kind": "tool_cart",
+      "id": "charging_tools",
+      "pose": [
+        13.6,
+        7.1,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "industrial_bin",
+      "id": "charging_bin",
+      "pose": [
+        14.05,
+        8.8,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "industrial_bin",
+      "id": "receiving_bin",
+      "pose": [
+        -14.0,
+        8.8,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "stacked_crates",
+      "id": "north_buffer_crates",
+      "pose": [
+        -12.7,
+        8.7,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "industrial_cart",
+      "id": "north_buffer_cart",
+      "pose": [
+        -10.9,
+        8.9,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "tool_cart",
+      "id": "staging_tools",
+      "pose": [
+        -14.1,
+        -6.8,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "cone",
+      "id": "receiving_cone",
+      "pose": [
+        -10.9,
+        2.5,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "cone",
+      "id": "dispatch_cone",
+      "pose": [
+        10.8,
+        2.5,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
 }

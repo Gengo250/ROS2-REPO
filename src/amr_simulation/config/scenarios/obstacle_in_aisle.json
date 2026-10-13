@@ -1,1 +1,21 @@
-{"name": "obstacle_in_aisle", "description": "Loaded pallet partially obstructs aisle_01", "aisle_obstacle": true, "corridor_blocked": false, "human_overrides": {}}
+{
+  "name": "obstacle_in_aisle",
+  "description": "Loaded pallet partially obstructs aisle_01",
+  "aisle_obstacle": true,
+  "corridor_blocked": false,
+  "human_overrides": {},
+  "industrial_objects": [
+    {
+      "kind": "cone",
+      "id": "aisle_warning_cone",
+      "pose": [
+        -5.35,
+        -3.65,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

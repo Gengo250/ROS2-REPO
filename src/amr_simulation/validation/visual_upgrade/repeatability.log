@@ -1,0 +1,39 @@
+PASS: AMR entity exists in Gazebo scene
+PASS: runtime barrier matches selected scenario
+PASS: runtime aisle load matches selected scenario
+PASS: AMR settles on floor
+PASS: AMR spawns at configured clear pose
+PASS: /scan publishes fresh samples
+PASS: /imu/data publishes fresh samples
+PASS: /camera/image_raw publishes fresh samples
+PASS: /camera/depth/image_raw publishes fresh samples
+PASS: /camera/camera_info publishes fresh samples
+PASS: /camera/points publishes fresh samples
+PASS: /odom publishes fresh samples
+PASS: /joint_states publishes fresh samples
+PASS: /warehouse/camera_01/image_raw publishes fresh samples
+PASS: /warehouse/camera_01/camera_info publishes fresh samples
+PASS: scan frame laser_frame
+PASS: LiDAR sample count preserved
+PASS: IMU gravity preserved
+PASS: point cloud X-forward frame preserved
+PASS: TF base_link -> laser_frame
+PASS: TF base_link -> camera_optical_frame
+PASS: TF odom -> base_link
+PASS: TF world -> warehouse_camera_01_optical_frame
+PASS: fixed camera optical frame
+PASS: fixed camera resolution and intrinsics
+PASS: /warehouse/camera_01/image_raw RGB encoding
+PASS: /warehouse/camera_01/image_raw nonblank rendered image
+PASS: human_01 trajectory ground truth available
+PASS: human_01 moves along configured route
+PASS: human_01 remains upright on floor
+PASS: human_01 body tilt remains stable
+PASS: human_02 trajectory ground truth available
+PASS: human_02 moves along configured route
+PASS: human_02 remains upright on floor
+PASS: human_02 body tilt remains stable
+PASS: human_01 crosses main AMR route y=0
+PASS: AMR remains stable after physical tests
+WAREHOUSE ACCEPTANCE PASSED: person_crossing
+PHYSICAL HUMAN REPEATABILITY PASSED: {'human_01': {'max_position_difference_m': 0.0033895760143610705, 'mean_position_difference_m': 0.00022461526943902573, 'compared_sim_seconds': 23.192, 'samples': 92}, 'human_02': {'max_position_difference_m': 0.005006642595635812, 'mean_position_difference_m': 0.00023082699638263368, 'compared_sim_seconds': 23.192, 'samples': 92}}
