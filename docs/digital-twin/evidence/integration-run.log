@@ -1,0 +1,21 @@
+PASS: scenario is carried from the composed launch
+PASS: real odometry retains odom frame
+Evidence: /home/gengo/ros2_ws/docs/digital-twin/evidence/20261013T162613Z
+Traceback (most recent call last):
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 204, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 138, in main
+    check(any('--headless-rendering' in c and '-s' in c for c in commands), 'Gazebo server uses headless rendering')
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 87, in check
+    assert condition, label
+           ^^^^^^^^^
+AssertionError: Gazebo server uses headless rendering

@@ -1,0 +1,6 @@
+{
+  "before_x": 0,
+  "after_x": 0.2364,
+  "text": "WAREHOUSE / PHASE 01\n\nDigital Twin\n\nLive connection diagnostics\n\nREAD-ONLY TELEMETRY\nGateway\n\nConnected\n\nROS 2\n\nOnline\n\nGazebo\n\nRunning\n\nActive scenario\n\nnormal\n\nReceiving live telemetry.\n\nRobot telemetry\nConnected robots: 1\nRobot: amr_01\nOnline\nPose frame: odom · Velocity frame: base_link · Source: /odom\nPOSITION · M\nX\n0.2364\nY\n0.0000\nZ\n0.0000\nVELOCITY · M/S, RAD/S\nLinear (x, y, z)\n0.0000, 0.0000, 0.0000\nAngular (x, y, z)\n0.0000, 0.0000, 0.0000\n\nLast odometry: 2026-10-13T16:37:34.021423Z · Age: 0.0109 s\n\nLast update: 2026-10-13T16:37:34.032400Z · #302\nPublication rate: 9.9 Hz\n\nPose source: ROS odometry. Positions are local to the reported frame. Global warehouse localization is not available in Phase 1.",
+  "page_errors": []
+}

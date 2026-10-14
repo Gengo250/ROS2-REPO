@@ -1,0 +1,7 @@
+/clock [rosgraph_msgs/msg/Clock]
+/joint_states [sensor_msgs/msg/JointState]
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/robot_description [std_msgs/msg/String]
+/rosout [rcl_interfaces/msg/Log]
+/tf [tf2_msgs/msg/TFMessage]
+/tf_static [tf2_msgs/msg/TFMessage]

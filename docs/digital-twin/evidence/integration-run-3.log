@@ -1,0 +1,31 @@
+PASS: scenario is carried from the composed launch
+PASS: real odometry retains odom frame
+PASS: Gazebo server uses headless rendering
+PASS: no Gazebo GUI or RViz process
+PASS: both existing controllers are active
+PASS: WebSocket receives multiple schema-valid sequenced snapshots
+PASS: Chromium displays odometry, motion, disconnection and reconnection
+PASS: simultaneous browser and Python WebSocket clients receive telemetry
+Evidence: /home/gengo/ros2_ws/docs/digital-twin/evidence/20261013T162804Z
+Traceback (most recent call last):
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 208, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 184, in main
+    await observer
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 95, in observe
+    async for data in socket:
+  File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/websockets/asyncio/connection.py", line 242, in __aiter__
+    yield await self.recv()
+          ^^^^^^^^^^^^^^^^^
+  File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/websockets/asyncio/connection.py", line 322, in recv
+    raise self.protocol.close_exc from self.recv_exc
+websockets.exceptions.ConnectionClosedError: received 1012 (service restart); then sent 1012 (service restart)

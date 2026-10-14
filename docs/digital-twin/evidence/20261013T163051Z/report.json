@@ -1,0 +1,115 @@
+{
+  "scenario": "normal",
+  "ros_domain_id": "212",
+  "gz_partition": "digital_twin_validation_199717",
+  "checks": [
+    "scenario is carried from the composed launch",
+    "real odometry retains odom frame",
+    "Gazebo server uses headless rendering",
+    "no Gazebo GUI or RViz process",
+    "both existing controllers are active",
+    "WebSocket receives multiple schema-valid sequenced snapshots",
+    "Chromium displays odometry, motion, disconnection and reconnection",
+    "simultaneous browser and Python WebSocket clients receive telemetry",
+    "SIGINT terminates all launch-owned processes",
+    "server shutdown closes the active WebSocket",
+    "Gateway port is released after shutdown"
+  ],
+  "shutdown": {
+    "remaining_after_sigint": [],
+    "returncode": 0
+  },
+  "process_commands": [
+    [
+      "gz",
+      "sim",
+      "-r",
+      "-v",
+      "3",
+      "-s",
+      "--headless-rendering",
+      "/home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_normal.sdf"
+    ],
+    [
+      "/opt/ros/jazzy/lib/robot_state_publisher/robot_state_publisher",
+      "--ros-args",
+      "--params-file",
+      "/tmp/launch_params_mb93wv78"
+    ],
+    [
+      "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+      "--ros-args",
+      "--params-file",
+      "/tmp/launch_params_n82zff9t"
+    ],
+    [
+      "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+      "--ros-args",
+      "-r",
+      "__node:=warehouse_bridge",
+      "--params-file",
+      "/tmp/launch_params_qb_ku5m4"
+    ],
+    [
+      "/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher",
+      "--frame-id",
+      "world",
+      "--child-frame-id",
+      "warehouse_camera_01_link",
+      "--x",
+      "-10",
+      "--y",
+      "-8.5",
+      "--z",
+      "4.4",
+      "--roll",
+      "0",
+      "--pitch",
+      "0.53",
+      "--yaw",
+      "0.85",
+      "--ros-args",
+      "-r",
+      "__node:=warehouse_camera_01_link_tf",
+      "--params-file",
+      "/tmp/launch_params__wrixtae"
+    ],
+    [
+      "/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher",
+      "--frame-id",
+      "warehouse_camera_01_link",
+      "--child-frame-id",
+      "warehouse_camera_01_optical_frame",
+      "--x",
+      "0",
+      "--y",
+      "0",
+      "--z",
+      "0",
+      "--roll",
+      "-1.5707963267948966",
+      "--pitch",
+      "0",
+      "--yaw",
+      "-1.5707963267948966",
+      "--ros-args",
+      "-r",
+      "__node:=warehouse_camera_01_optical_frame_tf",
+      "--params-file",
+      "/tmp/launch_params_65mecfmy"
+    ],
+    [
+      "/home/gengo/ros2_ws/.venv/bin/python",
+      "/home/gengo/ros2_ws/install/digital_twin_gateway/lib/digital_twin_gateway/gateway",
+      "--ros-args"
+    ]
+  ],
+  "sample_count_retained": 224,
+  "measured_websocket_hz": 9.939793337238843,
+  "mean_snapshot_bytes": 2126.5625,
+  "websocket_close_code": 1012,
+  "web_shutdown": {
+    "remaining_after_sigint": [],
+    "returncode": -2
+  }
+}

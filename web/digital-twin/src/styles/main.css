@@ -1,0 +1,27 @@
+:root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #e2eaf3; background: #0b121b; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1150px; margin: auto; padding: 54px 30px; }
+header, .section-heading, footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+h1 { margin: 10px 0; font-size: clamp(32px, 5vw, 48px); letter-spacing: -.04em; font-weight: 650; }
+.eyebrow { color: #50d9c3; font-size: 11px; letter-spacing: .18em; font-weight: 700; }
+.subtitle, .frame-note, footer, .robot-meta { color: #94a8bc; }
+.tag { font-size: 10px; letter-spacing: .12em; color: #50d9c3; border: 1px solid #28544f; padding: 10px 12px; border-radius: 4px; }
+.system { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 36px; }
+.system article, .telemetry { background: #101c29; border: 1px solid #233348; border-radius: 8px; padding: 22px; }
+h2 { font-size: 14px; font-weight: 500; color: #a6b9cb; margin: 0; }
+.system p { font-size: 21px; margin: 12px 0 0; }
+[data-connected="true"] { color: #50d9c3; }
+#notice { min-height: 26px; font-size: 13px; color: #a6b9cb; margin: 20px 0; }
+.section-heading > span { font-size: 12px; color: #a6b9cb; }
+.robot-card { margin-top: 22px; padding-top: 18px; border-top: 1px solid #2b3a4b; }
+h3 { font-size: 19px; margin: 0 0 12px; }
+.robot-meta { font-size: 12px; overflow-wrap: anywhere; }
+.measurements { display: grid; grid-template-columns: 1fr 1.3fr; gap: 42px; margin: 24px 0; }
+h4 { color: #a6b9cb; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+dl { display: grid; grid-template-columns: 1fr 2fr; row-gap: 16px; font-size: 14px; }
+dt { color: #a6b9cb; } dd { margin: 0; font-variant-numeric: tabular-nums; font-family: ui-monospace, monospace; }
+footer { font-size: 11px; margin-top: 22px; flex-wrap: wrap; }
+.frame-note { font-size: 12px; line-height: 1.7; margin-top: 32px; border-left: 2px solid #3a746d; padding-left: 14px; max-width: 800px; }
+.empty { color: #94a8bc; padding: 25px 0; }
+@media (max-width: 780px) { .system { grid-template-columns: 1fr 1fr; } header { align-items: flex-start; } .tag { display: none; } .measurements { grid-template-columns: 1fr; gap: 0; } main { padding: 30px 18px; } }

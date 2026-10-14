@@ -1,0 +1,13 @@
+
+> digital-twin@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /home/gengo/ros2_ws/web/digital-twin
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  13:24:51
+   Duration  259ms (import 69%, tests 19%, transform 9%, worker 2%)
+

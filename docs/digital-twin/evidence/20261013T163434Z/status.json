@@ -1,0 +1,50 @@
+{
+  "protocol_version": "1.0",
+  "message_type": "connection_status",
+  "session_id": "aa4d9b7d-d792-4519-8d9b-0f7286bbf47a",
+  "gateway": "online",
+  "ros_initialized": true,
+  "ros": "online",
+  "simulation": "online",
+  "last_odometry_timestamp": "2026-10-13T16:34:52.410606Z",
+  "active_websocket_clients": 1,
+  "configured_publication_hz": 10.0,
+  "measured_publication_hz": 9.935814242577532,
+  "topics": [
+    {
+      "topic": "/clock",
+      "status": "online",
+      "received_at": "2026-10-13T16:34:52.429823Z",
+      "age_seconds": 0.0012883299996246933,
+      "messages_received": 3998
+    },
+    {
+      "topic": "/tf",
+      "status": "online",
+      "received_at": "2026-10-13T16:34:52.410336Z",
+      "age_seconds": 0.020776891999958025,
+      "messages_received": 239
+    },
+    {
+      "topic": "/tf_static",
+      "status": "online",
+      "received_at": "2026-10-13T16:34:38.331245Z",
+      "age_seconds": 14.099866067999756,
+      "messages_received": 3
+    },
+    {
+      "topic": "/odom",
+      "status": "online",
+      "received_at": "2026-10-13T16:34:52.410721Z",
+      "age_seconds": 0.020388370999171457,
+      "messages_received": 177
+    },
+    {
+      "topic": "/joint_states",
+      "status": "online",
+      "received_at": "2026-10-13T16:34:52.428078Z",
+      "age_seconds": 0.00303315999917686,
+      "messages_received": 404
+    }
+  ]
+}

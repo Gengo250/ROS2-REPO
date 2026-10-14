@@ -1,0 +1,13 @@
+
+> digital-twin@0.1.0 test:browser
+> playwright test
+
+
+Running 2 tests using 1 worker
+
+  ✓  1 test/diagnostics.browser.ts:8:1 › real ROS odometry reaches the browser and follows controlled motion (14.5s)
+  ✓  2 test/diagnostics.browser.ts:42:1 › frontend starts and remains usable with no backend (258ms)
+
+  2 passed (16.2s)
+(node:193294) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

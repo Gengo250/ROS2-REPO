@@ -1,0 +1,39 @@
+"""QoS-compatible telemetry subscriptions; TF/joints provide receipt diagnostics."""
+from functools import partial
+from nav_msgs.msg import Odometry
+from rosgraph_msgs.msg import Clock
+from sensor_msgs.msg import JointState
+from tf2_msgs.msg import TFMessage
+from pydantic import ValidationError
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+from .state_collector import normalize_odometry, stamp_seconds
+
+
+def subscribe(node, manager, settings):
+    live = QoSProfile(depth=1, reliability=ReliabilityPolicy.BEST_EFFORT)
+    static = QoSProfile(depth=100, reliability=ReliabilityPolicy.RELIABLE,
+                        durability=DurabilityPolicy.TRANSIENT_LOCAL)
+
+    def odometry(config, message):
+        try:
+            robot = normalize_odometry(config.id, config.odom_topic, message, manager.wall_clock())
+        except ValidationError:
+            node.get_logger().warning('Invalid odometry rejected', throttle_duration_sec=5)
+            return
+        manager.update_robot(robot)
+
+    subscriptions = [
+        node.create_subscription(Clock, settings.clock_topic,
+                                 lambda msg: manager.update_clock(stamp_seconds(msg.clock)), live),
+        node.create_subscription(TFMessage, settings.tf_topic,
+                                 lambda _: manager.touch(settings.tf_topic), live),
+        node.create_subscription(TFMessage, settings.tf_static_topic,
+                                 lambda _: manager.touch(settings.tf_static_topic), static),
+    ]
+    for config in settings.robots:
+        subscriptions.append(node.create_subscription(Odometry, config.odom_topic,
+                                                       partial(odometry, config), live))
+    for topic in {r.joint_states_topic for r in settings.robots}:
+        subscriptions.append(node.create_subscription(JointState, topic,
+                             lambda _, t=topic: manager.touch(t), live))
+    return subscriptions

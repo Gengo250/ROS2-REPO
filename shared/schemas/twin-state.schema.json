@@ -1,0 +1,520 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/twin-state.schema.json",
+  "$defs": {
+    "ConnectionStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Protocol Version",
+          "type": "string"
+        },
+        "message_type": {
+          "const": "connection_status",
+          "default": "connection_status",
+          "title": "Message Type",
+          "type": "string"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "gateway": {
+          "enum": [
+            "online",
+            "offline"
+          ],
+          "title": "Gateway",
+          "type": "string"
+        },
+        "ros_initialized": {
+          "title": "Ros Initialized",
+          "type": "boolean"
+        },
+        "ros": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Ros",
+          "type": "string"
+        },
+        "simulation": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Simulation",
+          "type": "string"
+        },
+        "last_odometry_timestamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Odometry Timestamp"
+        },
+        "active_websocket_clients": {
+          "minimum": 0,
+          "title": "Active Websocket Clients",
+          "type": "integer"
+        },
+        "configured_publication_hz": {
+          "title": "Configured Publication Hz",
+          "type": "number"
+        },
+        "measured_publication_hz": {
+          "title": "Measured Publication Hz",
+          "type": "number"
+        },
+        "topics": {
+          "items": {
+            "$ref": "#/$defs/TopicStatus"
+          },
+          "title": "Topics",
+          "type": "array"
+        }
+      },
+      "required": [
+        "session_id",
+        "gateway",
+        "ros_initialized",
+        "ros",
+        "simulation",
+        "last_odometry_timestamp",
+        "active_websocket_clients",
+        "configured_publication_hz",
+        "measured_publication_hz",
+        "topics"
+      ],
+      "title": "ConnectionStatus",
+      "type": "object"
+    },
+    "Pose": {
+      "additionalProperties": false,
+      "properties": {
+        "position": {
+          "$ref": "#/$defs/Vector3"
+        },
+        "orientation": {
+          "$ref": "#/$defs/Quaternion"
+        }
+      },
+      "required": [
+        "position",
+        "orientation"
+      ],
+      "title": "Pose",
+      "type": "object"
+    },
+    "Quaternion": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "z": {
+          "title": "Z",
+          "type": "number"
+        },
+        "w": {
+          "title": "W",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z",
+        "w"
+      ],
+      "title": "Quaternion",
+      "type": "object"
+    },
+    "Robot": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "frame_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Id"
+        },
+        "child_frame_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Child Frame Id"
+        },
+        "pose_source": {
+          "title": "Pose Source",
+          "type": "string"
+        },
+        "pose": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pose"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "velocity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Velocity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "source_timestamp": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Timestamp"
+        },
+        "received_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Received At"
+        },
+        "age_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Age Seconds"
+        }
+      },
+      "required": [
+        "id",
+        "frame_id",
+        "child_frame_id",
+        "pose_source",
+        "pose",
+        "velocity",
+        "status",
+        "source_timestamp",
+        "received_at",
+        "age_seconds"
+      ],
+      "title": "Robot",
+      "type": "object"
+    },
+    "TopicStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "title": "Topic",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "received_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Received At"
+        },
+        "age_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Age Seconds"
+        },
+        "messages_received": {
+          "minimum": 0,
+          "title": "Messages Received",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "topic",
+        "status",
+        "received_at",
+        "age_seconds",
+        "messages_received"
+      ],
+      "title": "TopicStatus",
+      "type": "object"
+    },
+    "Vector3": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "z": {
+          "title": "Z",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "title": "Vector3",
+      "type": "object"
+    },
+    "Velocity": {
+      "additionalProperties": false,
+      "properties": {
+        "linear": {
+          "$ref": "#/$defs/Vector3"
+        },
+        "angular": {
+          "$ref": "#/$defs/Vector3"
+        }
+      },
+      "required": [
+        "linear",
+        "angular"
+      ],
+      "title": "Velocity",
+      "type": "object"
+    },
+    "World": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "frame_id": {
+          "title": "Frame Id",
+          "type": "string"
+        },
+        "scenario": {
+          "anyOf": [
+            {
+              "enum": [
+                "normal",
+                "person_crossing",
+                "obstacle_in_aisle",
+                "corridor_blocked"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Scenario"
+        },
+        "scenario_source": {
+          "enum": [
+            "launch_configuration",
+            "environment",
+            "unspecified"
+          ],
+          "title": "Scenario Source",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "running",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "availability": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Availability",
+          "type": "string"
+        },
+        "status_source": {
+          "const": "clock_progress",
+          "default": "clock_progress",
+          "title": "Status Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "frame_id",
+        "scenario",
+        "scenario_source",
+        "status",
+        "availability"
+      ],
+      "title": "World",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "twin_state",
+      "default": "twin_state",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "session_id": {
+      "title": "Session Id",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+    },
+    "simulation_time": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Simulation Time"
+    },
+    "world": {
+      "$ref": "#/$defs/World"
+    },
+    "robots": {
+      "items": {
+        "$ref": "#/$defs/Robot"
+      },
+      "title": "Robots",
+      "type": "array"
+    },
+    "humans": {
+      "default": [],
+      "maxItems": 0,
+      "minItems": 0,
+      "title": "Humans",
+      "type": "array"
+    },
+    "obstacles": {
+      "default": [],
+      "maxItems": 0,
+      "minItems": 0,
+      "title": "Obstacles",
+      "type": "array"
+    },
+    "stations": {
+      "default": [],
+      "maxItems": 0,
+      "minItems": 0,
+      "title": "Stations",
+      "type": "array"
+    },
+    "connection": {
+      "$ref": "#/$defs/ConnectionStatus"
+    }
+  },
+  "required": [
+    "session_id",
+    "sequence",
+    "timestamp",
+    "simulation_time",
+    "world",
+    "robots",
+    "connection"
+  ],
+  "title": "TwinState",
+  "type": "object"
+}

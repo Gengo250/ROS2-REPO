@@ -1,0 +1,107 @@
+{
+  "protocol_version": "1.0",
+  "message_type": "twin_state",
+  "session_id": "e5d826ef-cd1d-41a3-9920-c85b95feafb6",
+  "sequence": 114,
+  "timestamp": "2026-10-13T16:35:06.137989Z",
+  "simulation_time": 0.693,
+  "world": {
+    "id": "warehouse",
+    "frame_id": "world",
+    "scenario": "corridor_blocked",
+    "scenario_source": "launch_configuration",
+    "status": "running",
+    "availability": "online",
+    "status_source": "clock_progress"
+  },
+  "robots": [
+    {
+      "id": "amr_01",
+      "frame_id": "odom",
+      "child_frame_id": "base_link",
+      "pose_source": "/odom",
+      "pose": {
+        "position": {
+          "x": 5.767875654096279e-20,
+          "y": 1.3866660813190192e-39,
+          "z": 0.0
+        },
+        "orientation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 2.657756079025423e-20,
+          "w": 1.0
+        }
+      },
+      "velocity": {
+        "linear": {
+          "x": 9.397234926210746e-21,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "angular": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.7480853861776723e-20
+        }
+      },
+      "status": "online",
+      "source_timestamp": 0.68,
+      "received_at": "2026-10-13T16:35:06.118467Z",
+      "age_seconds": 0.019442989999333804
+    }
+  ],
+  "humans": [],
+  "obstacles": [],
+  "stations": [],
+  "connection": {
+    "protocol_version": "1.0",
+    "message_type": "connection_status",
+    "session_id": "e5d826ef-cd1d-41a3-9920-c85b95feafb6",
+    "gateway": "online",
+    "ros_initialized": true,
+    "ros": "online",
+    "simulation": "online",
+    "last_odometry_timestamp": "2026-10-13T16:35:06.118467Z",
+    "active_websocket_clients": 0,
+    "configured_publication_hz": 10.0,
+    "measured_publication_hz": 9.9736235556455,
+    "topics": [
+      {
+        "topic": "/clock",
+        "status": "online",
+        "received_at": "2026-10-13T16:35:06.136808Z",
+        "age_seconds": 0.0011806570000771899,
+        "messages_received": 683
+      },
+      {
+        "topic": "/tf",
+        "status": "online",
+        "received_at": "2026-10-13T16:35:06.119170Z",
+        "age_seconds": 0.01881687100012641,
+        "messages_received": 22
+      },
+      {
+        "topic": "/tf_static",
+        "status": "online",
+        "received_at": "2026-10-13T16:34:54.797346Z",
+        "age_seconds": 11.340642109999862,
+        "messages_received": 3
+      },
+      {
+        "topic": "/odom",
+        "status": "online",
+        "received_at": "2026-10-13T16:35:06.118544Z",
+        "age_seconds": 0.019442989999333804,
+        "messages_received": 9
+      },
+      {
+        "topic": "/joint_states",
+        "status": "online",
+        "received_at": "2026-10-13T16:35:06.132734Z",
+        "age_seconds": 0.005254953000076057,
+        "messages_received": 68
+      }
+    ]
+  }
+}

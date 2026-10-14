@@ -1,0 +1,12 @@
+PASS: scenario is carried from the composed launch
+PASS: real odometry retains odom frame
+PASS: Gazebo server uses headless rendering
+PASS: no Gazebo GUI or RViz process
+PASS: both existing controllers are active
+PASS: WebSocket receives multiple schema-valid sequenced snapshots
+PASS: Chromium displays odometry, motion, disconnection and reconnection
+PASS: simultaneous browser and Python WebSocket clients receive telemetry
+PASS: SIGINT terminates all launch-owned processes
+PASS: server shutdown closes the active WebSocket
+PASS: Gateway port is released after shutdown
+Evidence: /home/gengo/ros2_ws/docs/digital-twin/evidence/20261013T163051Z

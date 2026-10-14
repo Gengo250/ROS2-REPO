@@ -1,0 +1,133 @@
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< amr_description [0.24s]
+Finished <<< my_cpp_pkg [0.23s]
+Starting >>> amr_simulation
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+   Site: gengo
+   Build name: (empty)
+ Add coverage exclude regular expressions.
+Create new tag: 20261013-1627 - Experimental
+UpdateCTestConfiguration  from :/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Parse Config file:/home/gengo/ros2_ws/build/amr_simulation/CTestConfiguration.ini
+Test project /home/gengo/ros2_ws/build/amr_simulation
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: warehouse_generation
+
+1: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--package-name" "amr_simulation" "--output-file" "/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation.txt" "--command" "/usr/bin/python3" "-u" "-m" "pytest" "/home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py" "-o" "cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache" "--junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml" "--junit-prefix=amr_simulation"
+1: Working Directory: /home/gengo/ros2_ws/build/amr_simulation
+1: Test timeout computed to be: 180
+1: -- run_test.py: invoking following command in '/home/gengo/ros2_ws/build/amr_simulation':
+1:  - /usr/bin/python3 -u -m pytest /home/gengo/ros2_ws/src/amr_simulation/tests/test_generation.py -o cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache --junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml --junit-prefix=amr_simulation
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+1: ============================= test session starts ==============================
+1: platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+1: cachedir: build/amr_simulation/ament_cmake_pytest/warehouse_generation/.cache
+1: rootdir: /home/gengo/ros2_ws
+1: plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+1: collected 21 items
+1: 
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.6.0
+cachedir: /home/gengo/ros2_ws/build/my_py_pkg/.pytest_cache
+rootdir: /home/gengo/ros2_ws/src/my_py_pkg
+plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, asyncio-0.26.0, anyio-4.15.1, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 3 items
+
+test/test_copyright.py s                                                 [ 33%]
+test/test_flake8.py .                                                    [ 66%]
+test/test_pep257.py .                                                    [100%]
+
+------ generated xml file: /home/gengo/ros2_ws/build/my_py_pkg/pytest.xml ------
+========================= 2 passed, 1 skipped in 0.28s =========================
+--- stderr: my_py_pkg
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+---
+Finished <<< my_py_pkg [1.09s]
+1: ../../src/amr_simulation/tests/test_generation.py .....................  [100%]
+1: 
+1: - generated xml file: /home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml -
+1: ============================== 21 passed in 0.89s ==============================
+1: -- run_test.py: return code 0
+1: -- run_test.py: verify result file '/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_generation.xunit.xml'
+1/2 Test #1: warehouse_generation .............   Passed    1.38 sec
+test 2
+    Start 2: warehouse_launch
+
+2: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml" "--package-name" "amr_simulation" "--output-file" "/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_launch.txt" "--command" "/usr/bin/python3" "-u" "-m" "pytest" "/home/gengo/ros2_ws/src/amr_simulation/tests/test_launch.py" "-o" "cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_launch/.cache" "--junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml" "--junit-prefix=amr_simulation"
+2: Working Directory: /home/gengo/ros2_ws/build/amr_simulation
+2: Test timeout computed to be: 180
+2: -- run_test.py: invoking following command in '/home/gengo/ros2_ws/build/amr_simulation':
+2:  - /usr/bin/python3 -u -m pytest /home/gengo/ros2_ws/src/amr_simulation/tests/test_launch.py -o cache_dir=/home/gengo/ros2_ws/build/amr_simulation/ament_cmake_pytest/warehouse_launch/.cache --junit-xml=/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml --junit-prefix=amr_simulation
+2: ============================= test session starts ==============================
+2: platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+2: cachedir: build/amr_simulation/ament_cmake_pytest/warehouse_launch/.cache
+2: rootdir: /home/gengo/ros2_ws
+2: plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+2: collected 9 items
+2: 
+2: ../../src/amr_simulation/tests/test_launch.py .........                  [100%]
+2: 
+2: - generated xml file: /home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml -
+2: ============================== 9 passed in 0.55s ===============================
+2: -- run_test.py: return code 0
+2: -- run_test.py: verify result file '/home/gengo/ros2_ws/build/amr_simulation/test_results/amr_simulation/warehouse_launch.xunit.xml'
+2/2 Test #2: warehouse_launch .................   Passed    1.02 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+pytest    =   2.39 sec*proc (2 tests)
+
+Total Test time (real) =   2.40 sec
+Finished <<< amr_simulation [2.42s]
+Starting >>> digital_twin_gateway
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.6.0
+cachedir: /home/gengo/ros2_ws/build/digital_twin_gateway/.pytest_cache
+rootdir: /home/gengo/ros2_ws/src/digital_twin_gateway
+configfile: setup.cfg
+testpaths: test
+plugins: ament-lint-0.17.5, ament-pep257-0.17.5, launch-testing-ros-0.26.12, launch-testing-3.4.11, ament-flake8-0.17.5, ament-xmllint-0.17.5, ament-copyright-0.17.5, asyncio-0.26.0, anyio-4.15.1, None-None, colcon-core-0.20.1, typeguard-4.1.5, rerunfailures-12.0, mock-3.12.0, cov-4.1.0, timeout-2.2.0
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 19 items
+
+test/test_api.py .......                                                 [ 36%]
+test/test_launch.py ....                                                 [ 57%]
+test/test_ros_runtime.py .                                               [ 63%]
+
+=============================== warnings summary ===============================
+../../.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  Warning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+test/test_state.py .......                                               [100%]
+- generated xml file: /home/gengo/ros2_ws/build/digital_twin_gateway/pytest.xml -
+======================== 19 passed, 1 warning in 1.03s =========================
+--- stderr: digital_twin_gateway
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+Warning: Implicit None on return values is deprecated and will raise KeyErrors.
+
+=============================== warnings summary ===============================
+../../.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  Warning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+---
+Finished <<< digital_twin_gateway [2.14s]
+
+Summary: 5 packages finished [4.97s]
+  2 packages had stderr output: digital_twin_gateway my_py_pkg
