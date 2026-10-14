@@ -1,0 +1,161 @@
+[INFO] [launch]: All log files can be found below /home/gengo/.ros/log/2026-10-13-13-35-55-693451-gengo-212042
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: AMR xacro: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/amr.urdf.xacro; entity: warehouse_amr; world: amr_validation
+[INFO] [gz-1]: process started with pid [212070]
+[INFO] [robot_state_publisher-2]: process started with pid [212071]
+[INFO] [parameter_bridge-3]: process started with pid [212072]
+[INFO] [create-4]: process started with pid [212073]
+[robot_state_publisher-2] [INFO] [1791909355.872910057] [robot_state_publisher]: Robot initialized
+[create-4] [INFO] [1791909355.894083436] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[gz-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/home/gengo/ros2_ws/install/amr_description/share/amr_description/worlds/warehouse_test.sdf[0m[1;32m].[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/amr_validation/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/amr_validation/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/amr_validation/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/amr_validation/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/amr_validation/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/amr_validation/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/amr_validation/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/amr_validation/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/amr_validation/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/amr_validation/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/amr_validation/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/amr_validation/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/amr_validation/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/amr_validation/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/amr_validation/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/amr_validation[0m[1;32m/control], [[0m[1;32m/world/amr_validation[0m[1;32m/control/state] and [[0m[1;32m/world/amr_validation[0m[1;32m/playback/control][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[create-4] [INFO] [1791909356.353764954] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-4]: process has finished cleanly [pid 212073]
+[INFO] [spawner-5]: process started with pid [212150]
+[spawner-5] [INFO] [1791909356.831793250] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[parameter_bridge-3] [INFO] [1791909356.920909989] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791909356.922010273] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791909356.925137282] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/imu (gz.msgs.IMU) -> /imu/data (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791909356.925808803] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/image (gz.msgs.Image) -> /camera/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791909356.926343936] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/depth_image (gz.msgs.Image) -> /camera/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791909356.926781519] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/camera_info (gz.msgs.CameraInfo) -> /camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791909356.927417937] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/points (gz.msgs.PointCloudPacked) -> /camera/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[gz-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mamr_validation[0m[1;32m] initialized with [[0m[1;32mphysics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="rgbd_camera"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="imu"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="front_lidar"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [INFO] [1791909360.113748097] [gz_ros_control]: Loading controller_manager
+[gz-1] [INFO] [1791909360.124838154] [controller_manager]: Using ROS clock for triggering controller manager cycles.
+[gz-1] [WARN] [1791909360.124866723] [controller_manager]: The resource manager is not yet initialized, will wait for the robot description to initialize it..
+[gz-1] [INFO] [1791909360.131440892] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[gz-1] [WARN] [1791909360.131497179] [gz_ros_control]: Waiting RM to load and initialize hardware...
+[gz-1] [INFO] [1791909360.141837557] [controller_manager]: Received robot description from topic.
+[gz-1] [INFO] [1791909360.141909322] [controller_manager]: Enforcing command limits is enabled...
+[gz-1] [INFO] [1791909360.143895964] [gz_ros_control]: Using JointLimiter for joint 'right_wheel_joint' in hardware 'AMR_GazeboSystem' : '  has position limits: false [nan, nan]
+[gz-1]   has velocity limits: true [12]
+[gz-1]   has acceleration limits: false [nan]
+[gz-1]   has deceleration limits: false [nan]
+[gz-1]   has jerk limits: false [nan]
+[gz-1]   has effort limits: true [35]
+[gz-1]   angle wraparound: true'
+[gz-1] [INFO] [1791909360.143933571] [gz_ros_control]: Creating JointSaturationLimiter for joint 'right_wheel_joint' in hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791909360.143962307] [gz_ros_control]: Using JointLimiter for joint 'left_wheel_joint' in hardware 'AMR_GazeboSystem' : '  has position limits: false [nan, nan]
+[gz-1]   has velocity limits: true [12]
+[gz-1]   has acceleration limits: false [nan]
+[gz-1]   has deceleration limits: false [nan]
+[gz-1]   has jerk limits: false [nan]
+[gz-1]   has effort limits: true [35]
+[gz-1]   angle wraparound: true'
+[gz-1] [INFO] [1791909360.143972272] [gz_ros_control]: Creating JointSaturationLimiter for joint 'left_wheel_joint' in hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791909360.147167173] [gz_ros_control]: The position_proportional_gain has been set to: 0.1
+[gz-1] [INFO] [1791909360.147240892] [gz_ros_control]: Loading joint: left_wheel_joint
+[gz-1] [INFO] [1791909360.147254550] [gz_ros_control]: 	State:
+[gz-1] [INFO] [1791909360.147263132] [gz_ros_control]: 		 position
+[gz-1] [INFO] [1791909360.147269119] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791909360.147278198] [gz_ros_control]: 	Command:
+[gz-1] [INFO] [1791909360.147283790] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791909360.147309494] [gz_ros_control]: Loading joint: right_wheel_joint
+[gz-1] [INFO] [1791909360.147317299] [gz_ros_control]: 	State:
+[gz-1] [INFO] [1791909360.147322735] [gz_ros_control]: 		 position
+[gz-1] [INFO] [1791909360.147328527] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791909360.147333667] [gz_ros_control]: 	Command:
+[gz-1] [INFO] [1791909360.147338681] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791909360.147401448] [gz_ros_control]: Loading sensor: imu
+[gz-1] [INFO] [1791909360.147415845] [gz_ros_control]: 	State:
+[gz-1] [WARN] [1791909360.147421975] [gz_ros_control]: IMU sensor 'imu' not found in hardware_info, skipping.
+[gz-1] [INFO] [1791909360.147521018] [controller_manager]: Initialize hardware 'AMR_GazeboSystem' 
+[gz-1] [WARN] [1791909360.147546797] [controller_manager.hardware_component.system.AMR_GazeboSystem]: Executor is not available during hardware component initialization for 'AMR_GazeboSystem'. Skipping node creation!
+[gz-1] [INFO] [1791909360.147633679] [controller_manager]: Successful initialization of hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791909360.147791057] [controller_manager]: Activating component 'AMR_GazeboSystem'.
+[gz-1] [INFO] [1791909360.147812039] [resource_manager]: 'configure' hardware 'AMR_GazeboSystem' 
+[gz-1] [INFO] [1791909360.147820389] [gz_ros_control]: System Successfully configured!
+[gz-1] [INFO] [1791909360.147829513] [resource_manager]: Successful 'configure' of hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791909360.147840384] [resource_manager]: 'activate' hardware 'AMR_GazeboSystem' 
+[gz-1] [INFO] [1791909360.147864070] [resource_manager]: Successful 'activate' of hardware 'AMR_GazeboSystem'
+[gz-1] [WARN] [1791909360.147966638] [controller_manager]: Component 'AMR_GazeboSystem' does not have read or write statistics initialized, skipping registration.
+[gz-1] [INFO] [1791909360.147978411] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[spawner-5] [INFO] [1791909360.337922894] [spawner_joint_state_broadcaster]: Setting controller param "node_options_args" to "['--remap', '/diff_drive_controller/cmd_vel:=/cmd_vel', '--remap', '/diff_drive_controller/odom:=/odom']" for joint_state_broadcaster
+[gz-1] [INFO] [1791909360.338822712] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[gz-1] [INFO] [1791909360.338879975] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[gz-1] [INFO] [1791909360.343452047] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml -p use_sim_time:=true --param use_sim_time:=true --ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel --remap /diff_drive_controller/odom:=/odom 
+[spawner-5] [INFO] [1791909360.351887540] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[gz-1] [INFO] [1791909360.352642853] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[gz-1] [INFO] [1791909360.352882331] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[spawner-5] [INFO] [1791909360.365505954] [spawner_joint_state_broadcaster]: Setting controller param "node_options_args" to "['--remap', '/diff_drive_controller/cmd_vel:=/cmd_vel', '--remap', '/diff_drive_controller/odom:=/odom']" for diff_drive_controller
+[gz-1] [INFO] [1791909360.365648913] [controller_manager]: Loading controller : 'diff_drive_controller' of type 'diff_drive_controller/DiffDriveController'
+[gz-1] [INFO] [1791909360.365667266] [controller_manager]: Loading controller 'diff_drive_controller'
+[gz-1] [INFO] [1791909360.369520449] [controller_manager]: Controller 'diff_drive_controller' node arguments: --ros-args --params-file /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml -p use_sim_time:=true --param use_sim_time:=true --ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel --remap /diff_drive_controller/odom:=/odom 
+[spawner-5] [INFO] [1791909360.377814886] [spawner_joint_state_broadcaster]: Loaded diff_drive_controller
+[gz-1] [INFO] [1791909360.377985147] [controller_manager]: Configuring controller: 'diff_drive_controller'
+[gz-1] [INFO] [1791909360.385187349] [controller_manager]: Activating controllers: [ joint_state_broadcaster diff_drive_controller ]
+[gz-1] [WARN] [1791909362.155166325] [gz_ros_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[gz-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/amr_validation/scene/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/amr_validation/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/amr_validation/state[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/amr_validation[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [INFO] [1791909364.498524431] [controller_manager]: Successfully switched controllers!
+[spawner-5] [INFO] [1791909364.509466648] [spawner_joint_state_broadcaster]: Configured and activated all the parsed controllers list : ['joint_state_broadcaster', 'diff_drive_controller']!
+[INFO] [spawner-5]: process has finished cleanly [pid 212150]
+[gz-1] [WARN] [1791909365.488432327] [diff_drive_controller]: Velocity command timed out. Braking.
+[gz-1] [WARN] [1791909366.488342975] [diff_drive_controller]: Velocity command timed out. Braking.
+[gz-1] [WARN] [1791909370.060645671] [diff_drive_controller]: Velocity command timed out. Braking.
+[gz-1] [WARN] [1791909371.060607436] [diff_drive_controller]: Velocity command timed out. Braking.
+[gz-1] [WARN] [1791909374.562940449] [diff_drive_controller]: Velocity command timed out. Braking.
+[gz-1] [WARN] [1791909375.562928050] [diff_drive_controller]: Velocity command timed out. Braking.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [parameter_bridge-3]: sending signal 'SIGINT' to process[parameter_bridge-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [gz-1]: sending signal 'SIGINT' to process[gz-1]
+[robot_state_publisher-2] [INFO] [1791909376.748083584] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1791909376.748084181] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1791909376.750463500] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791909376.751131785] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gz-1] [INFO] [1791909376.850656074] [controller_manager.pal_statistics]: Async messages lost 0
+[gz-1] [INFO] [1791909376.850702055] [controller_manager.pal_statistics]: publish_async_failures_ 0
+[gz-1] [INFO] [1791909376.852021382] [controller_manager.pal_statistics]: Async messages lost 0
+[gz-1] [INFO] [1791909376.852048619] [controller_manager.pal_statistics]: publish_async_failures_ 0
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 212071]
+[INFO] [parameter_bridge-3]: process has finished cleanly [pid 212072]
+[INFO] [gz-1]: process has finished cleanly [pid 212070]
+[INFO] [launch]: process[gz-1] was required: shutting down launched system

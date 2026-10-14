@@ -1,0 +1,6 @@
+waiting for service to become available...
+requester: making request: controller_manager_msgs.srv.ListControllers_Request()
+
+response:
+controller_manager_msgs.srv.ListControllers_Response(controller=[controller_manager_msgs.msg.ControllerState(name='diff_drive_controller', state='active', type='diff_drive_controller/DiffDriveController', is_async=False, update_rate=100, claimed_interfaces=['left_wheel_joint/velocity', 'right_wheel_joint/velocity'], required_command_interfaces=['left_wheel_joint/velocity', 'right_wheel_joint/velocity'], required_state_interfaces=['left_wheel_joint/position', 'right_wheel_joint/position'], is_chainable=True, is_chained=False, exported_state_interfaces=[], reference_interfaces=['linear/velocity', 'angular/velocity'], chain_connections=[]), controller_manager_msgs.msg.ControllerState(name='joint_state_broadcaster', state='active', type='joint_state_broadcaster/JointStateBroadcaster', is_async=False, update_rate=100, claimed_interfaces=[], required_command_interfaces=[], required_state_interfaces=['left_wheel_joint/position', 'left_wheel_joint/velocity', 'right_wheel_joint/position', 'right_wheel_joint/velocity'], is_chainable=False, is_chained=False, exported_state_interfaces=[], reference_interfaces=[], chain_connections=[])])
+

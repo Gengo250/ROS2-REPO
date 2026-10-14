@@ -14,3 +14,13 @@ env/
 
 *.swp
 .DS_Store
+
+# Digital Twin development tools and generated runtime output
+.tools/
+node_modules/
+web/digital-twin/dist/
+web/digital-twin/test-results/
+web/digital-twin/playwright-report/
+.env
+.env.local
+.pytest_cache/

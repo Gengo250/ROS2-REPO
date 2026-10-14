@@ -1,0 +1,21 @@
+Starting >>> amr_description
+Starting >>> my_cpp_pkg
+Starting >>> my_py_pkg
+Finished <<< my_cpp_pkg [0.31s]
+Finished <<< amr_description [0.33s]
+Starting >>> amr_simulation
+Finished <<< amr_simulation [0.30s]
+Starting >>> digital_twin_gateway
+--- stderr: my_py_pkg
+/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:363: UserWarning: Unbuilt egg for pytest-repeat [unknown version] (/usr/lib/python3/dist-packages)
+  self.local_index = Environment(self.shadow_path + sys.path)
+---
+Finished <<< my_py_pkg [1.70s]
+--- stderr: digital_twin_gateway
+/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:363: UserWarning: Unbuilt egg for pytest-repeat [unknown version] (/usr/lib/python3/dist-packages)
+  self.local_index = Environment(self.shadow_path + sys.path)
+---
+Finished <<< digital_twin_gateway [1.64s]
+
+Summary: 5 packages finished [2.46s]
+  2 packages had stderr output: digital_twin_gateway my_py_pkg

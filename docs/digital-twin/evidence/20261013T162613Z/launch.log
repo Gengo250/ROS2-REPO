@@ -1,0 +1,260 @@
+[INFO] [launch]: All log files can be found below /home/gengo/.ros/log/2026-10-13-13-26-13-649427-gengo-187527
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: Warehouse scenario=normal; world=/home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_normal.sdf; sha256=b00bc6f43d1d0bc8f02053cea52c25b124760911bad1e1b60ab88eb78122690f; spawn=[-11, 0, 0.015, 0, 0, 0]; GZ_PARTITION=digital_twin_validation_187526
+[INFO] [launch.user]: AMR xacro: /home/gengo/ros2_ws/install/amr_description/share/amr_description/urdf/amr.urdf.xacro; entity: warehouse_amr; world: warehouse
+[INFO] [gz-1]: process started with pid [187530]
+[INFO] [robot_state_publisher-2]: process started with pid [187531]
+[INFO] [parameter_bridge-3]: process started with pid [187532]
+[INFO] [create-4]: process started with pid [187533]
+[INFO] [parameter_bridge-5]: process started with pid [187534]
+[INFO] [static_transform_publisher-6]: process started with pid [187535]
+[INFO] [static_transform_publisher-7]: process started with pid [187536]
+[INFO] [gateway-8]: process started with pid [187537]
+[create-4] [INFO] [1791908773.880173928] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[static_transform_publisher-7] [INFO] [1791908773.885638692] [warehouse_camera_01_optical_frame_tf]: Spinning until stopped - publishing transform
+[static_transform_publisher-7] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-7] rotation: ('-0.500000', '0.500000', '-0.500000', '0.500000')
+[static_transform_publisher-7] from 'warehouse_camera_01_link' to 'warehouse_camera_01_optical_frame'
+[static_transform_publisher-6] [INFO] [1791908773.886120082] [warehouse_camera_01_link_tf]: Spinning until stopped - publishing transform
+[static_transform_publisher-6] translation: ('-10.000000', '-8.500000', '4.400000')
+[static_transform_publisher-6] rotation: ('-0.107991', '0.238609', '0.397928', '0.879237')
+[static_transform_publisher-6] from 'world' to 'warehouse_camera_01_link'
+[robot_state_publisher-2] [INFO] [1791908773.919029400] [robot_state_publisher]: Robot initialized
+[gateway-8] INFO:     Started server process [187537]
+[gateway-8] INFO:     Waiting for application startup.
+[gateway-8] INFO:     Application startup complete.
+[gateway-8] INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[parameter_bridge-3] [INFO] [1791908774.984688582] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-5] [INFO] [1791908774.986203202] [warehouse_bridge]: Creating GZ->ROS Bridge: [/warehouse/camera_01/image (gz.msgs.Image) -> /warehouse/camera_01/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791908774.988107906] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791908774.991147825] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/imu (gz.msgs.IMU) -> /imu/data (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-5] [INFO] [1791908774.991406761] [warehouse_bridge]: Creating GZ->ROS Bridge: [/warehouse/camera_01/camera_info (gz.msgs.CameraInfo) -> /warehouse/camera_01/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791908774.992112221] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/image (gz.msgs.Image) -> /camera/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791908774.992807136] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/depth_image (gz.msgs.Image) -> /camera/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791908774.993385298] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/camera_info (gz.msgs.CameraInfo) -> /camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1791908774.994097505] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/amr/camera/points (gz.msgs.PointCloudPacked) -> /camera/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[create-4] [INFO] [1791908777.853689538] [ros_gz_sim]: Entity creation successful.
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_normal.sdf[0m[1;32m].[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/warehouse/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/warehouse/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/warehouse/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/warehouse/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/warehouse/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/warehouse/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/warehouse/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/warehouse/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/warehouse/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/warehouse/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/warehouse/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/warehouse/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/warehouse/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/warehouse[0m[1;32m/control], [[0m[1;32m/world/warehouse[0m[1;32m/control/state] and [[0m[1;32m/world/warehouse[0m[1;32m/playback/control][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mwarehouse[0m[1;32m] initialized with [[0m[1;32mphysics[0m[1;32m] physics profile.[0m[1;32m[0m
+[INFO] [create-4]: process has finished cleanly [pid 187533]
+[INFO] [spawner-9]: process started with pid [187667]
+[gz-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="rgbd_camera"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="imu"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="warehouse_amr"]/link[@name="base_link"]/sensor[@name="front_lidar"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [INFO] [1791908778.119764336] [gz_ros_control]: Loading controller_manager
+[gz-1] [INFO] [1791908778.137286305] [controller_manager]: Using ROS clock for triggering controller manager cycles.
+[gz-1] [WARN] [1791908778.137318510] [controller_manager]: The resource manager is not yet initialized, will wait for the robot description to initialize it..
+[gz-1] [INFO] [1791908778.151966260] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[gz-1] [WARN] [1791908778.152029007] [gz_ros_control]: Waiting RM to load and initialize hardware...
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[spawner-9] [INFO] [1791908778.371762980] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [WARN] [1791908779.153129736] [controller_manager]: Waiting for data on 'robot_description' topic to finish initialization
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [WARN] [1791908780.152129659] [gz_ros_control]: Waiting RM to load and initialize hardware...
+[gz-1] [WARN] [1791908780.152162027] [controller_manager]: Waiting for data on 'robot_description' topic to finish initialization
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [INFO] [1791908780.932893151] [controller_manager]: Received robot description from topic.
+[gz-1] [INFO] [1791908780.932946588] [controller_manager]: Enforcing command limits is enabled...
+[gz-1] [INFO] [1791908780.935458175] [gz_ros_control]: Using JointLimiter for joint 'right_wheel_joint' in hardware 'AMR_GazeboSystem' : '  has position limits: false [nan, nan]
+[gz-1]   has velocity limits: true [12]
+[gz-1]   has acceleration limits: false [nan]
+[gz-1]   has deceleration limits: false [nan]
+[gz-1]   has jerk limits: false [nan]
+[gz-1]   has effort limits: true [35]
+[gz-1]   angle wraparound: true'
+[gz-1] [INFO] [1791908780.935478737] [gz_ros_control]: Creating JointSaturationLimiter for joint 'right_wheel_joint' in hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791908780.935495755] [gz_ros_control]: Using JointLimiter for joint 'left_wheel_joint' in hardware 'AMR_GazeboSystem' : '  has position limits: false [nan, nan]
+[gz-1]   has velocity limits: true [12]
+[gz-1]   has acceleration limits: false [nan]
+[gz-1]   has deceleration limits: false [nan]
+[gz-1]   has jerk limits: false [nan]
+[gz-1]   has effort limits: true [35]
+[gz-1]   angle wraparound: true'
+[gz-1] [INFO] [1791908780.935500891] [gz_ros_control]: Creating JointSaturationLimiter for joint 'left_wheel_joint' in hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791908780.939533133] [gz_ros_control]: The position_proportional_gain has been set to: 0.1
+[gz-1] [INFO] [1791908780.939585566] [gz_ros_control]: Loading joint: left_wheel_joint
+[gz-1] [INFO] [1791908780.939593227] [gz_ros_control]: 	State:
+[gz-1] [INFO] [1791908780.939598955] [gz_ros_control]: 		 position
+[gz-1] [INFO] [1791908780.939603083] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791908780.939609080] [gz_ros_control]: 	Command:
+[gz-1] [INFO] [1791908780.939614584] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791908780.939629405] [gz_ros_control]: Loading joint: right_wheel_joint
+[gz-1] [INFO] [1791908780.939633788] [gz_ros_control]: 	State:
+[gz-1] [INFO] [1791908780.939636872] [gz_ros_control]: 		 position
+[gz-1] [INFO] [1791908780.939640563] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791908780.939643820] [gz_ros_control]: 	Command:
+[gz-1] [INFO] [1791908780.939646698] [gz_ros_control]: 		 velocity
+[gz-1] [INFO] [1791908780.940078712] [gz_ros_control]: Loading sensor: imu
+[gz-1] [INFO] [1791908780.940088473] [gz_ros_control]: 	State:
+[gz-1] [WARN] [1791908780.940092712] [gz_ros_control]: IMU sensor 'imu' not found in hardware_info, skipping.
+[gz-1] [INFO] [1791908780.940636173] [controller_manager]: Initialize hardware 'AMR_GazeboSystem' 
+[gz-1] [WARN] [1791908780.940653514] [controller_manager.hardware_component.system.AMR_GazeboSystem]: Executor is not available during hardware component initialization for 'AMR_GazeboSystem'. Skipping node creation!
+[gz-1] [INFO] [1791908780.940707173] [controller_manager]: Successful initialization of hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791908780.940803587] [controller_manager]: Activating component 'AMR_GazeboSystem'.
+[gz-1] [INFO] [1791908780.940837458] [resource_manager]: 'configure' hardware 'AMR_GazeboSystem' 
+[gz-1] [INFO] [1791908780.940842828] [gz_ros_control]: System Successfully configured!
+[gz-1] [INFO] [1791908780.940847396] [resource_manager]: Successful 'configure' of hardware 'AMR_GazeboSystem'
+[gz-1] [INFO] [1791908780.940854268] [resource_manager]: 'activate' hardware 'AMR_GazeboSystem' 
+[gz-1] [INFO] [1791908780.940867752] [resource_manager]: Successful 'activate' of hardware 'AMR_GazeboSystem'
+[gz-1] [WARN] [1791908780.940943235] [controller_manager]: Component 'AMR_GazeboSystem' does not have read or write statistics initialized, skipping registration.
+[gz-1] [INFO] [1791908780.940950483] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[spawner-9] [INFO] [1791908781.126980712] [spawner_joint_state_broadcaster]: Setting controller param "node_options_args" to "['--remap', '/diff_drive_controller/cmd_vel:=/cmd_vel', '--remap', '/diff_drive_controller/odom:=/odom']" for joint_state_broadcaster
+[gz-1] [INFO] [1791908781.127707668] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[gz-1] [INFO] [1791908781.127741057] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[gz-1] [INFO] [1791908781.139437256] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml -p use_sim_time:=true --param use_sim_time:=true --ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel --remap /diff_drive_controller/odom:=/odom 
+[spawner-9] [INFO] [1791908781.149219608] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[gz-1] [INFO] [1791908781.149976487] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[gz-1] [INFO] [1791908781.150147592] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[spawner-9] [INFO] [1791908781.173105772] [spawner_joint_state_broadcaster]: Setting controller param "node_options_args" to "['--remap', '/diff_drive_controller/cmd_vel:=/cmd_vel', '--remap', '/diff_drive_controller/odom:=/odom']" for diff_drive_controller
+[gz-1] [INFO] [1791908781.173248634] [controller_manager]: Loading controller : 'diff_drive_controller' of type 'diff_drive_controller/DiffDriveController'
+[gz-1] [INFO] [1791908781.173266799] [controller_manager]: Loading controller 'diff_drive_controller'
+[gz-1] [INFO] [1791908781.180576143] [controller_manager]: Controller 'diff_drive_controller' node arguments: --ros-args --params-file /home/gengo/ros2_ws/install/amr_description/share/amr_description/config/controllers.yaml -p use_sim_time:=true --param use_sim_time:=true --ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel --remap /diff_drive_controller/odom:=/odom 
+[spawner-9] [INFO] [1791908781.191175692] [spawner_joint_state_broadcaster]: Loaded diff_drive_controller
+[gz-1] [INFO] [1791908781.191497267] [controller_manager]: Configuring controller: 'diff_drive_controller'
+[gz-1] [INFO] [1791908781.201931155] [controller_manager]: Activating controllers: [ joint_state_broadcaster diff_drive_controller ]
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [WARN] [1791908782.322647385] [gz_ros_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/wall[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/human_01[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/human_02[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32m/warehouse/contacts/human_03[0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/warehouse/scene/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/warehouse/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/warehouse/state[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gz-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/warehouse[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [1;33m[Wrn] [Ogre2Camera.cc:423] [0m[1;33mOgre2Camera::SetVisibilityMask: Mask bits [0m[1;33mc0000000[0m[1;33m are set but will be ignored as they conflict with the [0m[1;33mreserved bits used internally by the ogre2 backend.[0m[1;33m[0m
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gz-1] [INFO] [1791908785.476286831] [controller_manager]: Successfully switched controllers!
+[spawner-9] [INFO] [1791908785.488579122] [spawner_joint_state_broadcaster]: Configured and activated all the parsed controllers list : ['joint_state_broadcaster', 'diff_drive_controller']!
+[INFO] [spawner-9]: process has finished cleanly [pid 187667]
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[gateway-8] INFO:     127.0.0.1:57852 - "GET /api/v1/state HTTP/1.1" 200 OK
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [gateway-8]: sending signal 'SIGINT' to process[gateway-8]
+[INFO] [static_transform_publisher-7]: sending signal 'SIGINT' to process[static_transform_publisher-7]
+[INFO] [static_transform_publisher-6]: sending signal 'SIGINT' to process[static_transform_publisher-6]
+[INFO] [parameter_bridge-5]: sending signal 'SIGINT' to process[parameter_bridge-5]
+[ERROR] [static_transform_publisher-7]: process has died [pid 187536, exit code -2, cmd '/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher --frame-id warehouse_camera_01_link --child-frame-id warehouse_camera_01_optical_frame --x 0 --y 0 --z 0 --roll -1.5707963267948966 --pitch 0 --yaw -1.5707963267948966 --ros-args -r __node:=warehouse_camera_01_optical_frame_tf --params-file /tmp/launch_params_jsu7wmz5'].
+[INFO] [parameter_bridge-3]: sending signal 'SIGINT' to process[parameter_bridge-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[ERROR] [static_transform_publisher-6]: process has died [pid 187535, exit code -2, cmd '/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher --frame-id world --child-frame-id warehouse_camera_01_link --x -10 --y -8.5 --z 4.4 --roll 0 --pitch 0.53 --yaw 0.85 --ros-args -r __node:=warehouse_camera_01_link_tf --params-file /tmp/launch_params_24b3ofdh'].
+[INFO] [gz-1]: sending signal 'SIGINT' to process[gz-1]
+[robot_state_publisher-2] [INFO] [1791908786.419311568] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[static_transform_publisher-7] [INFO] [1791908786.419311399] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-5] [INFO] [1791908786.419373711] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1791908786.419603259] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[static_transform_publisher-6] [INFO] [1791908786.419887391] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-5] [INFO] [1791908786.427708547] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1791908786.428613807] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [robot_state_publisher-2]: process has died [pid 187531, exit code -2, cmd '/opt/ros/jazzy/lib/robot_state_publisher/robot_state_publisher --ros-args --params-file /tmp/launch_params_94dui583'].
+[gateway-8] INFO:     Shutting down
+[INFO] [parameter_bridge-5]: process has finished cleanly [pid 187534]
+[INFO] [parameter_bridge-3]: process has finished cleanly [pid 187532]
+[gateway-8] INFO:     Finished server process [187537]
+[gateway-8] ERROR:    Traceback (most recent call last):
+[gateway-8]   File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+[gateway-8]     return runner.run(main)
+[gateway-8]            ^^^^^^^^^^^^^^^^
+[gateway-8]   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+[gateway-8]     return self._loop.run_until_complete(task)
+[gateway-8]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[gateway-8]   File "/usr/lib/python3.12/asyncio/base_events.py", line 674, in run_until_complete
+[gateway-8]     self.run_forever()
+[gateway-8]   File "/usr/lib/python3.12/asyncio/base_events.py", line 641, in run_forever
+[gateway-8]     self._run_once()
+[gateway-8]   File "/usr/lib/python3.12/asyncio/base_events.py", line 1987, in _run_once
+[gateway-8]     handle._run()
+[gateway-8]   File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+[gateway-8]     self._context.run(self._callback, *self._args)
+[gateway-8]   File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 89, in serve
+[gateway-8]     with self.capture_signals():
+[gateway-8]   File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+[gateway-8]     next(self.gen)
+[gateway-8]   File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 349, in capture_signals
+[gateway-8]     signal.raise_signal(captured_signal)
+[gateway-8]   File "/usr/lib/python3.12/asyncio/runners.py", line 157, in _on_sigint
+[gateway-8]     raise KeyboardInterrupt()
+[gateway-8] KeyboardInterrupt
+[gateway-8] 
+[gateway-8] During handling of the above exception, another exception occurred:
+[gateway-8] 
+[gateway-8] Traceback (most recent call last):
+[gateway-8]   File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/starlette/routing.py", line 661, in lifespan
+[gateway-8]     await receive()
+[gateway-8]   File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/fastapi/telemetry/_runtime.py", line 214, in wrapped_receive
+[gateway-8]     message = await receive()
+[gateway-8]               ^^^^^^^^^^^^^^^
+[gateway-8]   File "/home/gengo/ros2_ws/.venv/lib/python3.12/site-packages/uvicorn/lifespan/on.py", line 137, in receive
+[gateway-8]     return await self.receive_queue.get()
+[gateway-8]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[gateway-8]   File "/usr/lib/python3.12/asyncio/queues.py", line 158, in get
+[gateway-8]     await getter
+[gateway-8] asyncio.exceptions.CancelledError
+[gateway-8] 
+[INFO] [gateway-8]: process has finished cleanly [pid 187537]
+[INFO] [launch]: process[gateway-8] was required: shutting down launched system
+[gz-1] [INFO] [1791908786.956492844] [controller_manager.pal_statistics]: Async messages lost 0
+[gz-1] [INFO] [1791908786.956538910] [controller_manager.pal_statistics]: publish_async_failures_ 0
+[gz-1] [INFO] [1791908786.958000044] [controller_manager.pal_statistics]: Async messages lost 0
+[gz-1] [INFO] [1791908786.958015773] [controller_manager.pal_statistics]: publish_async_failures_ 0
+[INFO] [gz-1]: process has finished cleanly [pid 187530]
+[INFO] [launch]: process[gz-1] was required: shutting down launched system

@@ -1,0 +1,18 @@
+
+> digital-twin@0.1.0 build
+> npm run check:types && tsc --noEmit && vite build
+
+
+> digital-twin@0.1.0 check:types
+> node scripts/generate-types.mjs --check
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 105 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:  0.30 kB
+dist/assets/index-h0SRyYIL.css    1.96 kB │ gzip:  0.87 kB
+dist/assets/index-2P0Ry4xB.js   158.86 kB │ gzip: 45.64 kB
+
+✓ built in 73ms

@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "config_sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575",
+  "topic_samples": {
+    "/imu/data": 1184,
+    "/camera/camera_info": 183,
+    "/scan": 183,
+    "/joint_states": 1181,
+    "/camera/depth/image_raw": 180,
+    "/camera/points": 177,
+    "/camera/image_raw": 176,
+    "/odom": 573
+  },
+  "lidar_centre_m": 2.3600361347198486,
+  "depth_centre_m": 2.323000431060791,
+  "pointcloud_centre_depth_frame_m": {
+    "x": 2.323000431060791,
+    "y": -0.002785052638500929,
+    "z": -0.0027852896600961685
+  },
+  "initial_pose": {
+    "name": "warehouse_amr",
+    "id": 14,
+    "position": {
+      "x": 7.371673431123682e-20,
+      "y": 2.2934279080669793e-20,
+      "z": -3.9144782175612266e-07
+    },
+    "orientation": {
+      "x": -4.829582554988881e-19,
+      "y": 9.432687347713971e-11,
+      "z": 2.0988932106896992e-20,
+      "w": 1
+    }
+  },
+  "forward_pose": {
+    "name": "warehouse_amr",
+    "id": 14,
+    "position": {
+      "x": 0.5752457074269591,
+      "y": 9.017835596619685e-16,
+      "z": -4.1831133047292205e-09
+    },
+    "orientation": {
+      "x": 2.627547940370493e-16,
+      "y": 4.3336656096308256e-10,
+      "z": 3.3424946575409478e-15,
+      "w": 1
+    }
+  },
+  "turned_pose": {
+    "name": "warehouse_amr",
+    "id": 14,
+    "position": {
+      "x": 0.5752570039668644,
+      "y": -2.161280293416319e-05,
+      "z": -4.183980402480586e-09
+    },
+    "orientation": {
+      "x": -5.853411974969231e-11,
+      "y": 7.451859223515211e-11,
+      "z": 0.5836929501452892,
+      "w": 0.8119744700116432
+    }
+  },
+  "translation_m": 0.5752457074269591,
+  "odom_translation_m": 0.5752449999983893,
+  "turn_radians": 1.2465388134361874,
+  "simulation_seconds_at_completion": 12.061
+}

@@ -1,0 +1,100 @@
+{
+  "scenario": "normal",
+  "ros_domain_id": "212",
+  "gz_partition": "digital_twin_validation_189642",
+  "checks": [
+    "scenario is carried from the composed launch",
+    "real odometry retains odom frame",
+    "Gazebo server uses headless rendering",
+    "no Gazebo GUI or RViz process"
+  ],
+  "shutdown": {
+    "remaining_after_sigint": [],
+    "returncode": 0
+  },
+  "process_commands": [
+    [
+      "gz",
+      "sim",
+      "-r",
+      "-v",
+      "3",
+      "-s",
+      "--headless-rendering",
+      "/home/gengo/ros2_ws/install/amr_simulation/share/amr_simulation/worlds/warehouse_normal.sdf"
+    ],
+    [
+      "/opt/ros/jazzy/lib/robot_state_publisher/robot_state_publisher",
+      "--ros-args",
+      "--params-file",
+      "/tmp/launch_params_30xb04a8"
+    ],
+    [
+      "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+      "--ros-args",
+      "--params-file",
+      "/tmp/launch_params_e1qaabq3"
+    ],
+    [
+      "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+      "--ros-args",
+      "-r",
+      "__node:=warehouse_bridge",
+      "--params-file",
+      "/tmp/launch_params_xplj9tcg"
+    ],
+    [
+      "/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher",
+      "--frame-id",
+      "world",
+      "--child-frame-id",
+      "warehouse_camera_01_link",
+      "--x",
+      "-10",
+      "--y",
+      "-8.5",
+      "--z",
+      "4.4",
+      "--roll",
+      "0",
+      "--pitch",
+      "0.53",
+      "--yaw",
+      "0.85",
+      "--ros-args",
+      "-r",
+      "__node:=warehouse_camera_01_link_tf",
+      "--params-file",
+      "/tmp/launch_params_dtwdmmdf"
+    ],
+    [
+      "/opt/ros/jazzy/lib/tf2_ros/static_transform_publisher",
+      "--frame-id",
+      "warehouse_camera_01_link",
+      "--child-frame-id",
+      "warehouse_camera_01_optical_frame",
+      "--x",
+      "0",
+      "--y",
+      "0",
+      "--z",
+      "0",
+      "--roll",
+      "-1.5707963267948966",
+      "--pitch",
+      "0",
+      "--yaw",
+      "-1.5707963267948966",
+      "--ros-args",
+      "-r",
+      "__node:=warehouse_camera_01_optical_frame_tf",
+      "--params-file",
+      "/tmp/launch_params_f12wrz_f"
+    ],
+    [
+      "/home/gengo/ros2_ws/.venv/bin/python",
+      "/home/gengo/ros2_ws/install/digital_twin_gateway/lib/digital_twin_gateway/gateway",
+      "--ros-args"
+    ]
+  ]
+}

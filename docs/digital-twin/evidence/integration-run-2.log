@@ -1,0 +1,29 @@
+PASS: scenario is carried from the composed launch
+PASS: real odometry retains odom frame
+PASS: Gazebo server uses headless rendering
+PASS: no Gazebo GUI or RViz process
+Evidence: /home/gengo/ros2_ws/docs/digital-twin/evidence/20261013T162709Z
+Traceback (most recent call last):
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 206, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/gengo/ros2_ws/src/digital_twin_gateway/scripts/validate_integration.py", line 144, in main
+    result = await asyncio.to_thread(subprocess.run, command, env=env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ros2', 'control', 'list_controllers']' returned non-zero exit status 2.

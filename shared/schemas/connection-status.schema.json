@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/connection-status.schema.json",
+  "$defs": {
+    "TopicStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "title": "Topic",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "received_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Received At"
+        },
+        "age_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Age Seconds"
+        },
+        "messages_received": {
+          "minimum": 0,
+          "title": "Messages Received",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "topic",
+        "status",
+        "received_at",
+        "age_seconds",
+        "messages_received"
+      ],
+      "title": "TopicStatus",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "connection_status",
+      "default": "connection_status",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "session_id": {
+      "title": "Session Id",
+      "type": "string"
+    },
+    "gateway": {
+      "enum": [
+        "online",
+        "offline"
+      ],
+      "title": "Gateway",
+      "type": "string"
+    },
+    "ros_initialized": {
+      "title": "Ros Initialized",
+      "type": "boolean"
+    },
+    "ros": {
+      "enum": [
+        "unknown",
+        "offline",
+        "stale",
+        "online"
+      ],
+      "title": "Ros",
+      "type": "string"
+    },
+    "simulation": {
+      "enum": [
+        "unknown",
+        "offline",
+        "stale",
+        "online"
+      ],
+      "title": "Simulation",
+      "type": "string"
+    },
+    "last_odometry_timestamp": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Last Odometry Timestamp"
+    },
+    "active_websocket_clients": {
+      "minimum": 0,
+      "title": "Active Websocket Clients",
+      "type": "integer"
+    },
+    "configured_publication_hz": {
+      "title": "Configured Publication Hz",
+      "type": "number"
+    },
+    "measured_publication_hz": {
+      "title": "Measured Publication Hz",
+      "type": "number"
+    },
+    "topics": {
+      "items": {
+        "$ref": "#/$defs/TopicStatus"
+      },
+      "title": "Topics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "session_id",
+    "gateway",
+    "ros_initialized",
+    "ros",
+    "simulation",
+    "last_odometry_timestamp",
+    "active_websocket_clients",
+    "configured_publication_hz",
+    "measured_publication_hz",
+    "topics"
+  ],
+  "title": "ConnectionStatus",
+  "type": "object"
+}
