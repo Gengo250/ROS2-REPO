@@ -33,10 +33,14 @@ class RecordingSession:
         self.state='connecting'; self.process.start(); self.save()
 
     def poll(self):
+        # A delayed child notification must never turn a rejected recording
+        # (clock reset, queue overflow, deadline) into a successful one.
+        if self.state in ('failed','completed'): return self.state
         while True:
             try: event=self.results.get_nowait()
             except Empty: break
             self.state=event['state']; self.error=event.get('error'); self.verification=event.get('verification')
+            if self.state in ('failed','completed'): break
         if self.state in ('connecting','recording'):
             if not self.process.is_alive(): self.fail('Storage worker exited unexpectedly')
             elif time.monotonic()-self.heartbeat.value > self.config.io_timeout: self.fail('Storage I/O deadline exceeded')
@@ -63,6 +67,7 @@ class RecordingSession:
         self.finalized=True; self.stop_reason=reason
         if self.state == 'recording':
             self.state='finalizing'
+            self.save()
             summary=dict(topics={t:v.report() for t,v in self.integrity.items()},
                 ended_wall_utc=datetime.now(timezone.utc).isoformat(),stop_reason=reason)
             deadline=time.monotonic()+self.config.finalize_timeout

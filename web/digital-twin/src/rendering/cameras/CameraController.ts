@@ -15,6 +15,9 @@ export class CameraController {
     this.view('overview');
   }
   view(name: string) {
+    // Flush orbit/pan inertia before applying an exact preset. Otherwise a
+    // reset drifts away from the configured view on subsequent frames.
+    this.controls.enableDamping = false;
     this.controls.reset();
     const target = name === 'robot' ? new Vector3(this.robot[0], this.robot[1], this.robot[2]! + .3) : new Vector3(0, 0, 0);
     this.controls.target.copy(target);
@@ -22,6 +25,7 @@ export class CameraController {
       : name === 'top' ? new Vector3(0, -.001, this.span * 1.1)
       : new Vector3(this.span * .65, -this.span * .8, this.span * .85));
     this.controls.update();
+    this.controls.enableDamping = true;
   }
   dispose() { this.controls.dispose(); }
 }

@@ -9,7 +9,7 @@ setup(
         ('share/digital_twin_gateway', ['package.xml', 'README.md', 'requirements.txt']),
         ('share/digital_twin_gateway/launch', glob('launch/*.launch.py')),
     ],
-    install_requires=['setuptools', 'fastapi>=0.115,<1', 'pydantic>=2.10,<3',
+    install_requires=['setuptools', 'anyio>=4,<5', 'fastapi>=0.115,<1', 'pydantic>=2.10,<3',
                       'uvicorn>=0.30,<1', 'websockets>=14,<16'],
     tests_require=['pytest', 'pytest-asyncio', 'httpx', 'jsonschema'],
     zip_safe=True, maintainer='gengo', maintainer_email='gengo@example.com',

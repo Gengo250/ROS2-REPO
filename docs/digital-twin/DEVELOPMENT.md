@@ -49,7 +49,9 @@ npx playwright install chromium
 
 `.venv`, `.tools`, node_modules, dist and runtime caches are ignored by Git.
 `web/COLCON_IGNORE` keeps all web dependencies outside colcon discovery.
-The root workspace keeps its original packages and adds only digital_twin_gateway.
+The root workspace keeps its original packages and adds digital_twin_gateway and
+digital_twin_recorder. The Recorder uses its own Python environment; see
+[PHASE_2_STORAGE.md](PHASE_2_STORAGE.md).
 
 ## Run
 
@@ -152,8 +154,8 @@ ros2 run digital_twin_gateway gateway
 Vite variables: `VITE_API_URL`, `VITE_WS_URL` (see `.env.example`). They are embedded
 at build time; restart Vite after edits. Match the browser origin, including port,
 in the Gateway allowlist. `npm run preview` defaults to port 4173: explicitly allow
-that origin if testing a production bundle. The default frontend does not require
-any mesh, warehouse model, WebGL or graphics driver.
+that origin if testing a production bundle. The Phase 2 viewer requires WebGL2, the original AMR GLB and the Gateway scene
+API. Diagnostics remain usable when the viewer cannot load.
 
 ## Automated validation
 
@@ -189,8 +191,9 @@ uses only real Gazebo/ROS telemetry.
 
 If running only the standalone browser suite, start Vite separately and run
 `npm run test:browser`: real simulation/motion test is skipped unless
-`TWIN_EVIDENCE_DIR` is supplied by the integration harness. See VALIDATION.md for
-exact executed results and regression scope.
+`TWIN_EVIDENCE_DIR` is supplied by the integration harness. Phase 2 warehouse
+checks also require `TWIN_SCENE_EVIDENCE_DIR`; the Phase 2 harness sets both.
+See VALIDATION.md and PHASE_2_VALIDATION.md for executed results and regression scope.
 
 ## Stop and deployment boundary
 
@@ -207,3 +210,9 @@ reverse proxy, authentication/authorization, network access controls and resourc
 limits appropriate to deployment. Never expose an unauthenticated robotics control
 interface. Cameras/point clouds need a separate future transport; future commands
 need a separate validated authorization boundary.
+
+## Phase 2 validation
+
+See [visualization](PHASE_2_VISUALIZATION.md), [storage and exact service commands](PHASE_2_STORAGE.md),
+and [final validation evidence](PHASE_2_VALIDATION.md). Run the Phase 2 harness with
+both browser test groups enabled; the Phase 1 harness alone does not validate storage.

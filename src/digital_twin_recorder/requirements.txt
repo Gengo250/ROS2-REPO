@@ -3,3 +3,5 @@ mosaicolabs==0.7.0
 pyarrow==26.0.0
 numpy==2.4.6
 pydantic==2.14.1
+# rclpy imports YAML even when ROS itself comes from the sourced Jazzy overlay.
+PyYAML==6.0.1

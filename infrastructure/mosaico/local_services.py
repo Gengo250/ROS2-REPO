@@ -50,10 +50,22 @@ def stop():
     pid = daemon_pid()
     if pid:
         os.kill(pid, signal.SIGTERM)
-        for _ in range(100):
+        # Active Arrow Flight streams can need more than five seconds to drain
+        # after SIGTERM. Wait for the actual exit before restarting PostgreSQL.
+        for _ in range(600):
             if not daemon_pid(): break
             time.sleep(.05)
-        else: raise RuntimeError('Daemon did not stop; inspect before restarting')
+        else:
+            # Arrow Flight uploads can keep graceful shutdown waiting forever.
+            # This PID was verified against our exact executable; never target
+            # arbitrary listeners or another PostgreSQL instance.
+            if daemon_pid() == pid:
+                print('mosaicod still draining after 30 s; killing owned daemon', flush=True)
+                os.kill(pid, signal.SIGKILL)
+                for _ in range(100):
+                    if not daemon_pid(): break
+                    time.sleep(.05)
+                else: raise RuntimeError('Owned daemon did not exit after SIGKILL')
     if (DATA/'postgres/postmaster.pid').exists():
         subprocess.run([str(PG/'pg_ctl'), '-D', str(DATA/'postgres'), '-m', 'fast', 'stop'], check=True)
 

@@ -44,3 +44,15 @@ def test_finalization_has_deadline_and_stops_accepting(tmp_path):
     assert time.monotonic()-start < 5
     assert report['state']=='failed'; assert not s.submit({})
     assert s.finish()['state']=='failed'
+
+def test_late_worker_event_cannot_erase_failure(tmp_path):
+    from queue import Queue
+    s=session(tmp_path)
+    s.results.close()
+    s.results=Queue()
+    s.fail('Source clock reset')
+    s.results.put({'state':'completed','verification':{'validated':True}})
+    assert s.poll()=='failed'
+    assert s.error=='Source clock reset'
+    assert s.verification is None
+    s.records.close()

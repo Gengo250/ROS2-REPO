@@ -143,6 +143,45 @@ async def test_peer_disappearing_during_close_is_normal():
     await hub.close()
 
 
+async def test_connection_cancellation_joins_children_before_close():
+    import anyio
+
+    class CancelledSocket:
+        headers = {}
+        query_params = {}
+        sender_stopped = receiver_stopped = closed = False
+
+        async def accept(self):
+            pass
+
+        async def send_text(self, value):
+            try:
+                await asyncio.Event().wait()
+            finally:
+                await asyncio.sleep(.01)
+                self.sender_stopped = True
+
+        async def receive(self):
+            try:
+                await asyncio.Event().wait()
+            finally:
+                await asyncio.sleep(.01)
+                self.receiver_stopped = True
+
+        async def close(self, **kwargs):
+            self.closed = True
+
+    socket = CancelledSocket()
+    hub = BroadcastHub(Settings())
+    hub.publish('initial')
+    async with anyio.create_task_group() as group:
+        group.start_soon(hub.serve, socket)
+        await asyncio.sleep(.03)
+        group.cancel_scope.cancel()
+    assert not hub.clients
+    assert socket.sender_stopped and socket.receiver_stopped and socket.closed
+
+
 def test_ws_binary_messages_are_rejected():
     with TestClient(create_app(Settings(), Runtime)) as client:
         with client.websocket_connect('/ws/v1/twin') as socket:
