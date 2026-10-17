@@ -1,4 +1,5 @@
 import '../styles/main.css';
+import { WarehouseViewer } from '../rendering/core/WarehouseViewer';
 import { ApiClient } from '../core/api/client';
 import { TwinStore } from '../core/state/store';
 import { TwinSocket } from '../core/websocket/client';
@@ -6,8 +7,19 @@ import type { Robot } from '../core/types/twin-state';
 
 const root = document.querySelector<HTMLElement>('#app')!;
 root.innerHTML = `
-  <header><div><p class="eyebrow">WAREHOUSE / PHASE 01</p><h1>Digital Twin</h1>
-  <p class="subtitle">Live connection diagnostics</p></div><span class="tag">READ-ONLY TELEMETRY</span></header>
+  <header><div><p class="eyebrow">WAREHOUSE / PHASE 02</p><h1>Digital Twin</h1>
+  <p class="subtitle">Industrial environment · Live diagnostics</p></div><span class="tag">READ-ONLY TELEMETRY</span></header>
+  <section class="viewer-panel" aria-label="Warehouse visualization">
+    <div class="viewer-toolbar"><div><h2>Warehouse / 3D</h2><span id="scene-status" role="status">Initializing renderer…</span></div>
+      <div class="camera-buttons"><button data-view="overview">Overview</button><button data-view="robot">Robot focus</button>
+        <button data-view="top">Top-down</button><button data-view="overview">Reset camera</button></div></div>
+    <div id="warehouse"></div>
+    <div class="viewer-bottom"><label>Scene preview <select id="scene-select"><option value="">Active configuration</option>
+      <option>normal</option><option>person_crossing</option><option>obstacle_in_aisle</option><option>corridor_blocked</option></select></label>
+      <label><input id="structure" type="checkbox" checked> Walls & beams</label><button id="scene-retry">Retry</button>
+      <span id="render-metrics"></span></div>
+    <p class="view-note">Drag to orbit · Right-drag to pan · Scroll to zoom. All entities show configured initial poses; live localization and animation are not enabled. Scene preview does not change Gazebo.</p>
+  </section>
   <section class="system" aria-label="System connectivity">
     <article><h2>Gateway</h2><p id="gateway">Disconnected</p></article>
     <article><h2>ROS 2</h2><p id="ros">Unknown</p></article>
@@ -21,9 +33,24 @@ root.innerHTML = `
   </section>
   <footer><span id="last-update">Last update: —</span><span id="rate">Publication rate: —</span></footer>
   <p class="frame-note">Pose source: ROS odometry. Positions are local to the reported frame.
-    Global warehouse localization is not available in Phase 1.</p>`;
+    Global warehouse localization is not available. The 3D AMR uses its configured world spawn.</p>`;
 
 const element = (id: string) => document.getElementById(id)!;
+let viewer: WarehouseViewer | undefined;
+try {
+  viewer = new WarehouseViewer(element('warehouse'), element('scene-status'), element('render-metrics'),
+    import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000');
+  void viewer.load();
+} catch (error) { element('scene-status').textContent = `WebGL unavailable: ${(error as Error).message}`; }
+const selection = element('scene-select') as HTMLSelectElement;
+const structure = element('structure') as HTMLInputElement;
+const loadScene = () => { structure.checked = true; void viewer?.load(selection.value || undefined); };
+selection.addEventListener('change', loadScene);
+element('scene-retry').addEventListener('click', loadScene);
+structure.addEventListener('change', () => viewer?.structure(structure.checked));
+document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach(button =>
+  button.addEventListener('click', () => viewer?.view(button.dataset.view!)));
+let configuredScenario: string | null | undefined;
 const store = new TwinStore();
 const api = new ApiClient(import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000');
 const socket = new TwinSocket(import.meta.env.VITE_WS_URL ||
@@ -70,6 +97,10 @@ const unsubscribe = store.subscribe(() => {
   element('ros').textContent = connected && store.status ? title(store.status.ros) : 'Unknown';
   element('gazebo').textContent = connected && state ? title(state.world.status) : 'Unavailable';
   element('scenario').textContent = state?.world.scenario ?? 'Unknown';
+  if (state && configuredScenario !== state.world.scenario) {
+    configuredScenario = state.world.scenario;
+    if (!selection.value && configuredScenario) void viewer?.load(configuredScenario);
+  }
   element('notice').textContent = connected
     ? (state?.robots.some((r) => r.status === 'online') ? 'Receiving live telemetry.' : 'Gateway connected. Waiting for available odometry.')
     : (store.error || 'Connecting to Gateway…');
@@ -88,6 +119,6 @@ void api.status(abort.signal).then((status) => {
   if (store.connection !== 'connected') store.setStatus(status);
 }).catch(() => { /* WebSocket retry owns visible connection state. */ });
 socket.start();
-function stop() { abort.abort(); socket.stop(); unsubscribe(); window.removeEventListener('pagehide', stop); }
+function stop() { viewer?.dispose(); abort.abort(); socket.stop(); unsubscribe(); window.removeEventListener('pagehide', stop); }
 window.addEventListener('pagehide', stop);
 if (import.meta.hot) import.meta.hot.dispose(stop);

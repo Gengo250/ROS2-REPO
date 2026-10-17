@@ -1,0 +1,11 @@
+# Bound SDK batch buffering to 90% of 4 MiB per topic in mosaicolabs 0.7.0.
+[server]
+default_parallelism = 2
+max_concurrent_writes = 2
+[server.grpc]
+max_decode_message_size = 4194304
+target_encode_message_size = 2097152
+[encoding]
+parquet_in_memory_encoding_buffer_size = 8388608
+[query_engine]
+memory_pool_size = 268435456

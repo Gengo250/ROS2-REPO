@@ -1,5 +1,6 @@
 """Latest snapshot fan-out with bounded queues and independently timed sends."""
 import asyncio
+import anyio
 from fastapi import WebSocket, WebSocketDisconnect
 
 
@@ -57,13 +58,17 @@ class BroadcastHub:
             pass
         finally:
             self.clients.pop(socket, None)
-            for task in tasks:
-                task.cancel()
-            await asyncio.gather(*tasks, return_exceptions=True)
-            try:
-                await asyncio.wait_for(socket.close(code=1001), self.settings.send_timeout)
-            except (WebSocketDisconnect, RuntimeError, OSError, asyncio.TimeoutError):
-                pass
+            # ASGI servers can cancel the connection while cleanup is awaiting
+            # child tasks. Shield cleanup from repeated AnyIO cancellation so
+            # sends/receives are joined and the close handshake stays bounded.
+            with anyio.CancelScope(shield=True):
+                for task in tasks:
+                    task.cancel()
+                await asyncio.gather(*tasks, return_exceptions=True)
+                try:
+                    await asyncio.wait_for(socket.close(code=1001), self.settings.send_timeout)
+                except (WebSocketDisconnect, RuntimeError, OSError, asyncio.TimeoutError):
+                    pass
 
     async def close(self):
         self.closed = True

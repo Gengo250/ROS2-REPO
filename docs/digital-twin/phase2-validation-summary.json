@@ -1,0 +1,250 @@
+{
+  "verdict": "PHASE 2: FULLY VALIDATED",
+  "date": "2026-10-17",
+  "base_commit": "acadf8ee16ca12287fa0560e521747193555951a",
+  "evidence": "docs/digital-twin/evidence-phase2/20261017T144619Z",
+  "audit_evidence": "docs/digital-twin/evidence-phase2/audit-20261017",
+  "execution_id": "digital_twin_normal_20261017T144649Z_608e5457e691",
+  "elapsed_wall_seconds": 97.86607305100006,
+  "started_wall_utc": "2026-10-17T14:46:49.169516+00:00",
+  "ended_wall_utc": "2026-10-17T14:48:26.145782+00:00",
+  "storage_bytes": 427506,
+  "retrieved_after_restart": true,
+  "simulation_stopped_before_retrieval": true,
+  "service_pids_before": {
+    "mosaicod.pid": "245885",
+    "postgres/postmaster.pid": "245878"
+  },
+  "service_pids_after": {
+    "mosaicod.pid": "253120",
+    "postgres/postmaster.pid": "253113"
+  },
+  "records": {
+    "/odom": {
+      "count": 1367,
+      "sha256": "6bd45153907727d47d2ea201a2abde0d956eba2f50941e46355e0f6e99321389",
+      "source_first_ns": 9440000000,
+      "source_last_ns": 36760000000,
+      "retrieved_first_ns": 9440000000,
+      "retrieved_last_ns": 36760000000,
+      "frame_id": "odom",
+      "robot_id": "amr_01",
+      "source_span_seconds": 27.32
+    },
+    "/imu/data": {
+      "count": 2735,
+      "sha256": "1bbbecfc2799947ac63c47a14d9e01520a579f64bc7845fa4a02c68254982665",
+      "source_first_ns": 9430000000,
+      "source_last_ns": 36770000000,
+      "retrieved_first_ns": 9430000000,
+      "retrieved_last_ns": 36770000000,
+      "frame_id": "imu_link",
+      "robot_id": "amr_01",
+      "source_span_seconds": 27.34
+    }
+  },
+  "gateway_hz": {
+    "baseline": 9.984565006731733,
+    "during_recording": 9.873438771703565,
+    "during_outage": 9.948574980567678
+  },
+  "failure_states": {
+    "missing_imu": "failed",
+    "outage": "failed",
+    "unavailable_at_start": "failed"
+  },
+  "outage_error": "Exception: Write failed for topic '/imu/data': 'Flight returned unavailable error, with message: Socket closed. gRPC client debug context: UNKNOWN:Error received from peer ipv4:127.0.0.1:6726 {grpc_status:14, grpc_message:\"Socket closed\"}. Client context: OK'",
+  "outage_memory_samples": [
+    {
+      "250870": 72667136,
+      "250881": 13045760,
+      "250893": 174944256
+    },
+    {
+      "250870": 72744960,
+      "250881": 13045760,
+      "250893": 176930816
+    },
+    {
+      "250870": 72761344,
+      "250881": 13045760,
+      "250893": 178831360
+    },
+    {
+      "250870": 72765440,
+      "250881": 13045760,
+      "250893": 180699136
+    },
+    {
+      "250870": 72765440,
+      "250881": 13045760,
+      "250893": 182591488
+    },
+    {
+      "250870": 72769536,
+      "250881": 13045760,
+      "250893": 184446976
+    },
+    {
+      "250870": 72769536,
+      "250881": 13045760,
+      "250893": 186359808
+    },
+    {
+      "250870": 72769536,
+      "250881": 13045760,
+      "250893": 188280832
+    },
+    {
+      "250870": 72769536,
+      "250881": 13045760,
+      "250893": 190152704
+    },
+    {
+      "250870": 72769536,
+      "250881": 13045760,
+      "250893": 192020480
+    },
+    {},
+    {}
+  ],
+  "outage_processes_remaining": [],
+  "shutdown": {
+    "simulation": {
+      "remaining_after_sigint": [],
+      "returncode": 0
+    },
+    "vite": {
+      "remaining_after_sigint": [],
+      "returncode": -2
+    },
+    "storage": "stopped"
+  },
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+  },
+  "rendering": {
+    "normal": {
+      "average_fps": 46.54123451515885,
+      "load_ms": 875.3999999994412,
+      "calls": 51,
+      "triangles": 24676,
+      "geometries": 50,
+      "shapes": 955,
+      "memory": {
+        "usedJSHeapSize": 23100000,
+        "totalJSHeapSize": 39600000,
+        "jsHeapSizeLimit": 3760000000
+      },
+      "robot_size": [
+        0.9510000003501773,
+        0.699999988079071,
+        0.3440000079572202
+      ],
+      "geometry_sha256": "ef2ac81a3710f51e181e50602fe836a386f0a791652b3bd55cb75dc276fa6e69"
+    },
+    "person_crossing": {
+      "average_fps": 8.4391852293088,
+      "load_ms": 823.2000000001863,
+      "calls": 51,
+      "triangles": 24676,
+      "geometries": 50,
+      "shapes": 955,
+      "memory": {
+        "usedJSHeapSize": 23100000,
+        "totalJSHeapSize": 39600000,
+        "jsHeapSizeLimit": 3760000000
+      },
+      "robot_size": [
+        0.9510000003501773,
+        0.699999988079071,
+        0.3440000079572202
+      ],
+      "geometry_sha256": "edcb3ea0006f2d0284119d5d70753519ff7e657ac2d233c8349ddd4d1b7d86e8"
+    },
+    "obstacle_in_aisle": {
+      "average_fps": 8.276566522931077,
+      "load_ms": 1054.2000000001863,
+      "calls": 51,
+      "triangles": 25232,
+      "geometries": 50,
+      "shapes": 973,
+      "memory": {
+        "usedJSHeapSize": 23100000,
+        "totalJSHeapSize": 39600000,
+        "jsHeapSizeLimit": 3760000000
+      },
+      "robot_size": [
+        0.9510000003501773,
+        0.699999988079071,
+        0.3440000079572202
+      ],
+      "geometry_sha256": "a4e7d1408d27e6474e22c44943a8f2b3858d8f9ccb7b695deca0e607f6761e4d"
+    },
+    "corridor_blocked": {
+      "average_fps": 8.611050147565319,
+      "load_ms": 1217.2999999998137,
+      "calls": 51,
+      "triangles": 24808,
+      "geometries": 50,
+      "shapes": 966,
+      "memory": {
+        "usedJSHeapSize": 23100000,
+        "totalJSHeapSize": 39600000,
+        "jsHeapSizeLimit": 3760000000
+      },
+      "robot_size": [
+        0.9510000003501773,
+        0.699999988079071,
+        0.3440000079572202
+      ],
+      "geometry_sha256": "157222c59efa04d0e81916851117ced5c8c3add20f68c860f3f98d88de18e8cf"
+    }
+  },
+  "tests": {
+    "colcon": {
+      "total": 79,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 2
+    },
+    "recorder_isolated": {
+      "passed": 14,
+      "skipped": 0
+    },
+    "frontend": {
+      "passed": 8
+    },
+    "playwright": {
+      "passed": 4,
+      "skipped": 0
+    },
+    "websocket_repeat": {
+      "passed": 30
+    }
+  },
+  "evidence_sha256": {
+    "evidence-phase2/20261017T144619Z/report.json": "3161366f8a24e25a9c18dc6e04e0c00bdcf8ab828632fb7a1ff106cec2798ced",
+    "evidence-phase2/20261017T144619Z/retrieved-after-restart.json": "fdc18f8abad8423f49d855c3b76d8766172a4d0e1ef9c566d38f9236cc675670",
+    "evidence-phase2/20261017T144619Z/browser/rendering.json": "20af1c1b9b61b84442ff7c88286711f991ef61cafd845b1426e848559ccf6e7d",
+    "evidence-phase2/20261017T144619Z/browser/normal.png": "fd301fc298184732950ac74a35dd51de29f43150edef5e1d64b2393d76069f5a",
+    "evidence-phase2/20261017T144619Z/browser/person_crossing.png": "2ff661f837a6dd3871b9fccc978b5427e681f3e2ab9d3394a76a10778c8804a2",
+    "evidence-phase2/20261017T144619Z/browser/obstacle_in_aisle.png": "35b7e314ff1fd25ab19ee63e65bcb1e1cac5d12568609acd98587dfd09da3a84",
+    "evidence-phase2/20261017T144619Z/browser/corridor_blocked.png": "48e9e0b616bbe47bdc04dfd30753794d0d973317dc02f905cad581acd6d56858",
+    "evidence-phase2/20261017T144619Z/browser/robot-close-up.png": "a56a8067f47e54e53f197c096fee4d79817e7bcfac1f2dfcf601a2b281031266",
+    "evidence-phase2/20261017T144619Z/browser/top-down.png": "fa199bc0cf15f95a425d4cfccb54c08b60e4a18063cb2967c8f7614af8a8ecbb",
+    "evidence-phase2/20261017T144619Z/browser/overview.png": "2b4e44feb5e047970a8cbb9c03dfc1170021daca31b0db4fdea934ae81a5a4b7"
+  },
+  "shutdown_audit": {
+    "ports_listening": {
+      "8000": false,
+      "5173": false,
+      "6726": false,
+      "55432": false
+    },
+    "remaining_relevant_processes": []
+  },
+  "previous_sequences_preserved": true,
+  "outage_peak_tree_rss_bytes": 277835776
+}

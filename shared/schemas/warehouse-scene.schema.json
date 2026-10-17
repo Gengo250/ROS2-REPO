@@ -1,0 +1,594 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/warehouse-scene.schema.json",
+  "$defs": {
+    "Area": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "centre": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Centre",
+          "type": "array"
+        },
+        "size": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Size",
+          "type": "array"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "centre",
+        "size"
+      ],
+      "title": "Area",
+      "type": "object"
+    },
+    "Building": {
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "exclusiveMinimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "number"
+        },
+        "floor_size": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Floor Size",
+          "type": "array"
+        }
+      },
+      "required": [
+        "length",
+        "width",
+        "height",
+        "floor_size"
+      ],
+      "title": "Building",
+      "type": "object"
+    },
+    "Coordinates": {
+      "additionalProperties": false,
+      "properties": {
+        "frame": {
+          "const": "world",
+          "default": "world",
+          "title": "Frame",
+          "type": "string"
+        },
+        "x": {
+          "const": "east",
+          "default": "east",
+          "title": "X",
+          "type": "string"
+        },
+        "y": {
+          "const": "north",
+          "default": "north",
+          "title": "Y",
+          "type": "string"
+        },
+        "z": {
+          "const": "up",
+          "default": "up",
+          "title": "Z",
+          "type": "string"
+        },
+        "units": {
+          "const": "metres_radians",
+          "default": "metres_radians",
+          "title": "Units",
+          "type": "string"
+        },
+        "rotation": {
+          "const": "Rz(yaw) Ry(pitch) Rx(roll)",
+          "default": "Rz(yaw) Ry(pitch) Rx(roll)",
+          "title": "Rotation",
+          "type": "string"
+        }
+      },
+      "title": "Coordinates",
+      "type": "object"
+    },
+    "Entity": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "pose": {
+          "maxItems": 6,
+          "minItems": 6,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Pose",
+          "type": "array"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "pose_source": {
+          "const": "configured_initial_pose",
+          "default": "configured_initial_pose",
+          "title": "Pose Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "pose",
+        "kind"
+      ],
+      "title": "Entity",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "world_id": {
+          "title": "World Id",
+          "type": "string"
+        },
+        "scenario": {
+          "enum": [
+            "normal",
+            "person_crossing",
+            "obstacle_in_aisle",
+            "corridor_blocked"
+          ],
+          "title": "Scenario",
+          "type": "string"
+        },
+        "configured_scenario": {
+          "anyOf": [
+            {
+              "enum": [
+                "normal",
+                "person_crossing",
+                "obstacle_in_aisle",
+                "corridor_blocked"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Configured Scenario"
+        },
+        "source_version": {
+          "title": "Source Version",
+          "type": "integer"
+        },
+        "source_sha256": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Source Sha256",
+          "type": "object"
+        },
+        "geometry_sha256": {
+          "title": "Geometry Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "world_id",
+        "scenario",
+        "configured_scenario",
+        "source_version",
+        "source_sha256",
+        "geometry_sha256"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "Primitive": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "box",
+            "cylinder",
+            "sphere",
+            "label"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "dimensions": {
+          "items": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "title": "Dimensions",
+          "type": "array"
+        },
+        "transforms": {
+          "items": {
+            "maxItems": 6,
+            "minItems": 6,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Transforms",
+          "type": "array"
+        },
+        "colour": {
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Colour",
+          "type": "array"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "category": {
+          "enum": [
+            "structure",
+            "wall",
+            "pillar",
+            "beam",
+            "floor",
+            "marking",
+            "equipment",
+            "human"
+          ],
+          "title": "Category",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "dimensions",
+        "transforms",
+        "colour",
+        "category"
+      ],
+      "title": "Primitive",
+      "type": "object"
+    },
+    "Spawn": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "robot_id": {
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "pose": {
+          "maxItems": 6,
+          "minItems": 6,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Pose",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "robot_id",
+        "active",
+        "pose"
+      ],
+      "title": "Spawn",
+      "type": "object"
+    },
+    "Station": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "pose": {
+          "maxItems": 6,
+          "minItems": 6,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Pose",
+          "type": "array"
+        },
+        "goal_pose": {
+          "maxItems": 6,
+          "minItems": 6,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Goal Pose",
+          "type": "array"
+        },
+        "footprint": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Footprint",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "pose",
+        "goal_pose",
+        "footprint"
+      ],
+      "title": "Station",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "coordinate_system": {
+      "$ref": "#/$defs/Coordinates",
+      "default": {
+        "frame": "world",
+        "x": "east",
+        "y": "north",
+        "z": "up",
+        "units": "metres_radians",
+        "rotation": "Rz(yaw) Ry(pitch) Rx(roll)"
+      }
+    },
+    "building": {
+      "$ref": "#/$defs/Building"
+    },
+    "entities": {
+      "items": {
+        "$ref": "#/$defs/Entity"
+      },
+      "title": "Entities",
+      "type": "array"
+    },
+    "primitives": {
+      "items": {
+        "$ref": "#/$defs/Primitive"
+      },
+      "title": "Primitives",
+      "type": "array"
+    },
+    "aisles": {
+      "items": {
+        "$ref": "#/$defs/Area"
+      },
+      "title": "Aisles",
+      "type": "array"
+    },
+    "zones": {
+      "items": {
+        "$ref": "#/$defs/Area"
+      },
+      "title": "Zones",
+      "type": "array"
+    },
+    "stations": {
+      "items": {
+        "$ref": "#/$defs/Station"
+      },
+      "title": "Stations",
+      "type": "array"
+    },
+    "robot_spawns": {
+      "items": {
+        "$ref": "#/$defs/Spawn"
+      },
+      "title": "Robot Spawns",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "building",
+    "entities",
+    "primitives",
+    "aisles",
+    "zones",
+    "stations",
+    "robot_spawns"
+  ],
+  "title": "WarehouseScene",
+  "type": "object"
+}

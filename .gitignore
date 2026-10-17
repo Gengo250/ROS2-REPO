@@ -17,6 +17,7 @@ env/
 
 # Digital Twin development tools and generated runtime output
 .tools/
+docs/digital-twin/evidence*
 node_modules/
 web/digital-twin/dist/
 web/digital-twin/test-results/
@@ -24,3 +25,8 @@ web/digital-twin/playwright-report/
 .env
 .env.local
 .pytest_cache/
+
+# Phase 2 recorder environment and local persistent runtime data
+.venv-recorder/
+.runtime/
+recordings/
