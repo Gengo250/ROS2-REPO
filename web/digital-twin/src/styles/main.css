@@ -25,3 +25,22 @@ footer { font-size: 11px; margin-top: 22px; flex-wrap: wrap; }
 .frame-note { font-size: 12px; line-height: 1.7; margin-top: 32px; border-left: 2px solid #3a746d; padding-left: 14px; max-width: 800px; }
 .empty { color: #94a8bc; padding: 25px 0; }
 @media (max-width: 780px) { .system { grid-template-columns: 1fr 1fr; } header { align-items: flex-start; } .tag { display: none; } .measurements { grid-template-columns: 1fr; gap: 0; } main { padding: 30px 18px; } }
+main { max-width: 1680px; padding: 20px 28px; }
+h1 { font-size: 30px; margin: 4px 0; }
+.eyebrow { margin: 0; } .subtitle { margin: 5px 0 18px; font-size: 13px; }
+.viewer-panel { border: 1px solid #304254; border-radius: 8px; overflow: hidden; background: #101c29; }
+.viewer-toolbar, .viewer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 18px; flex-wrap: wrap; }
+#scene-status { display: inline-block; color: #9aafbd; font-size: 12px; margin-top: 6px; }
+#warehouse { width: 100%; height: clamp(430px, 65vh, 850px); position: relative; }
+#warehouse canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+button, select { font: inherit; font-size: 12px; background: #172b3b; color: #deebee; border: 1px solid #395266; border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+button:hover, button:focus-visible { background: #295365; }
+.camera-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+.viewer-bottom, .view-note { font-size: 11px; color: #9aafbd; }
+.view-note { margin: 0; padding: 0 18px 12px; line-height: 1.6; }
+#render-metrics { margin-left: auto; font-variant-numeric: tabular-nums; }
+.system { margin-top: 16px; gap: 10px; }.system article { padding: 12px 18px; }.system p { font-size: 17px; margin-top: 5px; }
+#notice { margin: 12px 0; min-height: 18px; }
+.telemetry { padding: 16px 18px; }.robot-card { margin-top: 10px; padding-top: 10px; }
+.measurements { margin: 8px 0; }.frame-note { margin-top: 14px; }
+@media(max-width:780px) { main { padding: 16px 10px; }.viewer-toolbar { padding: 10px; } #warehouse { height: 55vh; min-height: 350px; } }

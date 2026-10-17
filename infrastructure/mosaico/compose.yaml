@@ -1,0 +1,35 @@
+name: digital-twin-mosaico
+services:
+  database:
+    image: postgres:16.15
+    environment:
+      POSTGRES_DB: mosaico
+      POSTGRES_USER: mosaico
+      POSTGRES_PASSWORD: ${MOSAICO_DB_PASSWORD:?Set MOSAICO_DB_PASSWORD in .env}
+    volumes:
+      - metadata:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U mosaico -d mosaico]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  mosaicod:
+    image: ghcr.io/mosaico-labs/mosaicod:0.7.0-rc-c18683a@sha256:8e1f6857cc0623afab21428dd5c724adc490f224a17ac2d459ac045bf62db3f7
+    command: [server, --config, /etc/mosaicod/config.toml, --host, 0.0.0.0, --port, '6726', --log-level, info]
+    environment:
+      MOSAICOD_DB_URL: postgresql://database:5432/mosaico
+      MOSAICOD_DB_USER: mosaico
+      MOSAICOD_DB_PASSWORD: ${MOSAICO_DB_PASSWORD:?Set MOSAICO_DB_PASSWORD in .env}
+      MOSAICOD_STORE_ENDPOINT: file:///
+      MOSAICOD_STORE_BUCKET: data
+    ports:
+      - 127.0.0.1:6726:6726
+    volumes:
+      - objects:/data
+      - ./config.toml:/etc/mosaicod/config.toml:ro
+    depends_on:
+      database:
+        condition: service_healthy
+volumes:
+  metadata:
+  objects:

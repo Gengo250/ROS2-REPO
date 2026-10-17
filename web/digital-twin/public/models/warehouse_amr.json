@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "config_sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575",
+  "units": "metres",
+  "source_axes": "X forward Y left Z up",
+  "asset_axes": "X forward Y up Z right",
+  "world_conversion": "Rotate +pi/2 about X once at the asset root",
+  "bounds_world": [
+    [
+      -0.4749999940395355,
+      -0.3499999940395355,
+      0.0
+    ],
+    [
+      0.47599998116493225,
+      0.3499999940395355,
+      0.3440000116825104
+    ]
+  ],
+  "mesh_count": 10,
+  "blender_version": "5.2.2 LTS"
+}

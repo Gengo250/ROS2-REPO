@@ -1,0 +1,5 @@
+mosaicolabs==0.7.0
+# Keep these isolated from the Gateway and system ROS Python environment.
+pyarrow==26.0.0
+numpy==2.4.6
+pydantic==2.14.1
