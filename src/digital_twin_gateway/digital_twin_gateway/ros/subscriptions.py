@@ -6,7 +6,7 @@ from sensor_msgs.msg import JointState
 from tf2_msgs.msg import TFMessage
 from pydantic import ValidationError
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
-from .state_collector import normalize_odometry, stamp_seconds
+from .state_collector import normalize_odometry, stamp_seconds, normalize_simulation
 
 
 def subscribe(node, manager, settings):
@@ -22,7 +22,15 @@ def subscribe(node, manager, settings):
             return
         manager.update_robot(robot)
 
+    def simulation(message):
+        try:
+            entities = normalize_simulation(settings, message, manager.wall_clock())
+            manager.update_entities(entities)
+        except (ValidationError, ValueError):
+            node.get_logger().warning('Invalid simulation snapshot rejected', throttle_duration_sec=5)
+
     subscriptions = [
+        node.create_subscription(TFMessage, settings.simulation_pose_topic, simulation, live),
         node.create_subscription(Clock, settings.clock_topic,
                                  lambda msg: manager.update_clock(stamp_seconds(msg.clock)), live),
         node.create_subscription(TFMessage, settings.tf_topic,

@@ -15,7 +15,10 @@ from nav_msgs.msg import Odometry
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--angular', type=float, default=0.0, help='Optional bounded diagnostic turn rate')
     args = parser.parse_args()
+    if abs(args.angular) > .3:
+        parser.error('Diagnostic angular speed must be at most 0.3 rad/s')
     rclpy.init()
     node = rclpy.create_node('twin_motion_validation', parameter_overrides=[Parameter('use_sim_time', value=True)])
     odometry = []
@@ -24,7 +27,7 @@ def main():
     sub = node.create_subscription(Odometry, '/odom', receive, qos_profile_sensor_data)
     pub = node.create_publisher(TwistStamped, '/cmd_vel', 10)
     report = {}
-    def drive(speed, duration):
+    def drive(speed, duration, turn=0.0):
         start, deadline = node.get_clock().now().nanoseconds, time.monotonic()+75
         while (node.get_clock().now().nanoseconds-start)/1e9 < duration:
             if time.monotonic() > deadline:
@@ -33,6 +36,7 @@ def main():
             message.header.stamp = node.get_clock().now().to_msg()
             message.header.frame_id = 'base_link'
             message.twist.linear.x = speed
+            message.twist.angular.z = turn
             pub.publish(message)
             rclpy.spin_once(node, timeout_sec=.03)
     try:
@@ -44,7 +48,7 @@ def main():
         before = httpx.get('http://127.0.0.1:8000/api/v1/state').json()
         report['before'] = before
         report['ros_before_x'] = odometry[0].pose.pose.position.x
-        drive(.12, 2.0)
+        drive(.12, 2.0, args.angular)
         drive(0.0, 1.0)
         time.sleep(.3)
         after = httpx.get('http://127.0.0.1:8000/api/v1/state').json()

@@ -31,12 +31,21 @@ class Settings(BaseModel):
     scenario: Scenario | None = None
     scenario_source: str = 'unspecified'
     robots: tuple[RobotConfig, ...] = (RobotConfig(),)
+    simulation_pose_topic: Topic = '/digital_twin/simulation/poses'
+    simulation_entities: dict[str, str] = {'warehouse_amr': 'amr_01', 'human_01': 'human_01',
+                                          'human_02': 'human_02', 'human_03': 'human_03'}
     clock_topic: Topic = '/clock'
     tf_topic: Topic = '/tf'
     tf_static_topic: Topic = '/tf_static'
 
     @model_validator(mode='after')
     def validate_config(self):
+        if len(set(self.simulation_entities.values())) != len(self.simulation_entities):
+            raise ValueError('Simulation identities must be unique')
+        if any(not k or '/' in k or not v or '/' in v for k, v in self.simulation_entities.items()):
+            raise ValueError('Simulation mapping requires top-level model names and stable IDs')
+        if self.simulation_pose_topic in (self.tf_topic, self.tf_static_topic):
+            raise ValueError('Ground truth must not enter the TF graph')
         if self.offline_seconds <= self.stale_seconds:
             raise ValueError('offline_seconds must exceed stale_seconds')
         if not self.robots or len({r.id for r in self.robots}) != len(self.robots):
@@ -55,7 +64,7 @@ class Settings(BaseModel):
         for key in cls.model_fields:
             value = os.environ.get('TWIN_' + key.upper())
             if value is not None:
-                values[key] = json.loads(value) if key in ('robots', 'allowed_origins') else value
+                values[key] = json.loads(value) if key in ('robots', 'allowed_origins', 'simulation_entities') else value
         # The installed existing layout remains authoritative for world metadata.
         from ament_index_python.packages import get_package_share_directory
         layout = Path(get_package_share_directory('amr_simulation')) / 'config/warehouse_layout.json'

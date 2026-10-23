@@ -5,7 +5,8 @@ from fastapi import WebSocket, WebSocketDisconnect
 
 
 class BroadcastHub:
-    def __init__(self, settings):
+    def __init__(self, settings, version='1.0'):
+        self.version = version
         self.settings = settings
         self.clients = {}
         self.latest = ''
@@ -24,7 +25,7 @@ class BroadcastHub:
             await socket.close(code=1008)
             return
         # Non-browser diagnostic clients may omit Origin. This is not authentication.
-        if socket.query_params.get('protocol_version', '1.0') != '1.0':
+        if socket.query_params.get('protocol_version', self.version) != self.version:
             await socket.close(code=1002)
             return
         if self.closed or len(self.clients) >= self.settings.max_clients:

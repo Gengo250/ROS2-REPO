@@ -5,6 +5,9 @@ import type { WarehouseScene } from '../../core/types/warehouse-scene';
 import { buildWarehouse, setStructureVisible } from '../warehouse/WarehouseBuilder';
 import { loadRobot } from '../robots/RobotLoader';
 import { CameraController } from '../cameras/CameraController';
+import { buildHumans } from '../humans/HumanVisuals';
+import { StateSynchronizer } from '../synchronization/StateSynchronizer';
+import type { TwinStateV2 } from '../../core/types/twin-state-v2';
 import { disposeTree } from './resources';
 
 const validate = new Ajv({ strict: false }).compile<WarehouseScene>(schema);
@@ -15,6 +18,11 @@ export class WarehouseViewer {
   controls?: CameraController;
   warehouse?: Group;
   robot?: Group;
+  humans?: ReturnType<typeof buildHumans>;
+  readonly synchronizer = new StateSynchronizer();
+  private state?: TwinStateV2;
+  private liveScenario?: string;
+  private connected = false;
   private abort?: AbortController;
   private disposed = false;
   private frames = 0;
@@ -42,13 +50,23 @@ export class WarehouseViewer {
     });
     this.resize.observe(host);
     this.renderer.setAnimationLoop(() => {
+      // Do not initialize instanced/shadow rendering against a half-loaded scene.
+      if (!this.robot) return;
+      this.synchronizer.update();
+      this.humans?.update();
       this.controls?.controls.update(); this.renderer.render(this.scene, this.camera); this.frames++;
       const now = performance.now();
       if (now - this.last > 1000) {
         this.fps = this.frames * 1000 / (now - this.last); this.last = now; this.frames = 0;
         const info = this.renderer.info;
         this.metrics.textContent = `${this.fps.toFixed(0)} FPS · ${info.render.calls} draw calls · ${this.warehouse?.userData.primitiveCount ?? 0} shapes · ${(this.loadMs / 1000).toFixed(2)} s load`;
-        this.host.dataset.metrics = JSON.stringify({ fps: this.fps, load_ms: this.loadMs,
+        this.host.dataset.visualTransforms = JSON.stringify(Object.fromEntries(
+          [...this.synchronizer.objects].filter(([id]) => id.includes('/')).map(([id, object]) =>
+            [id, { position: object.position.toArray(), quaternion: object.quaternion.toArray() }])));
+        this.host.dataset.transforms = JSON.stringify(this.synchronizer.rendered);
+        this.host.dataset.metrics = JSON.stringify({ rendered_wall_ms: performance.timeOrigin + now, fps: this.fps, load_ms: this.loadMs,
+          human_models: this.humans?.humanCount, human_visuals: this.humans?.visualCount,
+          dynamic_entities: this.synchronizer.buffers.size, interpolation_delay_ms: this.synchronizer.delayMs,
           calls: info.render.calls, triangles: info.render.triangles, geometries: info.memory.geometries,
           textures: info.memory.textures, shapes: this.warehouse?.userData.primitiveCount,
           camera: this.camera.position.toArray(), target: this.controls?.controls.target.toArray() });
@@ -67,7 +85,11 @@ export class WarehouseViewer {
       if (!validate(data)) throw Error('Warehouse scene schema mismatch');
       if (abort.signal.aborted) return;
       this.clear();
-      this.warehouse = buildWarehouse(data); this.scene.add(this.warehouse);
+      this.liveScenario = data.metadata.scenario;
+      this.warehouse = buildWarehouse({ ...data, primitives: data.primitives.filter(p => p.category !== 'human') });
+      this.warehouse.userData.primitiveCount = data.primitives.length;
+      this.scene.add(this.warehouse);
+      this.humans = buildHumans(data, this.synchronizer); this.scene.add(this.humans.group);
       const spawn = data.robot_spawns.find(s => s.active)!;
       this.controls = new CameraController(this.camera, this.renderer.domElement, data.building.length, spawn.pose);
       this.host.dataset.scenario = data.metadata.scenario;
@@ -75,19 +97,32 @@ export class WarehouseViewer {
       this.status.textContent = `${data.metadata.scenario} · Loading original AMR…`;
       const robot = await loadRobot(spawn.pose, abort.signal, data.metadata.source_sha256['amr_dimensions.json']!);
       if (abort.signal.aborted || this.disposed) { disposeTree(robot); return; }
-      this.robot = robot; this.scene.add(robot); this.renderer.shadowMap.needsUpdate = true; this.loadMs = performance.now() - started;
+      this.robot = robot; this.synchronizer.register(spawn.robot_id, robot); this.scene.add(robot); this.renderer.shadowMap.needsUpdate = true; this.loadMs = performance.now() - started;
       this.host.dataset.loaded = 'true'; this.host.dataset.robotSize = JSON.stringify(robot.userData.size);
       this.status.textContent = `${data.metadata.scenario} · AMR 01 · Configured spawn · World / metres`;
+      if (this.state) this.accept(this.state, this.connected);
     } catch (error) {
       if (!abort.signal.aborted && !this.disposed) this.status.textContent = `Visualization unavailable: ${(error as Error).message}. Retry to reload.`;
     }
   }
+  accept(state: TwinStateV2, connected: boolean) {
+    this.state = state; this.connected = connected;
+    if (!connected || state.world.scenario !== this.liveScenario) {
+      this.synchronizer.disconnect();
+      if (this.robot) this.status.textContent = `${this.liveScenario} · ${connected ? 'Configured spawn · Preview' : 'Disconnected · Last known pose'}`;
+      return;
+    }
+    if (!this.robot) return;
+    this.synchronizer.accept(state);
+    this.status.textContent = `${this.liveScenario} · Gazebo ground truth · ${state.simulation.status} · World / metres`;
+  }
   view(name: string) { this.controls?.view(name); }
   structure(visible: boolean) { if (this.warehouse) setStructureVisible(this.warehouse, visible); this.renderer.shadowMap.needsUpdate = true; }
   private clear() {
+    this.synchronizer.clear();
     this.controls?.dispose(); this.controls = undefined;
-    for (const group of [this.warehouse, this.robot]) if (group) { this.scene.remove(group); disposeTree(group); }
-    this.warehouse = this.robot = undefined;
+    for (const group of [this.warehouse, this.robot, this.humans?.group]) if (group) { this.scene.remove(group); disposeTree(group); }
+    this.warehouse = this.robot = undefined; this.humans = undefined;
   }
   dispose() {
     if (this.disposed) return;

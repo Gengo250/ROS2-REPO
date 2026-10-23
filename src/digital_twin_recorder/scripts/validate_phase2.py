@@ -24,7 +24,7 @@ ROOT=Path(__file__).resolve().parents[3]
 spec=importlib.util.spec_from_file_location('phase1_validation',ROOT/'src/digital_twin_gateway/scripts/validate_integration.py')
 helpers=importlib.util.module_from_spec(spec); spec.loader.exec_module(helpers)
 
-async def rate(seconds):
+async def rate_v1(seconds):
     stamps=[]; first=last=None
     async with websockets.connect('ws://127.0.0.1:8000/ws/v1/twin') as socket:
         start=time.monotonic()
@@ -33,6 +33,29 @@ async def rate(seconds):
             stamps.append(time.monotonic()); first=first or state; last=state
     assert last['robots'][0]['status']=='online' and last['world']['status']=='running'
     return dict(messages=len(stamps),hz=(len(stamps)-1)/(stamps[-1]-stamps[0]),first=first,last=last)
+
+
+async def rate_dynamic(seconds):
+    """Phase 3 regression: storage cannot stall ground-truth delivery either."""
+    stamps=[]; first=last=None
+    async with websockets.connect('ws://127.0.0.1:8000/ws/v2/twin', max_queue=1) as socket:
+        start=time.monotonic()
+        while time.monotonic()-start<seconds:
+            state=json.loads(await asyncio.wait_for(socket.recv(),timeout=3))
+            stamps.append(time.monotonic()); first=first or state; last=state
+    entities=lambda s: s['simulation_robots']+s['humans']
+    assert len(entities(last))==4
+    assert all(e['status']=='online' for e in entities(last))
+    initial={e['id']:e['source_timestamp'] for e in entities(first)}
+    final={e['id']:e['source_timestamp'] for e in entities(last)}
+    assert all(initial[k] is not None and final[k]>initial[k] for k in final)
+    return dict(messages=len(stamps),hz=(len(stamps)-1)/(stamps[-1]-stamps[0]),
+                first_source_times=initial,last_source_times=final)
+
+
+async def rate(seconds):
+    legacy,dynamic=await asyncio.gather(rate_v1(seconds),rate_dynamic(seconds))
+    return {**legacy,'dynamic':dynamic}
 
 async def wait_process(proc,timeout):
     deadline=time.monotonic()+timeout
@@ -77,7 +100,10 @@ async def main():
                 if sim.poll() is not None: raise RuntimeError('Simulation launch exited')
                 try:
                     state=(await client.get('http://127.0.0.1:8000/api/v1/state')).json()
-                    if state['world']['status']=='running' and state['robots'][0]['status']=='online': break
+                    if state['world']['status']=='running' and state['robots'][0]['status']=='online':
+                        dynamic=(await client.get('http://127.0.0.1:8000/api/v2/state')).json()
+                        entities=dynamic['simulation_robots']+dynamic['humans']
+                        if len(entities)==4 and all(e['status']=='online' for e in entities): break
                 except (httpx.HTTPError,KeyError): pass
                 await asyncio.sleep(1)
             else: raise TimeoutError('Real telemetry not ready')

@@ -1,10 +1,11 @@
+import type { TwinStateV2 } from '../types/twin-state-v2';
 import type { TwinState } from '../types/twin-state';
 import type { ConnectionStatus } from '../types/connection-status';
 
 export type Connection = 'connecting' | 'connected' | 'disconnected';
 export class TwinStore {
   connection: Connection = 'disconnected';
-  twin: TwinState | null = null;
+  twin: TwinState | TwinStateV2 | null = null;
   status: ConnectionStatus | null = null;
   error = '';
   private listeners = new Set<() => void>();
@@ -18,7 +19,7 @@ export class TwinStore {
     this.emit();
   }
   setStatus(value: ConnectionStatus) { this.status = value; this.emit(); }
-  accept(value: TwinState) {
+  accept(value: TwinState | TwinStateV2) {
     if (this.twin?.session_id === value.session_id && value.sequence <= this.twin.sequence) return;
     this.twin = value;
     this.status = value.connection;

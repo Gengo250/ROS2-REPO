@@ -16,6 +16,7 @@ def generate_launch_description():
         IncludeLaunchDescription(PythonLaunchDescriptionSource(str(warehouse)),
                                  launch_arguments={'scenario': LaunchConfiguration('scenario'),
                                                    'gui': 'false', 'rviz': 'false'}.items()),
+        Node(package='digital_twin_gateway', executable='simulation_pose_adapter', output='screen'),
         Node(package='digital_twin_gateway', executable='gateway', output='screen',
              additional_env={'TWIN_SCENARIO': LaunchConfiguration('scenario'),
                              'TWIN_SCENARIO_SOURCE': 'launch_configuration'},

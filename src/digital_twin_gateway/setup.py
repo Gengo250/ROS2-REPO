@@ -14,5 +14,6 @@ setup(
     tests_require=['pytest', 'pytest-asyncio', 'httpx', 'jsonschema'],
     zip_safe=True, maintainer='gengo', maintainer_email='gengo@example.com',
     description='Read-only ROS telemetry gateway', license='Apache-2.0',
-    entry_points={'console_scripts': ['gateway = digital_twin_gateway.main:main']},
+    entry_points={'console_scripts': ['gateway = digital_twin_gateway.main:main',
+        'simulation_pose_adapter = digital_twin_gateway.ros.simulation_adapter:main']},
 )
