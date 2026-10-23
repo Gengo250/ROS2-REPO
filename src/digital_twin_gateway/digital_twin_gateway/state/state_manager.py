@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from threading import Lock
 from time import monotonic
 from uuid import uuid4
-from .models import ConnectionStatus, Robot, TopicStatus, TwinState, World
+from .models import ConnectionStatus, Robot, TopicStatus, TwinState, World, TwinStateV2, DynamicEntity, SimulationState
 
 
 def utcnow():
@@ -19,8 +19,14 @@ class StateManager:
         self.sequence = 0
         self.ros_initialized = False
         self.robots = {}
+        self.entities = {}
+        self.entity_receipts = {}
+        self.simulation_epoch = 0
+        self.pose_time = None
+        self.latest_v2 = None
         topics = [settings.clock_topic, settings.tf_topic, settings.tf_static_topic]
         topics += [t for r in settings.robots for t in (r.odom_topic, r.joint_states_topic)]
+        topics.append(settings.simulation_pose_topic)
         self.topics = dict.fromkeys(topics)
         self.simulation_time = None
         self.clock_progress = None
@@ -43,8 +49,31 @@ class StateManager:
             self.robots[robot.id] = robot
             self._touch(robot.pose_source)
 
+    def update_entities(self, entities):
+        with self.lock:
+            if not entities:
+                return
+            stamp = entities[0].source_timestamp
+            if self.pose_time is not None and stamp < self.pose_time:
+                self.simulation_epoch += 1
+                self.entities.clear()
+                self.entity_receipts.clear()
+            self.pose_time = stamp
+            self._touch(self.settings.simulation_pose_topic)
+            for entity in entities:
+                previous = self.entities.get(entity.id)
+                # Repeated frozen poses are not evidence of simulation progress.
+                if previous is None or entity.source_timestamp != previous.source_timestamp:
+                    self.entities[entity.id] = entity
+                    self.entity_receipts[entity.id] = self.timer()
+
     def update_clock(self, value):
         with self.lock:
+            if self.simulation_time is not None and value < self.simulation_time:
+                self.simulation_epoch += 1
+                self.entities.clear()
+                self.entity_receipts.clear()
+                self.pose_time = None
             # The first sample alone does not prove that the simulation is running.
             if self.simulation_time is not None and value != self.simulation_time:
                 self.clock_progress = self.timer()
@@ -105,8 +134,32 @@ class StateManager:
                             ('unknown' if simulation == 'unknown' else 'unavailable')),
                 robots=tuple(robots), connection=connection,
             )
+            dynamic = []
+            for name, identity in self.settings.simulation_entities.items():
+                receipt = self.entity_receipts.get(identity)
+                status = self.availability(receipt, now)
+                entity = self.entities.get(identity)
+                if entity is None:
+                    kind = 'robot' if identity in {r.id for r in self.settings.robots} else (
+                        'human' if identity.startswith('human_') else 'obstacle')
+                    entity = DynamicEntity(id=identity, type=kind, gazebo_name=name,
+                        frame_id=self.settings.world_frame, pose=None, source_timestamp=None,
+                        received_at=None, age_seconds=None, status=status,
+                        pose_source=self.settings.simulation_pose_topic)
+                else:
+                    entity = entity.model_copy(update={'status': status, 'age_seconds': now-receipt})
+                dynamic.append(entity)
+            self.latest_v2 = TwinStateV2(
+                **self.latest.model_dump(exclude={'protocol_version', 'humans', 'obstacles'}),
+                simulation=SimulationState(epoch=self.simulation_epoch,
+                    status='running' if simulation == 'online' else
+                    'paused_or_stalled' if simulation == 'stale' else simulation,
+                    pose_topic=self.settings.simulation_pose_topic),
+                simulation_robots=tuple(e for e in dynamic if e.type == 'robot'),
+                humans=tuple(e for e in dynamic if e.type == 'human'),
+                obstacles=tuple(e for e in dynamic if e.type == 'obstacle'))
             return self.latest
 
-    def snapshot(self):
+    def snapshot(self, version=1):
         with self.lock:
-            return self.latest
+            return self.latest_v2 if version == 2 else self.latest

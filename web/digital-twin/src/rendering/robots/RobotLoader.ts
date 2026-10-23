@@ -23,6 +23,6 @@ export async function loadRobot(pose: number[], signal: AbortSignal, expectedCon
   const robot = new Group(); robot.name = 'amr_01'; robot.add(model);
   robot.applyMatrix4(poseMatrix(pose));
   robot.userData.size = bounds.getSize(new Vector3()).toArray();
-  model.traverse(obj => { obj.castShadow = true; obj.receiveShadow = true; });
+  model.traverse(obj => { obj.castShadow = false; obj.receiveShadow = true; });
   return robot;
 }

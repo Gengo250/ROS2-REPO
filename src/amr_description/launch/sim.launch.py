@@ -32,6 +32,12 @@ def setup(context):
         '-y',LaunchConfiguration('spawn_y').perform(context),
         '-z',LaunchConfiguration('spawn_z').perform(context),
         '-Y',LaunchConfiguration('spawn_yaw').perform(context),'-allow_renaming','false'])
+    ready = ExecuteProcess(cmd=['python3', str(share/'scripts/wait_gazebo.py'),
+        LaunchConfiguration('world_name').perform(context)], output='screen')
+    def after_ready(event, _context):
+        if event.returncode != 0:
+            raise RuntimeError('Gazebo was not ready; AMR was not spawned')
+        return [spawn]
     controllers = Node(package='controller_manager',executable='spawner',output='screen',arguments=[
         'joint_state_broadcaster','diff_drive_controller','--activate-as-group',
         '--controller-manager-timeout','90', '--controller-ros-args',
@@ -63,9 +69,10 @@ def setup(context):
              parameters=[{'robot_description':description,'use_sim_time':True}]),
         Node(package='ros_gz_bridge',executable='parameter_bridge',output='screen',
              parameters=[{'config_file':str(share/'config/bridge.yaml'),'use_sim_time':True}]),
+        RegisterEventHandler(OnProcessExit(target_action=ready,on_exit=after_ready)),
         RegisterEventHandler(OnProcessExit(target_action=spawn,on_exit=after_spawn)),
         RegisterEventHandler(OnProcessExit(target_action=controllers,on_exit=after_controllers)),
-        spawn]
+        ready]
     if LaunchConfiguration('rviz').perform(context).lower() == 'true':
         actions.append(Node(package='rviz2',executable='rviz2',arguments=['-d',str(share/'rviz/amr.rviz')],
                             parameters=[{'use_sim_time':True}],output='screen'))

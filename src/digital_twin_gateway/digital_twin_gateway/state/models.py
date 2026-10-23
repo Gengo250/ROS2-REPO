@@ -92,3 +92,49 @@ class TwinState(Model):
     obstacles: tuple[()] = ()
     stations: tuple[()] = ()
     connection: ConnectionStatus
+
+
+class EntityTransform(Model):
+    id: str
+    frame_id: str
+    pose: Pose
+
+
+class DynamicEntity(Model):
+    id: str
+    type: Literal['robot', 'human', 'obstacle']
+    gazebo_name: str
+    frame_id: str
+    pose: Pose | None
+    # SceneBroadcaster supplies poses, not measured velocity.
+    velocity: Velocity | None = None
+    source_timestamp: Number | None
+    received_at: AwareDatetime | None
+    age_seconds: Number | None
+    status: Availability
+    pose_source: str
+    components: tuple[EntityTransform, ...] = Field(default=(), max_length=64)
+
+
+class SimulationState(Model):
+    epoch: int = Field(ge=0)
+    status: Literal['unknown', 'running', 'paused_or_stalled', 'offline']
+    pose_topic: str
+
+
+class TwinStateV2(Model):
+    protocol_version: Literal['2.0'] = '2.0'
+    message_type: Literal['twin_state'] = 'twin_state'
+    session_id: str
+    sequence: int = Field(ge=1)
+    timestamp: AwareDatetime
+    simulation_time: Number | None
+    simulation: SimulationState
+    world: World
+    # Same odometry diagnostics as v1. World ground truth is explicitly separate.
+    robots: tuple[Robot, ...]
+    simulation_robots: tuple[DynamicEntity, ...]
+    humans: tuple[DynamicEntity, ...]
+    obstacles: tuple[DynamicEntity, ...]
+    stations: tuple[()] = ()
+    connection: ConnectionStatus

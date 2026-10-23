@@ -17,6 +17,7 @@ def create_app(settings=None, runtime_factory=None, manager=None):
         from ..ros.node import RosRuntime
         runtime_factory = RosRuntime
     hub = BroadcastHub(settings)
+    hub_v2 = BroadcastHub(settings, '2.0')
 
     @asynccontextmanager
     async def lifespan(app):
@@ -25,6 +26,7 @@ def create_app(settings=None, runtime_factory=None, manager=None):
         try:
             runtime.start()
             hub.publish(manager.publish().model_dump_json())
+            hub_v2.publish(manager.snapshot(2).model_dump_json())
 
             async def publish():
                 last = monotonic()
@@ -32,8 +34,9 @@ def create_app(settings=None, runtime_factory=None, manager=None):
                 while True:
                     await asyncio.sleep(period)
                     now = monotonic()
-                    snapshot = manager.publish(len(hub.clients), 1 / (now-last))
+                    snapshot = manager.publish(len(hub.clients)+len(hub_v2.clients), 1 / (now-last))
                     hub.publish(snapshot.model_dump_json())
+                    hub_v2.publish(manager.snapshot(2).model_dump_json())
                     last = now
 
             publisher = asyncio.create_task(publish(), name='twin-publisher')
@@ -45,10 +48,12 @@ def create_app(settings=None, runtime_factory=None, manager=None):
                 with suppress(asyncio.CancelledError):
                     await publisher
             await hub.close()
+            await hub_v2.close()
             runtime.stop()
 
     app = FastAPI(title='Digital Twin Gateway', version='1.0', lifespan=lifespan)
     app.state.manager, app.state.hub = manager, hub
+    app.state.hub_v2 = hub_v2
     app.add_middleware(CORSMiddleware, allow_origins=list(settings.allowed_origins),
                        allow_methods=['GET'], allow_headers=['Accept'], allow_credentials=False)
     app.include_router(router)

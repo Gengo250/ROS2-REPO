@@ -18,7 +18,7 @@ test('real scene API, four scenarios, original GLB, cameras and resize', async (
     await page.locator('#scene-select').selectOption(scenario);
     await expect(canvas).toHaveAttribute('data-loaded','true', {timeout:30000});
     await expect(canvas).toHaveAttribute('data-scenario',scenario);
-    await expect(page.locator('#scene-status')).toContainText('Configured spawn');
+    await expect(page.locator('#scene-status')).toHaveText(/Configured spawn|Gazebo ground truth/);
     await expect(page.locator('#gateway')).toHaveText('Connected');
     await expect(page.locator('#gazebo')).toHaveText('Running');
     const samples = [];

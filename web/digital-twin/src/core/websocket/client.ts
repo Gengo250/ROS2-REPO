@@ -1,4 +1,4 @@
-import { parseTwin } from '../types/validation';
+import { parseTwin, parseTwinV2 } from '../types/validation';
 import type { TwinStore } from '../state/store';
 
 export class TwinSocket {
@@ -28,7 +28,7 @@ export class TwinSocket {
       socket.onopen = () => this.armWatchdog(15000);
       socket.onmessage = (event) => {
         try {
-          const state = parseTwin(JSON.parse(String(event.data)));
+          const state = (this.url.includes('/ws/v2/') ? parseTwinV2 : parseTwin)(JSON.parse(String(event.data)));
           this.store.accept(state);
           this.attempts = 0;
           this.armWatchdog(Math.max(5000, 3000 / state.connection.configured_publication_hz));

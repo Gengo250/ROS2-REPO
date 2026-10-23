@@ -9,7 +9,7 @@ function typeSchema(value) {
   }
   return value;
 }
-for (const name of ['twin-state', 'connection-status', 'warehouse-scene']) {
+for (const name of ['twin-state', 'twin-state-v2', 'connection-status', 'warehouse-scene']) {
   const schema = JSON.parse(await readFile(new URL(`../../../shared/schemas/${name}.schema.json`, import.meta.url)));
   const result = await compile(typeSchema(schema), schema.title, {
     bannerComment: '/* Generated from shared/schemas. Run npm run generate:types. */',

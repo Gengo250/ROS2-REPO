@@ -7,7 +7,7 @@ import type { Robot } from '../core/types/twin-state';
 
 const root = document.querySelector<HTMLElement>('#app')!;
 root.innerHTML = `
-  <header><div><p class="eyebrow">WAREHOUSE / PHASE 02</p><h1>Digital Twin</h1>
+  <header><div><p class="eyebrow">WAREHOUSE / PHASE 03</p><h1>Digital Twin</h1>
   <p class="subtitle">Industrial environment · Live diagnostics</p></div><span class="tag">READ-ONLY TELEMETRY</span></header>
   <section class="viewer-panel" aria-label="Warehouse visualization">
     <div class="viewer-toolbar"><div><h2>Warehouse / 3D</h2><span id="scene-status" role="status">Initializing renderer…</span></div>
@@ -18,7 +18,7 @@ root.innerHTML = `
       <option>normal</option><option>person_crossing</option><option>obstacle_in_aisle</option><option>corridor_blocked</option></select></label>
       <label><input id="structure" type="checkbox" checked> Walls & beams</label><button id="scene-retry">Retry</button>
       <span id="render-metrics"></span></div>
-    <p class="view-note">Drag to orbit · Right-drag to pan · Scroll to zoom. All entities show configured initial poses; live localization and animation are not enabled. Scene preview does not change Gazebo.</p>
+    <p class="view-note">Drag to orbit · Right-drag to pan · Scroll to zoom. The active scene follows Gazebo ground truth. Other scenarios show configured previews. Scene preview does not change Gazebo.</p>
   </section>
   <section class="system" aria-label="System connectivity">
     <article><h2>Gateway</h2><p id="gateway">Disconnected</p></article>
@@ -27,13 +27,14 @@ root.innerHTML = `
     <article><h2>Active scenario</h2><p id="scenario">Unknown</p></article>
   </section>
   <p id="notice" role="status">Connecting to Gateway…</p>
+  <section class="telemetry"><h2>Simulation ground truth · World</h2><div id="dynamic-entities">Waiting for simulation poses.</div></section>
   <section class="telemetry"><div class="section-heading"><h2>Robot telemetry</h2>
     <span>Connected robots: <strong id="count">0</strong></span></div>
     <div id="robots"><p class="empty">Waiting for real robot telemetry.</p></div>
   </section>
   <footer><span id="last-update">Last update: —</span><span id="rate">Publication rate: —</span></footer>
   <p class="frame-note">Pose source: ROS odometry. Positions are local to the reported frame.
-    Global warehouse localization is not available. The 3D AMR uses its configured world spawn.</p>`;
+    Global warehouse localization is not available. The 3D view uses separate Gazebo world ground truth.</p>`;
 
 const element = (id: string) => document.getElementById(id)!;
 let viewer: WarehouseViewer | undefined;
@@ -54,7 +55,7 @@ let configuredScenario: string | null | undefined;
 const store = new TwinStore();
 const api = new ApiClient(import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000');
 const socket = new TwinSocket(import.meta.env.VITE_WS_URL ||
-  'ws://127.0.0.1:8000/ws/v1/twin?protocol_version=1.0', store);
+  'ws://127.0.0.1:8000/ws/v2/twin?protocol_version=2.0', store);
 const abort = new AbortController();
 const cards = new Map<string, HTMLElement>();
 const number = (value: number | undefined) => value === undefined ? '—' : value.toFixed(4);
@@ -92,14 +93,24 @@ function robotCard(robot: Robot, connected: boolean) {
 const unsubscribe = store.subscribe(() => {
   const connected = store.connection === 'connected';
   const state = store.twin;
+  if (state && 'simulation' in state) {
+    viewer?.accept(state, connected);
+    element('dynamic-entities').replaceChildren(...[...state.simulation_robots, ...state.humans, ...state.obstacles].map(entity => {
+      const row = document.createElement('p');
+      row.textContent = `${entity.id} · ${connected ? entity.status : 'disconnected'} · ${entity.frame_id} · ` +
+        (entity.pose ? `(${number(entity.pose.position.x)}, ${number(entity.pose.position.y)}, ${number(entity.pose.position.z)}) m · simulation ${number(entity.source_timestamp ?? undefined)} s` : 'No ground truth received');
+      return row;
+    }));
+  }
   element('gateway').textContent = title(store.connection);
   element('gateway').dataset.connected = String(connected);
   element('ros').textContent = connected && store.status ? title(store.status.ros) : 'Unknown';
   element('gazebo').textContent = connected && state ? title(state.world.status) : 'Unavailable';
   element('scenario').textContent = state?.world.scenario ?? 'Unknown';
   if (state && configuredScenario !== state.world.scenario) {
+    const previousScenario = configuredScenario;
     configuredScenario = state.world.scenario;
-    if (!selection.value && configuredScenario) void viewer?.load(configuredScenario);
+    if (previousScenario !== undefined && !selection.value && configuredScenario) void viewer?.load(configuredScenario);
   }
   element('notice').textContent = connected
     ? (state?.robots.some((r) => r.status === 'online') ? 'Receiving live telemetry.' : 'Gateway connected. Waiting for available odometry.')
