@@ -3,6 +3,7 @@ from functools import partial
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import JointState
+from diagnostic_msgs.msg import DiagnosticArray
 from tf2_msgs.msg import TFMessage
 from pydantic import ValidationError
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
@@ -30,6 +31,7 @@ def subscribe(node, manager, settings):
             node.get_logger().warning('Invalid simulation snapshot rejected', throttle_duration_sec=5)
 
     subscriptions = [
+        node.create_subscription(DiagnosticArray, '/navigation/diagnostics', manager.update_navigation, live),
         node.create_subscription(TFMessage, settings.simulation_pose_topic, simulation, live),
         node.create_subscription(Clock, settings.clock_topic,
                                  lambda msg: manager.update_clock(stamp_seconds(msg.clock)), live),

@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "NavigationDiagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "enum": [
+            "navigation/interlock",
+            "navigation/action"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "level": {
+          "maximum": 3,
+          "minimum": 0,
+          "title": "Level",
+          "type": "integer"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "values": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Values",
+          "type": "object"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "age_seconds": {
+          "title": "Age Seconds",
+          "type": "number"
+        },
+        "availability": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Availability",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "level",
+        "message",
+        "values",
+        "received_at",
+        "age_seconds",
+        "availability"
+      ],
+      "title": "NavigationDiagnostic",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "navigation_status",
+      "default": "navigation_status",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "diagnostics": {
+      "items": {
+        "$ref": "#/$defs/NavigationDiagnostic"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "diagnostics"
+  ],
+  "title": "NavigationStatus",
+  "type": "object"
+}

@@ -4,6 +4,7 @@ from threading import Lock
 from time import monotonic
 from uuid import uuid4
 from .models import ConnectionStatus, Robot, TopicStatus, TwinState, World, TwinStateV2, DynamicEntity, SimulationState
+from .models import NavigationDiagnostic, NavigationStatus
 
 
 def utcnow():
@@ -31,6 +32,25 @@ class StateManager:
         self.simulation_time = None
         self.clock_progress = None
         self.latest = None
+        self.navigation = {}
+
+    def update_navigation(self, message):
+        with self.lock:
+            for status in message.status:
+                if status.name not in ('navigation/interlock', 'navigation/action'):
+                    continue
+                self.navigation[status.name] = (self.timer(), self.wall_clock(),
+                    int(status.level), status.message[:1024],
+                    {v.key[:64]: v.value[:2048] for v in status.values[:16]})
+
+    def navigation_snapshot(self):
+        with self.lock:
+            now = self.timer()
+            return NavigationStatus(diagnostics=tuple(NavigationDiagnostic(
+                name=name, level=level, message=message, values=values,
+                received_at=timestamp, age_seconds=max(0., now-receipt),
+                availability=self.availability(receipt, now))
+                for name, (receipt, timestamp, level, message, values) in self.navigation.items()))
 
     def set_ros_initialized(self, value):
         with self.lock:

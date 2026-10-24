@@ -4,11 +4,14 @@ import json
 import math
 import os
 import uuid
+import tempfile
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, OpaqueFunction, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, OpaqueFunction, SetEnvironmentVariable, RegisterEventHandler
+from launch.event_handlers import OnShutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -42,6 +45,24 @@ def setup(context):
             'gui': LaunchConfiguration('gui').perform(context),
             'gui_renderer': LaunchConfiguration('gui_renderer').perform(context),
             'rviz': LaunchConfiguration('rviz').perform(context)}
+    cleanup = []
+    if LaunchConfiguration('mapping_only', default='false').perform(context).lower() == 'true':
+        if scenario != 'normal':
+            raise ValueError('mapping_only requires the normal scenario')
+        # Controlled survey: derive from the verified authoritative world.
+        # Only workers are omitted; production worlds and collision geometry
+        # are unchanged. Never derive an occupancy grid from this geometry.
+        tree = ET.parse(args['world'])
+        world = tree.getroot().find('world')
+        human_ids = {human['id'] for human in c['humans']}
+        for model in list(world.findall('model')):
+            if model.get('name') in human_ids:
+                world.remove(model)
+        temporary = tempfile.TemporaryDirectory(prefix='warehouse_mapping_')
+        args['world'] = str(Path(temporary.name)/'warehouse_mapping.sdf')
+        tree.write(args['world'], encoding='unicode', xml_declaration=True)
+        cleanup.append(RegisterEventHandler(OnShutdown(on_shutdown=[
+            OpaqueFunction(function=lambda context: temporary.cleanup())])))
     for key, value in zip(('spawn_x', 'spawn_y', 'spawn_z', 'spawn_yaw'),
                           (spawn[0], spawn[1], spawn[2], spawn[5])):
         args[key] = str(value)
@@ -51,7 +72,7 @@ def setup(context):
             options += [flag, str(value)]
         return Node(package='tf2_ros', executable='static_transform_publisher',
                     name=child+'_tf', arguments=options, parameters=[{'use_sim_time': True}])
-    return [
+    return cleanup + [
         # Explicit partitions remain usable by test observers. Interactive
         # launches get a fresh partition so an abandoned server cannot answer
         # their create/scene requests or supply the GUI with an older world.
@@ -79,5 +100,6 @@ def generate_launch_description():
         DeclareLaunchArgument('gui', default_value='true'),
         DeclareLaunchArgument('gui_renderer', default_value='ogre'),
         DeclareLaunchArgument('rviz', default_value='false'),
+        DeclareLaunchArgument('mapping_only', default_value='false', choices=['true', 'false']),
         OpaqueFunction(function=setup),
     ])

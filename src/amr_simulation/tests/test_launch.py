@@ -70,6 +70,17 @@ def test_spawn_uses_existing_description_and_managed_server():
     commands = [[perform_substitutions(c, s) for s in a.cmd] for a in actions if isinstance(a, ExecuteProcess)]
     server = next(cmd for cmd in commands if '--headless-rendering' in cmd)
     assert server[:2] == ['gz','sim'] and server[-1] == '/tmp/selected.sdf'
+    # Phase 3 gates create behind a read-only Gazebo readiness process.
+    handlers = [a.event_handler for a in actions if isinstance(a,RegisterEventHandler)]
+    def event(action, code=0):
+        return ProcessExited(action=action,returncode=code,name='test',cmd=[],cwd=None,env=None,pid=123)
+    ready = next(a for a in actions if isinstance(a,ExecuteProcess) and
+                 any(x.endswith('/wait_gazebo.py') for x in [perform_substitutions(c,s) for s in a.cmd]))
+    ready_handler = next(h for h in handlers if h.matches(event(ready)))
+    spawn_action = ready_handler.handle(event(ready),c)[0]
+    with pytest.raises(RuntimeError,match='not ready'):
+        ready_handler.handle(event(ready,1),c)
+    commands.append([perform_substitutions(c,s) for s in spawn_action.cmd])
     spawn = next(cmd for cmd in commands if any(x.endswith('/create') for x in cmd))
     assert spawn[spawn.index('-world')+1] == 'warehouse'
     assert spawn[spawn.index('-name')+1] == 'warehouse_amr'
@@ -77,11 +88,6 @@ def test_spawn_uses_existing_description_and_managed_server():
     assert any(any(x.endswith('/robot_state_publisher') for x in cmd) for cmd in commands)
     # GUI must not race create. Exercise both event handlers, including failure.
     assert not any('-g' in cmd for cmd in commands)
-    handlers = [a.event_handler for a in actions if isinstance(a,RegisterEventHandler)]
-    spawn_action = next(a for a in actions if isinstance(a,ExecuteProcess) and
-                        any(x.endswith('/create') for x in [perform_substitutions(c,s) for s in a.cmd]))
-    def event(action, code=0):
-        return ProcessExited(action=action,returncode=code,name='test',cmd=[],cwd=None,env=None,pid=123)
     spawn_event = event(spawn_action)
     handler = next(h for h in handlers if h.matches(spawn_event))
     controllers = handler.handle(spawn_event,c)[0]

@@ -138,3 +138,20 @@ class TwinStateV2(Model):
     obstacles: tuple[DynamicEntity, ...]
     stations: tuple[()] = ()
     connection: ConnectionStatus
+
+
+class NavigationDiagnostic(Model):
+    name: Literal['navigation/interlock', 'navigation/action']
+    level: int = Field(ge=0, le=3)
+    message: str
+    values: dict[str, str]
+    received_at: AwareDatetime
+    age_seconds: Number
+    availability: Availability
+
+
+class NavigationStatus(Model):
+    # Independent, explicitly versioned extension; TwinState v1/v2 are unchanged.
+    protocol_version: Literal['1.0'] = '1.0'
+    message_type: Literal['navigation_status'] = 'navigation_status'
+    diagnostics: tuple[NavigationDiagnostic, ...]

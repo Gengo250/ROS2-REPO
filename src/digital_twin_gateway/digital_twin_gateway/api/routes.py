@@ -4,8 +4,14 @@ from ..scene.models import WarehouseScene
 from ..scene.adapter import load_scene
 from ..state.models import Scenario
 from ..state.models import ConnectionStatus, TwinState, TwinStateV2
+from ..state.models import NavigationStatus
 
 router = APIRouter()
+
+
+@router.get('/api/v1/navigation', response_model=NavigationStatus)
+async def navigation(request: Request):
+    return request.app.state.manager.navigation_snapshot()
 
 
 @router.get('/api/v1/health')
