@@ -19,7 +19,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--duration', type=float, default=15.)
-    args = parser.parse_args()
+    args = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
     rclpy.init()
     node = Node('navigation_sensor_audit', parameter_overrides=[Parameter('use_sim_time', value=True)])
     buffer = Buffer(node=node)

@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(navigation_tf_audit)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tf2_msgs REQUIRED)
+add_executable(tf_owners tf_owners.cpp)
+ament_target_dependencies(tf_owners rclcpp tf2_msgs)

@@ -32,3 +32,40 @@ def test_uncertain_localization_and_drive_limits():
 def test_duplicate_command_owner():
     g,t=fixture();g.get_publishers_info_by_topic=lambda _:[SimpleNamespace(node_name='manual')]
     assert CommandGuard.check(g,t,10.).startswith('Conflicting command publishers')
+
+
+def test_clock_failure_latches_zero_and_requests_simulation_pause(monkeypatch):
+    import rclpy
+    monkeypatch.setenv("GZ_PARTITION", "navigation_unit_test")
+    rclpy.init()
+    guard=CommandGuard()
+    messages=[];pauses=[]
+    try:
+        guard.publisher=SimpleNamespace(publish=messages.append)
+        guard.emergency_pause=lambda wall:pauses.append(wall)
+        guard.command=TwistStamped();guard.command.twist.linear.x=.4
+        guard.check=lambda wall,sim:'ready'
+        guard.tick()
+        assert messages[-1].twist.linear.x==.4
+        guard.check=lambda wall,sim:'Simulation clock stopped or reset'
+        guard.tick()
+        assert guard.emergency_latched and pauses
+        assert messages[-1].twist.linear.x==0.
+        # Sensor recovery must not silently restart motion after emergency pause.
+        guard.check=lambda wall,sim:'ready'
+        guard.tick()
+        assert messages[-1].twist.linear.x==0.
+    finally:
+        guard.destroy_node();rclpy.shutdown()
+
+
+def test_gazebo_timeout_exit_zero_is_not_a_pause_acknowledgement():
+    errors=[]
+    guard=SimpleNamespace(pause_acknowledged=False,
+        pause_process=SimpleNamespace(poll=lambda:0,communicate=lambda:('Service call timed out\n',None)),
+        next_pause_retry=100.,get_logger=lambda:SimpleNamespace(error=errors.append))
+    CommandGuard.emergency_pause(guard,10.)
+    assert not guard.pause_acknowledged and guard.pause_process is None and errors
+    guard.pause_process=SimpleNamespace(poll=lambda:0,communicate=lambda:('data: true\n',None))
+    CommandGuard.emergency_pause(guard,11.)
+    assert guard.pause_acknowledged

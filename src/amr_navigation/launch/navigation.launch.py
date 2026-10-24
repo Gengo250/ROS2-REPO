@@ -1,6 +1,6 @@
 """Saved map + AMCL + minimal Nav2. Attach to the one existing simulation."""
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, Shutdown
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from amr_navigation.launch_checks import exclusive_mode
@@ -16,7 +16,7 @@ def start(context):
         if executable=='bt_navigator':params.append({'default_nav_to_pose_bt_xml':str(share()/'config/navigate_to_pose.xml')})
         nodes.append(Node(package=package,executable=executable,name=executable,output='screen',parameters=params,
                           remappings=[('cmd_vel','nav_cmd_vel')] if executable in ['controller_server','behavior_server'] else []))
-    nodes += [Node(package='amr_navigation',executable='command_guard',output='screen',parameters=[{'use_sim_time':True}]),
+    nodes += [Node(package='amr_navigation',executable='command_guard',output='screen',parameters=[{'use_sim_time':True}],on_exit=Shutdown(reason='Navigation command interlock exited')),
               Node(package='nav2_lifecycle_manager',executable='lifecycle_manager',name='lifecycle_manager_navigation',output='screen',
                    parameters=[{'use_sim_time':True,'autostart':True,'bond_timeout':4.0,
                                 'node_names':['controller_server','planner_server','behavior_server','bt_navigator']}])]

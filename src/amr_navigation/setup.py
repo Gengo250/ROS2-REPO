@@ -1,9 +1,10 @@
 from glob import glob
+from pathlib import Path
 from setuptools import setup
 setup(name='amr_navigation', version='0.1.0', packages=['amr_navigation'],
       data_files=[('share/ament_index/resource_index/packages',['resource/amr_navigation']),
                   ('share/amr_navigation',['package.xml'])]+[
-                      ('share/amr_navigation/'+folder,glob(folder+'/*'))
+                      ('share/amr_navigation/'+folder,[file for file in glob(folder+'/*') if Path(file).is_file()])
                       for folder in ['launch','config','maps','rviz','scripts']],
       install_requires=['setuptools'], tests_require=['pytest'], zip_safe=True, maintainer='Gengo',
       maintainer_email='gengo@users.noreply.github.com', description='Warehouse AMR navigation',

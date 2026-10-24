@@ -46,10 +46,6 @@ Visualization Manager:
   Tools:
   - Class: rviz_default_plugins/Interact
   - Class: rviz_default_plugins/MoveCamera
-  - Class: rviz_default_plugins/SetInitialPose
-    Topic:
-      Value: /initialpose
-  - Class: nav2_rviz_plugins/GoalTool
   Views:
     Current:
       Class: rviz_default_plugins/TopDownOrtho

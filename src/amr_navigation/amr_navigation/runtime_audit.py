@@ -14,9 +14,10 @@ from rosidl_runtime_py.convert import message_to_ordereddict
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--timeout',type=float,default=90);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--timeout',type=float,default=90);a=p.parse_args(rclpy.utilities.remove_ros_args()[1:])
     rclpy.init();n=rclpy.create_node('navigation_runtime_audit',parameter_overrides=[Parameter('use_sim_time',value=True)])
-    b=Buffer(node=n);listener=TransformListener(b,n);maps={};clients={};pending={};states={};report={'passed':False}
+    b=Buffer(node=n);listener=TransformListener(b,n)
+    maps={};clients={};pending={};states={};report={'passed':False}
     for topic in ['/map','/global_costmap/costmap','/local_costmap/costmap']:
         n.create_subscription(OccupancyGrid,topic,lambda m,t=topic:maps.update({t:m}),QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL))
     for name in ['map_server','amcl','planner_server','controller_server','behavior_server','bt_navigator']:
@@ -31,11 +32,17 @@ def main():
                 last_check=time.monotonic()
                 for name,client in clients.items():
                     if name not in pending and client.service_is_ready():pending[name]=client.call_async(GetState.Request())
-            if all(states.get(k)=='active' for k in clients) and len(maps)==3 and action.server_is_ready() and b.can_transform('map','laser_frame',rclpy.time.Time()):break
+            owners=n.get_publishers_info_by_topic('/cmd_vel')
+            topology_ready=len(owners)==1 and owners[0].node_name=='navigation_command_guard' and bool(n.get_subscriptions_info_by_topic('/nav_cmd_vel'))
+            if all(states.get(k)=='active' for k in clients) and len(maps)==3 and action.server_is_ready() and b.can_transform('map','laser_frame',rclpy.time.Time()) and topology_ready:break
         else:raise TimeoutError('Lifecycle/TF/maps/action readiness failed: '+str(states))
         report['states']=states;report['action']='/navigate_to_pose'
         report['map_to_laser']=message_to_ordereddict(b.lookup_transform('map','laser_frame',rclpy.time.Time()))
         report['tf_frames_yaml']=b.all_frames_as_yaml()
+        report['tf_publishers']=[x.node_name for x in n.get_publishers_info_by_topic('/tf')]
+        assert sorted(report['tf_publishers'])==['amcl','diff_drive_controller','robot_state_publisher'], 'Unexpected TF publishers'
+        report['clock_publishers']=[x.node_name for x in n.get_publishers_info_by_topic('/clock')]
+        assert len(report['clock_publishers'])==1, 'Expected one simulation clock publisher'
         report['map_publishers']=[x.node_name for x in n.get_publishers_info_by_topic('/map')]
         assert report['map_publishers']==['map_server']
         report['commands']={}

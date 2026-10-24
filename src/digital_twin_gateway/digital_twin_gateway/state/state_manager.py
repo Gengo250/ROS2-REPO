@@ -40,7 +40,7 @@ class StateManager:
                 if status.name not in ('navigation/interlock', 'navigation/action'):
                     continue
                 self.navigation[status.name] = (self.timer(), self.wall_clock(),
-                    int(status.level), status.message[:1024],
+                    (status.level[0] if isinstance(status.level, bytes) else int(status.level)), status.message[:1024],
                     {v.key[:64]: v.value[:2048] for v in status.values[:16]})
 
     def navigation_snapshot(self):

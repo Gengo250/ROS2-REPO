@@ -17,5 +17,6 @@
   <exec_depend>rosgraph_msgs</exec_depend><exec_depend>diagnostic_msgs</exec_depend>
   <exec_depend>rosidl_runtime_py</exec_depend><exec_depend>python3-yaml</exec_depend><exec_depend>rviz2</exec_depend>
   <test_depend>python3-pytest</test_depend>
+  <test_depend>python3-psutil</test_depend>
   <export><build_type>ament_python</build_type></export>
 </package>

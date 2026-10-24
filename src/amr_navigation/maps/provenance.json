@@ -1,0 +1,34 @@
+{
+  "source": "SLAM Toolbox 2.8.5, real /scan plus wheel odometry; no geometry-derived occupancy",
+  "coverage": "Controlled central cross-aisle survey with overlapping return; rack interior aisles and perimeter remain partly unknown. Rejected long-loop maps are not used.",
+  "resolution_m": 0.05,
+  "initial_map_pose": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "initial_world_pose": [
+    -11.0,
+    0.0,
+    0.0
+  ],
+  "world_to_map_for_evaluation": [
+    11.0,
+    0.0,
+    0.0
+  ],
+  "world_registration_usage": "Controlled initial calibration and evaluation only; never published as localization TF.",
+  "files_sha256": {
+    "config/slam_params.yaml": "21bb193dc567e1d6e8d127e3b5bdd2933d69dafe425a84cd64fadd249ccec756",
+    "maps/warehouse.yaml": "efff854f324b357b2dee07f55f9849ee5a82fdf1d94b9d0a3d1c167b797fd5ca",
+    "maps/warehouse.pgm": "ee82c5009a96cf256ac4af4fa999f53f6510b372d083b79a51a475b328021a74"
+  },
+  "survey_evidence": [
+    "v3-survey-01.json",
+    "v3-return-turn.json",
+    "v3-return.json",
+    "v3-return-registration.json"
+  ],
+  "final_return_position_difference_m": 0.2175,
+  "final_return_yaw_difference_rad": 0.0206
+}

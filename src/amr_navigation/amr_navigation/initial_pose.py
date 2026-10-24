@@ -12,7 +12,7 @@ from amr_navigation.goal_client import grid_coordinates
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('x',type=float);p.add_argument('y',type=float);p.add_argument('yaw',type=float);p.add_argument('--timeout',type=float,default=90.)
-    a=p.parse_args()
+    a=p.parse_args(rclpy.utilities.remove_ros_args()[1:])
     if not all(math.isfinite(x) for x in [a.x,a.y,a.yaw]):p.error('Pose must be finite')
     rclpy.init();n=rclpy.create_node('explicit_initial_pose',parameter_overrides=[Parameter('use_sim_time',value=True)])
     maps=[];estimates=[];b=Buffer(node=n);listener=TransformListener(b,n)

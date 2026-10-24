@@ -7,7 +7,8 @@ in the existing visualization pipeline and evaluation; it never enters localizat
 ## Baseline and environment
 
 Created `feature/amr-autonomous-navigation` from fetched `origin/main` `fafd145`
-(Phase 3 merge). Working tree was clean. No commits or pushes. Ubuntu 24.04,
+(Phase 3 merge). Working tree was clean. The user later committed the initial Phase 4 work as `855d4d3`;
+subsequent fixes remain uncommitted. No assistant commits or pushes. Ubuntu 24.04,
 ROS 2 Jazzy, Nav2 1.3.13, SLAM Toolbox 2.8.5; packages were already installed.
 Full Debian versions and runtime evidence live in `evidence-phase4/` (ignored
 runtime artifacts, consistent with earlier phases).
@@ -81,7 +82,7 @@ ROS domain and not launch two modes simultaneously.
 ```bash
 ros2 launch amr_navigation localization.launch.py map:=/absolute/path/warehouse.yaml
 # Explicit estimate in map coordinates, or use RViz's 2D Pose Estimate tool:
-ros2 run amr_navigation initial_pose X Y YAW
+ros2 run amr_navigation initial_pose 0 0 0
 ```
 
 AMCL uses a differential motion model and likelihood-field sensor model, 500–2500
@@ -98,7 +99,7 @@ ros2 launch amr_navigation navigation.launch.py
 ros2 run amr_navigation initial_pose X Y YAW
 # Or start ONE complete existing simulation + Gateway + navigation stack:
 ros2 launch amr_navigation autonomous_demo.launch.py scenario:=normal \
-  initialize:=true initial_x:=X initial_y:=Y initial_yaw:=YAW
+  initialize:=true initial_x:=0 initial_y:=0 initial_yaw:=0
 # Frontend, separate terminal:
 npm --prefix web/digital-twin run dev
 # A bounded real Nav2 action, map coordinates:
@@ -125,7 +126,17 @@ The `navigation_command_guard` is the sole `/cmd_vel` publisher. It forwards tho
 covariance and valid TF. Its wall-clock timer outputs zeros during stale input or
 clock pauses. It never plans paths or synthesizes navigation velocities. A crashed
 guard leaves the original controller's 0.5 s simulation-time watchdog in charge.
-A paused Gazebo cannot move; after a clock reset the guard clears readiness.
+Real fault testing found that stopping the ROS clock bridge freezes the controller
+update loop while Gazebo can continue integrating its last wheel velocity. A zero
+ROS command cannot stop that failure. The guard therefore latches motion disabled
+and requests a native `/world/warehouse/control` emergency pause on clock loss
+during motion or a backwards clock jump. It uses the existing **GZ_PARTITION**;
+that variable is required when attaching navigation. The full demo sets it once
+for all children. No second clock or velocity publisher is introduced. This pause
+is a fault response, never a way to pass an obstacle test. The guard never unpauses
+automatically: stop/restart the owned stack, reinitialize AMCL, then issue a new
+goal. A paused controller's stale velocity sample is not proof of a physical stop;
+fault tests check independent world-pose stationarity and native Gazebo statistics.
 
 The installed standard replanning/recovery tree is adapted only to bound retries
 to three and omit `BackUp` because rear approaches are unobserved by the 180° scan.
@@ -183,3 +194,40 @@ travel separately. Path publication count is reported separately from replans;
 recovery count comes from Nav2 feedback. Collision count remains null unless an
 independent contact observer supplies evidence; absence of a crash is not a zero
 collision measurement.
+
+## Current saved map and measured runs
+
+`maps/warehouse.yaml`, `warehouse.pgm`, and `provenance.json` are real SLAM
+artifacts. The 729×491 grid uses 0.05 m cells and origin (−10.196, −10.052, 0).
+Its validated initial map pose is (0, 0, 0) at the unchanged world spawn (−11, 0, 0).
+The +11 m x registration is used only for evaluation. The central cross aisle is
+covered; rack aisles and perimeter remain partly unknown. See the validation
+report before using a goal outside demonstrated coverage.
+
+The real browser run reached map goals (2, 0, 0), (5, 1, π/2), and (10, −1, 0).
+For a repeat, pass these explicit map poses to `integration.py`. The bounded
+client normally rejects a goal whose conservative footprint overlaps unknown or
+occupied map cells. `--server-validation` is an acceptance-test option that sends
+a finite goal directly to Nav2 to exercise its own rejection; all Nav2 costmap
+and collision checks remain enabled.
+
+```bash
+python3 src/amr_navigation/scripts/integration.py --initial 0 0 0 \
+  --goal 2 0 0 --goal 5 1 1.57079632679 --goal 10 -1 0 \
+  --scenario normal --browser --output /tmp/phase4-normal
+python3 src/amr_navigation/scripts/fault_suite.py --output /tmp/phase4-faults
+python3 src/amr_navigation/scripts/analyze_results.py /tmp/phase4-normal/goal-0.json \
+  --output /tmp/phase4-normal/goal-0.metrics.json
+```
+
+The fault suite owns a fresh stack for each case, uses wall deadlines and cancels
+or shuts down all owned processes. Contact evidence covers only the existing
+worker, south-wall and scenario-barrier sensors, not every warehouse collision.
+The obstacle observer compares LiDAR/costmap observations with independent worker
+poses solely for evaluation; it publishes nothing.
+
+To continue mapping, retain the serialized graph alongside the occupancy map.
+The supported SLAM `map_file_name` and `map_start_pose` parameters may be supplied
+in a copy of `slam_params.yaml` via `mapping.launch.py slam_params_file:=...`.
+Use the verified initial map pose after a fresh simulation restart, and validate
+registration again before replacing a reviewed map. Do not run AMCL concurrently.

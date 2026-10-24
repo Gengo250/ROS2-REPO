@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 // Read-only observer: never publishes a command or changes an entity pose.
@@ -15,6 +15,7 @@ test('observes physical Nav2 navigation through the existing v2 scene',async({pa
   await expect.poll(async()=>Object.keys(JSON.parse(await host.getAttribute('data-transforms')||'{}')).length).toBe(4);
   await page.getByRole('button',{name:'Robot focus',exact:true}).click();
   const samples:any[]=[];
+  await writeFile(resolve(evidence!,'browser.ready'),'ready');
   try {
     const seconds=Number(process.env.NAV_OBSERVE_SECONDS||120);
     for(let i=0;i<seconds;i++){
@@ -22,7 +23,9 @@ test('observes physical Nav2 navigation through the existing v2 scene',async({pa
       samples.push(s);
       if([0,Math.floor(seconds/2),seconds-1].includes(i))await page.screenshot({path:resolve(evidence!,`navigation-${i}.png`),fullPage:true});
       await page.waitForTimeout(1000);
+      if(i>10 && await access(resolve(evidence!,'navigation.done')).then(()=>true,()=>false))break;
     }
+    await page.screenshot({path:resolve(evidence!,'navigation-final.png'),fullPage:true});
     const displacement=Math.max(...samples.map(s=>Math.hypot(...s.roots.amr_01.position.map((v:number,i:number)=>v-samples[0].roots.amr_01.position[i]))));
     expect(displacement).toBeGreaterThan(.5);
     expect(errors).toEqual([]);

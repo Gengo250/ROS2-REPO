@@ -10,7 +10,7 @@ from rclpy.parameter import Parameter
 from rclpy.qos import QoSProfile,DurabilityPolicy,qos_profile_sensor_data
 from nav2_msgs.action import NavigateToPose
 from nav_msgs.msg import Path as NavPath,Odometry,OccupancyGrid
-from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import TwistStamped,PoseStamped
 from tf2_msgs.msg import TFMessage
 from tf2_ros import Buffer,TransformListener
 from diagnostic_msgs.msg import DiagnosticArray,DiagnosticStatus,KeyValue
@@ -41,13 +41,14 @@ def free_goal(grid,x,y,radius=.64):
 def main():
     p=argparse.ArgumentParser();p.add_argument('x',type=float);p.add_argument('y',type=float);p.add_argument('yaw',type=float)
     p.add_argument('--timeout',type=float,default=180.,help='Wall-clock deadline, seconds')
+    p.add_argument('--server-validation',action='store_true',help='Test Nav2 goal rejection directly; Nav2 collision checks remain enabled')
     p.add_argument('--cancel-after',type=float,help='Intentional cancellation after wall seconds')
     p.add_argument('--output',type=Path,required=True);p.add_argument('--action',default='/navigate_to_pose')
-    a=p.parse_args()
+    a=p.parse_args(rclpy.utilities.remove_ros_args()[1:])
     if not all(math.isfinite(v) for v in [a.x,a.y,a.yaw,a.timeout]) or not 1<=a.timeout<=900:p.error('Finite pose and timeout of 1–900 seconds required')
     rclpy.init();n=rclpy.create_node('navigation_goal_client',parameter_overrides=[Parameter('use_sim_time',value=True)])
     b=Buffer(node=n);listener=TransformListener(b,n);client=ActionClient(n,NavigateToPose,a.action)
-    report={'goal_map':[a.x,a.y,a.yaw],'action':a.action,'paths':[],'trajectory':[],'feedback':[],'accepted':False,'passed':False,'collision_events':None}
+    report={'goal_map':[a.x,a.y,a.yaw],'action':a.action,'paths':[],'trajectory':[],'feedback':[],'accepted':False,'passed':False,'collision_events':None,'server_validation':a.server_validation}
     latest={};handle=None;result_future=None;cancelled=False;start=time.monotonic();last_sample=0.;command_count=0
     def path(m):
         if m.header.frame_id=='map':report['paths'].append({'stamp':m.header.stamp.sec+m.header.stamp.nanosec/1e9,'points':[[p.pose.position.x,p.pose.position.y] for p in m.poses]})
@@ -63,8 +64,9 @@ def main():
     n.create_subscription(OccupancyGrid,'/map',lambda m:latest.update(map=m),QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL))
     n.create_subscription(TwistStamped,'/cmd_vel',command,10)
     diagnostics=n.create_publisher(DiagnosticArray,'/navigation/diagnostics',10)
+    goal_view=n.create_publisher(PoseStamped,'/navigation/goal',QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL))
     def status(state,details=''):
-        m=DiagnosticArray();m.header.stamp=n.get_clock().now().to_msg();m.status=[DiagnosticStatus(name='navigation/action',hardware_id='warehouse_amr',level=2 if state in ['failed','timeout'] else 0,message=state,values=[KeyValue(key='goal_map',value=json.dumps(report['goal_map'])),KeyValue(key='details',value=details)])];diagnostics.publish(m)
+        m=DiagnosticArray();m.header.stamp=n.get_clock().now().to_msg();m.status=[DiagnosticStatus(name='navigation/action',hardware_id='warehouse_amr',level=DiagnosticStatus.ERROR if state in ['failed','timeout'] else DiagnosticStatus.OK,message=state,values=[KeyValue(key='goal_map',value=json.dumps(report['goal_map'])),KeyValue(key='details',value=details)])];diagnostics.publish(m)
     def feedback(m):
         f=m.feedback
         row={'wall_elapsed_s':time.monotonic()-start,'distance_remaining_m':f.distance_remaining,'recoveries':f.number_of_recoveries,'navigation_time_s':f.navigation_time.sec+f.navigation_time.nanosec/1e9}
@@ -90,10 +92,10 @@ def main():
         return future.result()
     try:
         deadline=time.monotonic()+60
-        while 'map' not in latest or 'odom' not in latest or not b.can_transform('map','base_link',rclpy.time.Time()) or not client.server_is_ready():
+        while 'map' not in latest or 'odom' not in latest or not b.can_transform('map','base_link',rclpy.time.Time()) or not client.server_is_ready() or command_count<2 or not n.get_publishers_info_by_topic('/cmd_vel') or any(p.node_name=='_NODE_NAME_UNKNOWN_' for p in n.get_publishers_info_by_topic('/cmd_vel')):
             if time.monotonic()>deadline:raise TimeoutError('Map, odometry, localization or NavigateToPose unavailable')
             spin()
-        if not free_goal(latest['map'],a.x,a.y):
+        if not a.server_validation and not free_goal(latest['map'],a.x,a.y):
             report['rejection']='Goal footprint intersects unknown, occupied or outside-map cells';status('rejected',report['rejection']);raise SystemExit(2)
         publishers=n.get_publishers_info_by_topic('/cmd_vel')
         report['cmd_vel_publishers']=[{'node':p.node_name,'type':p.topic_type} for p in publishers]
@@ -103,6 +105,7 @@ def main():
         handle=wait(client.send_goal_async(goal,feedback_callback=feedback),15)
         report['acceptance_latency_s']=time.monotonic()-start;report['accepted']=handle.accepted
         if not handle.accepted:raise RuntimeError('Nav2 rejected goal')
+        goal_view.publish(goal.pose)
         result_future=handle.get_result_async();status('accepted')
         while not result_future.done():
             elapsed=time.monotonic()-start
