@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/route-graph.v1.schema.json",
+  "$defs": {
+    "RouteGraphConnection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "directions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Directions",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "corridor",
+            "station_access"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "corridor_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Corridor Id"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "distance": {
+          "minimum": 0,
+          "title": "Distance",
+          "type": "number"
+        },
+        "status": {
+          "enum": [
+            "validated",
+            "unmapped",
+            "blocked",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "zones": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Zones",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "target",
+        "directions",
+        "kind",
+        "corridor_id",
+        "width",
+        "distance",
+        "status",
+        "zones"
+      ],
+      "title": "RouteGraphConnection",
+      "type": "object"
+    },
+    "RouteGraphNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "STATION",
+            "INTERSECTION",
+            "CORRIDOR_POINT",
+            "OPEN_AREA"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "position": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Position",
+          "type": "array"
+        },
+        "yaw": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Yaw"
+        },
+        "status": {
+          "enum": [
+            "validated",
+            "unmapped",
+            "blocked",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "position",
+        "yaw",
+        "status",
+        "reason"
+      ],
+      "title": "RouteGraphNode",
+      "type": "object"
+    },
+    "RouteRegistration": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "parent_frame": {
+          "const": "world",
+          "title": "Parent Frame",
+          "type": "string"
+        },
+        "child_frame": {
+          "const": "map",
+          "title": "Child Frame",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "yaw": {
+          "title": "Yaw",
+          "type": "number"
+        },
+        "valid": {
+          "title": "Valid",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "parent_frame",
+        "child_frame",
+        "x",
+        "y",
+        "yaw",
+        "valid"
+      ],
+      "title": "RouteRegistration",
+      "type": "object"
+    },
+    "RouteStation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "dock_node": {
+          "title": "Dock Node",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "validated",
+            "unmapped",
+            "blocked",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "dock_node",
+        "status",
+        "reason"
+      ],
+      "title": "RouteStation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Static graph geometry in the world frame; fetched once, never broadcast.",
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "route_graph",
+      "default": "route_graph",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "graph_version": {
+      "title": "Graph Version",
+      "type": "string"
+    },
+    "map_version": {
+      "title": "Map Version",
+      "type": "string"
+    },
+    "frame_id": {
+      "const": "world",
+      "title": "Frame Id",
+      "type": "string"
+    },
+    "registration": {
+      "$ref": "#/$defs/RouteRegistration"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/RouteGraphNode"
+      },
+      "title": "Nodes",
+      "type": "array"
+    },
+    "connections": {
+      "items": {
+        "$ref": "#/$defs/RouteGraphConnection"
+      },
+      "title": "Connections",
+      "type": "array"
+    },
+    "stations": {
+      "items": {
+        "$ref": "#/$defs/RouteStation"
+      },
+      "title": "Stations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "graph_version",
+    "map_version",
+    "frame_id",
+    "registration",
+    "nodes",
+    "connections",
+    "stations"
+  ],
+  "title": "RouteGraph",
+  "type": "object"
+}

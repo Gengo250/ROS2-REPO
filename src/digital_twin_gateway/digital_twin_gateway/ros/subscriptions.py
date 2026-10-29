@@ -4,6 +4,7 @@ from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import JointState
 from diagnostic_msgs.msg import DiagnosticArray
+from std_msgs.msg import String
 from tf2_msgs.msg import TFMessage
 from pydantic import ValidationError
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
@@ -23,6 +24,14 @@ def subscribe(node, manager, settings):
             return
         manager.update_robot(robot)
 
+    latched = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.TRANSIENT_LOCAL)
+
+    def route(message):
+        try:
+            manager.update_route(message.data)
+        except (ValidationError, ValueError):
+            node.get_logger().warning('Invalid route status rejected', throttle_duration_sec=5)
+
     def simulation(message):
         try:
             entities = normalize_simulation(settings, message, manager.wall_clock())
@@ -32,6 +41,8 @@ def subscribe(node, manager, settings):
 
     subscriptions = [
         node.create_subscription(DiagnosticArray, '/navigation/diagnostics', manager.update_navigation, live),
+        # Latched by the route executor so a late Gateway still sees the last route.
+        node.create_subscription(String, settings.route_status_topic, route, latched),
         node.create_subscription(TFMessage, settings.simulation_pose_topic, simulation, live),
         node.create_subscription(Clock, settings.clock_topic,
                                  lambda msg: manager.update_clock(stamp_seconds(msg.clock)), live),

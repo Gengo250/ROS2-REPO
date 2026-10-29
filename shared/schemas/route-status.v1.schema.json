@@ -1,0 +1,369 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/route-status.v1.schema.json",
+  "$defs": {
+    "RouteExecution": {
+      "additionalProperties": false,
+      "description": "Route executor message on /route_planner/status; map-frame geometry only.",
+      "properties": {
+        "protocol_version": {
+          "const": "1.0",
+          "title": "Protocol Version",
+          "type": "string"
+        },
+        "message_type": {
+          "const": "route_status",
+          "title": "Message Type",
+          "type": "string"
+        },
+        "route_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Route Id"
+        },
+        "status": {
+          "enum": [
+            "IDLE",
+            "PLANNING",
+            "PLANNED",
+            "VALIDATING",
+            "EXECUTING",
+            "REPLANNING",
+            "COMPLETED",
+            "BLOCKED",
+            "FAILED",
+            "CANCELED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "origin": {
+          "title": "Origin",
+          "type": "string"
+        },
+        "destination": {
+          "title": "Destination",
+          "type": "string"
+        },
+        "algorithm": {
+          "enum": [
+            "astar",
+            "dijkstra"
+          ],
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "graph_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Graph Version"
+        },
+        "map_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Map Version"
+        },
+        "registration_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Registration Id"
+        },
+        "selected_nodes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 512,
+          "title": "Selected Nodes",
+          "type": "array"
+        },
+        "selected_edges": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 512,
+          "title": "Selected Edges",
+          "type": "array"
+        },
+        "map_frame_path": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 512,
+          "title": "Map Frame Path",
+          "type": "array"
+        },
+        "map_frame_waypoints": {
+          "items": {
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 512,
+          "title": "Map Frame Waypoints",
+          "type": "array"
+        },
+        "waypoint_nodes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 512,
+          "title": "Waypoint Nodes",
+          "type": "array"
+        },
+        "current_waypoint": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Current Waypoint"
+        },
+        "completed_waypoints": {
+          "minimum": 0,
+          "title": "Completed Waypoints",
+          "type": "integer"
+        },
+        "total_waypoints": {
+          "minimum": 0,
+          "title": "Total Waypoints",
+          "type": "integer"
+        },
+        "estimated_distance_m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Estimated Distance M"
+        },
+        "distance_remaining_m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Distance Remaining M"
+        },
+        "execution_progress": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Execution Progress",
+          "type": "number"
+        },
+        "replans": {
+          "minimum": 0,
+          "title": "Replans",
+          "type": "integer"
+        },
+        "blocked_connections": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 512,
+          "title": "Blocked Connections",
+          "type": "array"
+        },
+        "navigation_action_status": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Navigation Action Status"
+        },
+        "failure_reason": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Failure Reason"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Detail"
+        },
+        "stamp": {
+          "title": "Stamp",
+          "type": "number"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "protocol_version",
+        "message_type",
+        "route_id",
+        "status",
+        "origin",
+        "destination",
+        "algorithm",
+        "graph_version",
+        "map_version",
+        "registration_id",
+        "selected_nodes",
+        "selected_edges",
+        "map_frame_path",
+        "map_frame_waypoints",
+        "waypoint_nodes",
+        "current_waypoint",
+        "completed_waypoints",
+        "total_waypoints",
+        "estimated_distance_m",
+        "distance_remaining_m",
+        "execution_progress",
+        "replans",
+        "blocked_connections",
+        "navigation_action_status",
+        "failure_reason",
+        "detail",
+        "stamp",
+        "updated_at"
+      ],
+      "title": "RouteExecution",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "route_status_snapshot",
+      "default": "route_status_snapshot",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "availability": {
+      "enum": [
+        "unknown",
+        "offline",
+        "stale",
+        "online"
+      ],
+      "title": "Availability",
+      "type": "string"
+    },
+    "received_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Received At"
+    },
+    "age_seconds": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Age Seconds"
+    },
+    "route": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RouteExecution"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "availability",
+    "received_at",
+    "age_seconds",
+    "route"
+  ],
+  "title": "RouteStatus",
+  "type": "object"
+}

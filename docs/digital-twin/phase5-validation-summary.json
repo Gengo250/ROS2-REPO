@@ -1,0 +1,198 @@
+{
+  "verdict": "PHASE 5: PARTIALLY VALIDATED (routing validated inside approved-map coverage; station-level routing BLOCKED by map coverage; dynamic-obstacle zero-contact criterion FAILED)",
+  "date": "2026-10-29",
+  "phase": 5,
+  "branch": "feature/warehouse-graph-routing",
+  "baseline_commit": "5ca6a95724eaa56bf54dc79d3bc9c61470e2199c",
+  "evidence_directory": "docs/digital-twin/evidence-phase5 (ignored)",
+  "graph": {
+    "graph_version": "0e127f48069cca0a",
+    "topology_version": "70cdd3c14357b07c462884b3740c31b5905ece322282aa4e695e388b80da6790",
+    "nodes": 30,
+    "directed_edges": 74,
+    "connections": 37,
+    "node_status": {
+      "blocked": 3,
+      "invalid": 0,
+      "unmapped": 23,
+      "validated": 4
+    },
+    "connection_status": {
+      "blocked": 12,
+      "invalid": 0,
+      "unmapped": 22,
+      "validated": 3
+    },
+    "station_status": {
+      "charging_station": "unmapped",
+      "dropoff_station_01": "unmapped",
+      "dropoff_station_02": "unmapped",
+      "pickup_station_01": "unmapped",
+      "pickup_station_02": "unmapped",
+      "staging_area": "unmapped"
+    }
+  },
+  "registration": {
+    "id": "7287e1893844515d",
+    "transform": {
+      "x": 11.0375,
+      "y": 0.065,
+      "yaw": 0.0145
+    },
+    "median_residual_m": 0.0564,
+    "inlier_fraction_0_20": 0.8074
+  },
+  "planning_benchmark": {
+    "validated": {
+      "pairs": 12,
+      "routes_found": 12,
+      "astar": {
+        "median_planning_s": 5.090175000077579e-05,
+        "max_planning_s": 6.583450021935278e-05,
+        "mean_expanded_states": 2.6666666666666665,
+        "mean_visited_nodes": 2.6666666666666665
+      },
+      "dijkstra": {
+        "median_planning_s": 6.284050016347464e-05,
+        "max_planning_s": 7.04934998339013e-05,
+        "mean_expanded_states": 3.1666666666666665,
+        "mean_visited_nodes": 3
+      },
+      "astar_fewer_expansions_pairs": 6,
+      "equal_expansions_pairs": 6
+    },
+    "topology": {
+      "pairs": 870,
+      "routes_found": 870,
+      "astar": {
+        "median_planning_s": 7.945474999360158e-05,
+        "max_planning_s": 0.00030877200015311246,
+        "mean_expanded_states": 9.158620689655173,
+        "mean_visited_nodes": 8.133333333333333
+      },
+      "dijkstra": {
+        "median_planning_s": 0.0001388835001989719,
+        "max_planning_s": 0.00040315250021194515,
+        "mean_expanded_states": 27.80229885057471,
+        "mean_visited_nodes": 16.06206896551724
+      },
+      "astar_fewer_expansions_pairs": 828,
+      "equal_expansions_pairs": 42
+    },
+    "graph_build_median_s": 0.1643
+  },
+  "map_extension_candidates": {
+    "survey-v4": "rejected (0.49 m, ghosted walls)",
+    "survey-v5": "rejected (0.78 m)",
+    "survey-v6-comb": "rejected (2.02 m after in-place turn)"
+  },
+  "run1-normal": {
+    "passed": true,
+    "steps": [
+      {
+        "request": "--to main_cross_aisle__aisle_02",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to main_cross_aisle__aisle_01 --algorithm dijkstra",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle --block main_cross_aisle__west_service_aisle--pickup_station_01_via_west_service_aisle",
+        "expected": 3,
+        "returncode": 3,
+        "status": "BLOCKED"
+      },
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle",
+        "expected": 3,
+        "returncode": 3,
+        "status": "BLOCKED"
+      },
+      {
+        "request": "--to main_cross_aisle__aisle_02 --cancel-after 14",
+        "expected": 6,
+        "returncode": 6,
+        "status": "CANCELED"
+      }
+    ],
+    "scoped_amr_contact_samples": 0
+  },
+  "run2-person-crossing-tolerance-0.35": {
+    "passed": false,
+    "steps": [
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to main_cross_aisle__aisle_01",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      }
+    ],
+    "scoped_amr_contact_samples": 15235
+  },
+  "run2-person-crossing": {
+    "passed": false,
+    "steps": [
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to main_cross_aisle__aisle_01",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      },
+      {
+        "request": "--to pickup_station_01_via_west_service_aisle",
+        "expected": 0,
+        "returncode": 0,
+        "status": "COMPLETED"
+      }
+    ],
+    "scoped_amr_contact_samples": 5439
+  },
+  "regression-phase4-navigation": {
+    "passed": true,
+    "steps": [
+      {
+        "returncode": 0,
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "passed": true
+      }
+    ],
+    "scoped_amr_contact_samples": 0
+  },
+  "graph_version_note": "run1-normal and run2-person-crossing-tolerance-0.35 used graph 2c7f8be6c77f3cb8; widening executor.plan_deviation_tolerance_m (0.35 to 1.0 m) changed only the planner-config hash, giving 0e127f48069cca0a with identical topology and map validation."
+}

@@ -36,4 +36,13 @@ def test_footprint_includes_camera_and_chassis_and_limits():
     assert control['FollowPath']['max_angular_accel']<=1.5
     assert not control['FollowPath']['allow_reversing']
     assert behavior['behavior_plugins']==['spin','wait']
-    assert '<BackUp ' not in (ROOT/'config/navigate_to_pose.xml').read_text()
+    for tree in ['navigate_to_pose.xml','navigate_through_poses.xml']:
+        assert '<BackUp ' not in (ROOT/'config'/tree).read_text()
+
+def test_through_poses_navigator_shares_the_bounded_tree():
+    p=yaml.safe_load((ROOT/'config/nav2_params.yaml').read_text())['bt_navigator']['ros__parameters']
+    assert p['navigators']==['navigate_to_pose','navigate_through_poses']
+    assert p['navigate_through_poses']['plugin']=='nav2_bt_navigator::NavigateThroughPosesNavigator'
+    tree=(ROOT/'config/navigate_through_poses.xml').read_text()
+    assert 'number_of_retries="3" name="NavigateRecovery"' in tree and 'RemovePassedGoals' in tree
+    assert "default_nav_through_poses_bt_xml" in (ROOT/'launch/navigation.launch.py').read_text()

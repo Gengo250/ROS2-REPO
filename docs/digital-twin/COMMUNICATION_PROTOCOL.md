@@ -84,3 +84,19 @@ then run schema drift checks and both test suites. v1.0 uses strict fields; addi
 new nonempty reserved collections requires a coordinated version revision. Browsers
 reject incompatible data, indicate disconnection and retry with bounded backoff.
 A changed `session_id` resets sequence comparison. No replay/history is promised.
+
+## Phase 5 route extension (independent, version 1.0)
+
+Two read-only REST resources; WebSocket v1/v2 payloads are unchanged.
+
+| Endpoint | Contract | Content |
+|---|---|---|
+| `GET /api/v1/routes/graph` | `route-graph.v1.schema.json` (`message_type: route_graph`) | Static warehouse graph in `world`: nodes, one entry per connection (with its directed edge ids), map-validation status, stations, and the verified world → map SE(2) registration with its id. Served from the installed `amr_route_planner` artifact; 503 when absent. Fetch once per `graph_version`. |
+| `GET /api/v1/routes/status` | `route-status.v1.schema.json` (`message_type: route_status_snapshot`) | Last `/route_planner/status` message (`route_status`, map frame) with `availability`, `received_at`, `age_seconds`; `route: null` before any route. |
+
+`/route_planner/status` is a latched (`reliable`, `transient_local`, depth 1)
+`std_msgs/String` carrying the versioned JSON document. The Gateway bounds it to
+256 KiB and validates it with a strict model (unknown fields, versions or states are
+rejected). Route geometry is **map-frame**; a client must transform it with the
+graph's registration and must not draw it when the registration id, graph version or
+map version disagree with the graph it holds.

@@ -136,6 +136,18 @@ Static station exposure is deferred: `stations`, `humans` and `obstacles` are em
 reserved arrays, not statements that these entities do not exist in the simulation.
 No dynamic tracking, battery, mission or navigation state is implemented.
 
+## Phase 5 route-planning layer
+
+`amr_route_planner` sits above Nav2 and never below it. It builds a deterministic
+world-frame warehouse graph from the layout. It validates every node and connection
+against the approved SLAM map through a verified world → map registration. It plans
+with A* or Dijkstra, and it executes routes as `NavigateThroughPoses` objectives. The
+existing Nav2 planner/controller and the command guard remain the only path to
+`/cmd_vel`. Route state reaches the browser through the existing Gateway
+(`/api/v1/routes/*`), never through WebSocket v1/v2. See
+[Phase 5 graph routing](PHASE_5_GRAPH_ROUTING.md) and
+[Phase 5 validation](PHASE_5_VALIDATION.md).
+
 ## Official references consulted
 
 - [rclpy Jazzy executor implementation](https://github.com/ros2/rclpy/blob/jazzy/rclpy/rclpy/executors.py)

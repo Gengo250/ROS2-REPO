@@ -9,6 +9,7 @@ import { buildHumans } from '../humans/HumanVisuals';
 import { StateSynchronizer } from '../synchronization/StateSynchronizer';
 import type { TwinStateV2 } from '../../core/types/twin-state-v2';
 import { disposeTree } from './resources';
+import { RouteOverlay } from '../routes/RouteOverlay';
 
 const validate = new Ajv({ strict: false }).compile<WarehouseScene>(schema);
 export class WarehouseViewer {
@@ -20,6 +21,7 @@ export class WarehouseViewer {
   robot?: Group;
   humans?: ReturnType<typeof buildHumans>;
   readonly synchronizer = new StateSynchronizer();
+  readonly routes = new RouteOverlay();
   private state?: TwinStateV2;
   private liveScenario?: string;
   private connected = false;
@@ -42,6 +44,7 @@ export class WarehouseViewer {
     sun.shadow.mapSize.set(2048, 2048);
     Object.assign(sun.shadow.camera, { left: -22, right: 22, top: 22, bottom: -22, far: 60 });
     sun.shadow.bias = -.0002; this.scene.add(sun);
+    this.scene.add(this.routes.group);
     host.append(this.renderer.domElement);
     this.renderer.domElement.setAttribute('aria-label', 'Interactive warehouse 3D view');
     this.resize = new ResizeObserver(() => {
@@ -64,6 +67,7 @@ export class WarehouseViewer {
           [...this.synchronizer.objects].filter(([id]) => id.includes('/')).map(([id, object]) =>
             [id, { position: object.position.toArray(), quaternion: object.quaternion.toArray() }])));
         this.host.dataset.transforms = JSON.stringify(this.synchronizer.rendered);
+        this.host.dataset.route = JSON.stringify(this.routes.rendered);
         this.host.dataset.metrics = JSON.stringify({ rendered_wall_ms: performance.timeOrigin + now, fps: this.fps, load_ms: this.loadMs,
           human_models: this.humans?.humanCount, human_visuals: this.humans?.visualCount,
           dynamic_entities: this.synchronizer.buffers.size, interpolation_delay_ms: this.synchronizer.delayMs,
@@ -127,7 +131,7 @@ export class WarehouseViewer {
   dispose() {
     if (this.disposed) return;
     this.disposed = true; this.abort?.abort(); this.renderer.setAnimationLoop(null);
-    this.resize.disconnect(); this.clear();
+    this.resize.disconnect(); this.clear(); this.routes.dispose();
     this.scene.traverse(object => { if (object instanceof DirectionalLight) object.shadow.dispose(); });
     this.renderer.dispose(); this.renderer.forceContextLoss(); this.renderer.domElement.remove();
   }

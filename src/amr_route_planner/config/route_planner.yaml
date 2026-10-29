@@ -1,0 +1,59 @@
+# Warehouse graph route planning. Units: metres, radians, seconds.
+# Route cost unit: metres-equivalent of travel at the Nav2 desired linear speed.
+graph:
+  # Clearance required beyond the padded Nav2 footprint, for map and layout checks.
+  # Equals warehouse_layout.json navigation.lateral_clearance (checked at build time).
+  required_clearance_m: 0.30
+  # Two graph points closer than this along one corridor are one node.
+  node_merge_tolerance_m: 0.30
+  # Every collision-free station access no longer than this is kept (at least the shortest).
+  max_access_length_m: 3.0
+registration:
+  # Acceptance of the landmark fit (calibrate_registration) for the approved map.
+  min_cells: 500
+  max_median_m: 0.10
+  min_inlier_fraction_0_20: 0.70
+  max_prior_translation_m: 0.50
+  max_prior_yaw_rad: 0.05
+  # Local non-rigid distortion check around each graph node.
+  local_radius_m: 4.0
+  local_min_cells: 20
+  local_max_median_m: 0.20
+cost:
+  # cost(edge) = distance_weight * distance + static penalty; turns add turn_weight * |Δheading|.
+  distance_weight: 1.0
+  # Distance not travelled while rotating in place: desired_linear_vel / rotate_to_heading_angular_vel
+  # = 0.45 / 0.35 (nav2_params.yaml). Breaks ties between equal-length staircase routes.
+  turn_weight_m_per_rad: 1.2857
+  # Optional nonnegative operational penalties (m). Hard closures never use a large cost.
+  station_access_penalty_m: 0.0
+  corridor_penalties_m: {}
+  # Explicit one-way connections, e.g. [[source_node, target_node]]. None configured.
+  one_way: []
+waypoints:
+  # Graph nodes become Nav2 objectives only where the route turns or changes corridor.
+  turn_threshold_rad: 0.35
+executor:
+  algorithm: astar
+  # Shared budget for graph replans (closure evidence) and same-route retries (no evidence).
+  max_replans: 3
+  # Stopped wait before retrying the same route when a failure has no corridor evidence.
+  retry_wait_s: 8.0
+  # A corridor reported blocked by costmap evidence stays closed for this long.
+  blocked_connection_ttl_s: 120.0
+  # Nav2 plan points farther than this outside the route lanes are a corridor deviation.
+  # Purpose: catch bypasses through another aisle (any other aisle centreline lies
+  # ≥ 2.7 m beyond a lane edge here) while tolerating Nav2's local avoidance in open
+  # floor. 0.35 m turned a detour around a worker into stop-and-wait inside the
+  # crossing junction (run2-person-crossing-tolerance-0.35).
+  plan_deviation_tolerance_m: 1.0
+  # Start attaches to an existing node within this distance, else projects onto an edge lane.
+  attach_radius_m: 0.50
+  # Outside every lane, a straight connector to a validated node this close is allowed
+  # only when the live map shows it occupied-free and unknown-free beyond the robot itself.
+  max_connector_m: 3.0
+  final_position_tolerance_m: 0.30
+  final_yaw_tolerance_rad: 0.20
+  # Localization accepted only with AMCL x/y variance (m²) and yaw variance (rad²) below these.
+  max_position_variance_m2: 0.25
+  max_yaw_variance_rad2: 0.10

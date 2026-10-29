@@ -4,7 +4,7 @@ from threading import Lock
 from time import monotonic
 from uuid import uuid4
 from .models import ConnectionStatus, Robot, TopicStatus, TwinState, World, TwinStateV2, DynamicEntity, SimulationState
-from .models import NavigationDiagnostic, NavigationStatus
+from .models import NavigationDiagnostic, NavigationStatus, RouteExecution, RouteStatus
 
 
 def utcnow():
@@ -33,6 +33,7 @@ class StateManager:
         self.clock_progress = None
         self.latest = None
         self.navigation = {}
+        self.route = None
 
     def update_navigation(self, message):
         with self.lock:
@@ -51,6 +52,23 @@ class StateManager:
                 received_at=timestamp, age_seconds=max(0., now-receipt),
                 availability=self.availability(receipt, now))
                 for name, (receipt, timestamp, level, message, values) in self.navigation.items()))
+
+    def update_route(self, text):
+        # Bounded before parsing; strict model rejects unknown fields and versions.
+        if len(text) > 262144:
+            raise ValueError('Route status too large')
+        route = RouteExecution.model_validate_json(text)
+        with self.lock:
+            self.route = (self.timer(), self.wall_clock(), route)
+
+    def route_snapshot(self):
+        with self.lock:
+            now = self.timer()
+            if self.route is None:
+                return RouteStatus(availability=self.availability(None, now), received_at=None, age_seconds=None, route=None)
+            receipt, timestamp, route = self.route
+            return RouteStatus(availability=self.availability(receipt, now), received_at=timestamp,
+                               age_seconds=max(0., now-receipt), route=route)
 
     def set_ros_initialized(self, value):
         with self.lock:

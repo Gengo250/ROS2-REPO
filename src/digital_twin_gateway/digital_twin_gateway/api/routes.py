@@ -4,7 +4,8 @@ from ..scene.models import WarehouseScene
 from ..scene.adapter import load_scene
 from ..state.models import Scenario
 from ..state.models import ConnectionStatus, TwinState, TwinStateV2
-from ..state.models import NavigationStatus
+from ..state.models import NavigationStatus, RouteGraph, RouteStatus
+from ..routes import graph_path, load_route_graph
 
 router = APIRouter()
 
@@ -12,6 +13,19 @@ router = APIRouter()
 @router.get('/api/v1/navigation', response_model=NavigationStatus)
 async def navigation(request: Request):
     return request.app.state.manager.navigation_snapshot()
+
+
+@router.get('/api/v1/routes/graph', response_model=RouteGraph)
+def route_graph(request: Request):
+    try:
+        return load_route_graph(graph_path(request.app.state.manager.settings.route_graph_path))
+    except (ValueError, OSError, KeyError) as exc:
+        raise HTTPException(503, 'Route graph unavailable; build and install amr_route_planner') from exc
+
+
+@router.get('/api/v1/routes/status', response_model=RouteStatus)
+async def route_status(request: Request):
+    return request.app.state.manager.route_snapshot()
 
 
 @router.get('/api/v1/health')

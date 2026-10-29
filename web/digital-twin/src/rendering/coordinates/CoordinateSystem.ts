@@ -14,3 +14,14 @@ export function rosQuaternion(q: { x: number; y: number; z: number; w: number })
 }
 // glTF specification is Y-up. Blender export rotates Z-up to Y-up; invert ONCE.
 export const gltfToWorld = () => new Matrix4().makeRotationX(Math.PI / 2);
+// Verified world → map SE(2) registration: map = R(yaw)·world + (x, y). Routes arrive in
+// the Nav2 map frame; the scene is Gazebo world, so invert explicitly before rendering.
+export interface Registration { x: number; y: number; yaw: number }
+export function mapToWorld(r: Registration, x: number, y: number): [number, number] {
+  const dx = x - r.x, dy = y - r.y, c = Math.cos(r.yaw), s = Math.sin(r.yaw);
+  return [c * dx + s * dy, -s * dx + c * dy];
+}
+export function worldToMap(r: Registration, x: number, y: number): [number, number] {
+  const c = Math.cos(r.yaw), s = Math.sin(r.yaw);
+  return [c * x - s * y + r.x, s * x + c * y + r.y];
+}

@@ -1,5 +1,6 @@
 import '../styles/main.css';
 import { observeNavigation } from '../core/api/navigation';
+import { observeRoutes } from '../core/api/routes';
 import { WarehouseViewer } from '../rendering/core/WarehouseViewer';
 import { ApiClient } from '../core/api/client';
 import { TwinStore } from '../core/state/store';
@@ -8,7 +9,7 @@ import type { Robot } from '../core/types/twin-state';
 
 const root = document.querySelector<HTMLElement>('#app')!;
 root.innerHTML = `
-  <header><div><p class="eyebrow">WAREHOUSE / PHASE 04</p><h1>Digital Twin</h1>
+  <header><div><p class="eyebrow">WAREHOUSE / PHASE 05</p><h1>Digital Twin</h1>
   <p class="subtitle">Industrial environment · Live diagnostics</p></div><span class="tag">READ-ONLY TELEMETRY</span></header>
   <section class="viewer-panel" aria-label="Warehouse visualization">
     <div class="viewer-toolbar"><div><h2>Warehouse / 3D</h2><span id="scene-status" role="status">Initializing renderer…</span></div>
@@ -29,6 +30,8 @@ root.innerHTML = `
   </section>
   <p id="notice" role="status">Connecting to Gateway…</p>
   <section class="telemetry"><h2>Navigation · Read-only</h2><div id="navigation-status" role="status">Waiting for navigation diagnostics.</div></section>
+  <section class="telemetry"><h2>Warehouse route · Read-only</h2><div id="route-status" role="status">Waiting for route status.</div>
+    <p class="frame-note">Graph lines: green validated, amber unmapped, red blocked. Route planned in the Nav2 map frame, drawn through the verified map/world registration.</p></section>
   <section class="telemetry"><h2>Simulation ground truth · World</h2><div id="dynamic-entities">Waiting for simulation poses.</div></section>
   <section class="telemetry"><div class="section-heading"><h2>Robot telemetry</h2>
     <span>Connected robots: <strong id="count">0</strong></span></div>
@@ -60,6 +63,7 @@ const socket = new TwinSocket(import.meta.env.VITE_WS_URL ||
   'ws://127.0.0.1:8000/ws/v2/twin?protocol_version=2.0', store);
 const abort = new AbortController();
 observeNavigation(import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000', element('navigation-status'), abort.signal);
+observeRoutes(import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000', viewer?.routes, element('route-status'), abort.signal);
 const cards = new Map<string, HTMLElement>();
 const number = (value: number | undefined) => value === undefined ? '—' : value.toFixed(4);
 const title = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);

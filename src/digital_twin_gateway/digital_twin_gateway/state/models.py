@@ -155,3 +155,106 @@ class NavigationStatus(Model):
     protocol_version: Literal['1.0'] = '1.0'
     message_type: Literal['navigation_status'] = 'navigation_status'
     diagnostics: tuple[NavigationDiagnostic, ...]
+
+
+# Phase 5 route extension: independent, explicitly versioned; TwinState v1/v2 unchanged.
+MapStatus = Literal['validated', 'unmapped', 'blocked', 'invalid']
+Point2 = tuple[Number, Number]
+
+
+class RouteRegistration(Model):
+    id: str
+    parent_frame: Literal['world']
+    child_frame: Literal['map']
+    x: Number
+    y: Number
+    yaw: Number
+    valid: bool
+
+
+class RouteGraphNode(Model):
+    id: str
+    type: Literal['STATION', 'INTERSECTION', 'CORRIDOR_POINT', 'OPEN_AREA']
+    position: Point2
+    yaw: Number | None
+    status: MapStatus
+    reason: str
+
+
+class RouteGraphConnection(Model):
+    id: str
+    source: str
+    target: str
+    directions: tuple[str, ...]
+    kind: Literal['corridor', 'station_access']
+    corridor_id: str | None
+    width: Number = Field(gt=0)
+    distance: Number = Field(ge=0)
+    status: MapStatus
+    zones: tuple[str, ...]
+
+
+class RouteStation(Model):
+    id: str
+    label: str
+    dock_node: str
+    status: MapStatus
+    reason: str
+
+
+class RouteGraph(Model):
+    """Static graph geometry in the world frame; fetched once, never broadcast."""
+    protocol_version: Literal['1.0'] = '1.0'
+    message_type: Literal['route_graph'] = 'route_graph'
+    graph_version: str
+    map_version: str
+    frame_id: Literal['world']
+    registration: RouteRegistration
+    nodes: tuple[RouteGraphNode, ...]
+    connections: tuple[RouteGraphConnection, ...]
+    stations: tuple[RouteStation, ...]
+
+
+RouteState = Literal['IDLE', 'PLANNING', 'PLANNED', 'VALIDATING', 'EXECUTING', 'REPLANNING',
+                     'COMPLETED', 'BLOCKED', 'FAILED', 'CANCELED']
+
+
+class RouteExecution(Model):
+    """Route executor message on /route_planner/status; map-frame geometry only."""
+    protocol_version: Literal['1.0']
+    message_type: Literal['route_status']
+    route_id: str | None
+    status: RouteState
+    origin: str
+    destination: str
+    algorithm: Literal['astar', 'dijkstra']
+    graph_version: str | None
+    map_version: str | None
+    registration_id: str | None
+    selected_nodes: tuple[str, ...] = Field(max_length=512)
+    selected_edges: tuple[str, ...] = Field(max_length=512)
+    map_frame_path: tuple[Point2, ...] = Field(max_length=512)
+    map_frame_waypoints: tuple[tuple[Number, Number, Number], ...] = Field(max_length=512)
+    waypoint_nodes: tuple[str, ...] = Field(max_length=512)
+    current_waypoint: int | None = Field(ge=0)
+    completed_waypoints: int = Field(ge=0)
+    total_waypoints: int = Field(ge=0)
+    estimated_distance_m: Number | None = Field(ge=0)
+    distance_remaining_m: Number | None = Field(ge=0)
+    execution_progress: Number = Field(ge=0, le=1)
+    replans: int = Field(ge=0)
+    blocked_connections: tuple[str, ...] = Field(max_length=512)
+    navigation_action_status: str | None = Field(max_length=64)
+    failure_reason: str | None = Field(max_length=64)
+    detail: str | None = Field(max_length=1024)
+    stamp: Number
+    updated_at: AwareDatetime
+
+
+class RouteStatus(Model):
+    protocol_version: Literal['1.0'] = '1.0'
+    message_type: Literal['route_status_snapshot'] = 'route_status_snapshot'
+    availability: Availability
+    received_at: AwareDatetime | None
+    age_seconds: Number | None
+    route: RouteExecution | None

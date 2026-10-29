@@ -37,6 +37,8 @@ class Settings(BaseModel):
     clock_topic: Topic = '/clock'
     tf_topic: Topic = '/tf'
     tf_static_topic: Topic = '/tf_static'
+    route_status_topic: Topic = '/route_planner/status'
+    route_graph_path: str | None = None
 
     @model_validator(mode='after')
     def validate_config(self):

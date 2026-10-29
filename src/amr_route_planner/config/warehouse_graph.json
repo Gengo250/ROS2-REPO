@@ -1,0 +1,3695 @@
+{
+ "components": {
+  "topology": [
+   [
+    "amr_01_spawn",
+    "charging_station",
+    "charging_station_via_north_cross_aisle",
+    "dispatch",
+    "dropoff_station_01",
+    "dropoff_station_01_via_east_service_aisle",
+    "dropoff_station_02",
+    "dropoff_station_02_via_east_service_aisle",
+    "main_cross_aisle__aisle_01",
+    "main_cross_aisle__aisle_02",
+    "main_cross_aisle__aisle_03",
+    "main_cross_aisle__east_service_aisle",
+    "main_cross_aisle__west_service_aisle",
+    "north_cross_aisle__aisle_01",
+    "north_cross_aisle__aisle_02",
+    "north_cross_aisle__aisle_03",
+    "north_cross_aisle__east_service_aisle",
+    "north_cross_aisle__west_service_aisle",
+    "pickup_station_01",
+    "pickup_station_01_via_west_service_aisle",
+    "pickup_station_02",
+    "pickup_station_02_via_west_service_aisle",
+    "receiving",
+    "south_cross_aisle__aisle_01",
+    "south_cross_aisle__aisle_02",
+    "south_cross_aisle__aisle_03",
+    "south_cross_aisle__east_service_aisle",
+    "south_cross_aisle__west_service_aisle",
+    "staging_area",
+    "staging_area_via_west_service_aisle"
+   ]
+  ],
+  "validated": [
+   [
+    "main_cross_aisle__aisle_01",
+    "main_cross_aisle__aisle_02",
+    "main_cross_aisle__west_service_aisle",
+    "pickup_station_01_via_west_service_aisle"
+   ]
+  ]
+ },
+ "corridors": [
+  {
+   "capacity": 2,
+   "centre": [
+    -4.5,
+    0
+   ],
+   "id": "aisle_01",
+   "size": [
+    3,
+    14
+   ]
+  },
+  {
+   "capacity": 2,
+   "centre": [
+    -0.3,
+    0
+   ],
+   "id": "aisle_02",
+   "size": [
+    3,
+    14
+   ]
+  },
+  {
+   "capacity": 2,
+   "centre": [
+    3.9,
+    0
+   ],
+   "id": "aisle_03",
+   "size": [
+    3,
+    14
+   ]
+  },
+  {
+   "capacity": 2,
+   "centre": [
+    8.1,
+    0
+   ],
+   "id": "east_service_aisle",
+   "size": [
+    3,
+    14
+   ]
+  },
+  {
+   "capacity": 3,
+   "centre": [
+    0,
+    0
+   ],
+   "id": "main_cross_aisle",
+   "size": [
+    30,
+    4
+   ]
+  },
+  {
+   "capacity": 2,
+   "centre": [
+    0,
+    8.5
+   ],
+   "id": "north_cross_aisle",
+   "size": [
+    20,
+    3
+   ]
+  },
+  {
+   "capacity": 2,
+   "centre": [
+    0,
+    -8.5
+   ],
+   "id": "south_cross_aisle",
+   "size": [
+    20,
+    3
+   ]
+  },
+  {
+   "capacity": 2,
+   "centre": [
+    -8.7,
+    0
+   ],
+   "id": "west_service_aisle",
+   "size": [
+    3,
+    14
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "base_cost": 2.3,
+   "cells": {
+    "core": {
+     "free": 1560,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 15
+    },
+    "with_clearance": {
+     "free": 2769,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 65
+    }
+   },
+   "connection": "amr_01_spawn--main_cross_aisle__west_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 2.3,
+   "id": "amr_01_spawn->main_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "amr_01_spawn",
+   "status": "unmapped",
+   "target": "main_cross_aisle__west_service_aisle",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 1.0,
+   "cells": {
+    "core": {
+     "free": 836,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 296
+    },
+    "with_clearance": {
+     "free": 1581,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 480
+    }
+   },
+   "connection": "amr_01_spawn--receiving",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 1.0,
+   "id": "amr_01_spawn->receiving",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "amr_01_spawn",
+   "status": "unmapped",
+   "target": "receiving",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 1.726268,
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1381
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2496
+    }
+   },
+   "connection": "charging_station--charging_station_via_north_cross_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 1.726268,
+   "id": "charging_station->charging_station_via_north_cross_aisle",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "charging_station",
+   "status": "unmapped",
+   "target": "charging_station_via_north_cross_aisle",
+   "width": 2.2,
+   "zones": []
+  },
+  {
+   "base_cost": 1.726268,
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1381
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2496
+    }
+   },
+   "connection": "charging_station--charging_station_via_north_cross_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 1.726268,
+   "id": "charging_station_via_north_cross_aisle->charging_station",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "charging_station_via_north_cross_aisle",
+   "status": "unmapped",
+   "target": "charging_station",
+   "width": 2.2,
+   "zones": []
+  },
+  {
+   "base_cost": 1.9,
+   "cells": {
+    "core": {
+     "free": 53,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1386
+    },
+    "with_clearance": {
+     "free": 104,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2495
+    }
+   },
+   "connection": "charging_station_via_north_cross_aisle--north_cross_aisle__east_service_aisle",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 1.9,
+   "id": "charging_station_via_north_cross_aisle->north_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "charging_station_via_north_cross_aisle",
+   "status": "unmapped",
+   "target": "north_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.9,
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2116
+    },
+    "with_clearance": {
+     "free": 5,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3762
+    }
+   },
+   "connection": "dispatch--main_cross_aisle__east_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 3.9,
+   "id": "dispatch->main_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dispatch",
+   "status": "unmapped",
+   "target": "main_cross_aisle__east_service_aisle",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 2.8,
+   "cells": {
+    "core": {
+     "free": 44,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1703
+    },
+    "with_clearance": {
+     "free": 80,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3037
+    }
+   },
+   "connection": "dropoff_station_01--dropoff_station_01_via_east_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.8,
+   "id": "dropoff_station_01->dropoff_station_01_via_east_service_aisle",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_01",
+   "status": "unmapped",
+   "target": "dropoff_station_01_via_east_service_aisle",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 2.8,
+   "cells": {
+    "core": {
+     "free": 44,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1703
+    },
+    "with_clearance": {
+     "free": 80,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3037
+    }
+   },
+   "connection": "dropoff_station_01--dropoff_station_01_via_east_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.8,
+   "id": "dropoff_station_01_via_east_service_aisle->dropoff_station_01",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_01_via_east_service_aisle",
+   "status": "unmapped",
+   "target": "dropoff_station_01",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 578,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1914
+    },
+    "with_clearance": {
+     "free": 996,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3405
+    }
+   },
+   "connection": "dropoff_station_01_via_east_service_aisle--main_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "dropoff_station_01_via_east_service_aisle->main_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_01_via_east_service_aisle",
+   "status": "unmapped",
+   "target": "main_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.5,
+   "cells": {
+    "core": {
+     "free": 130,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1854
+    },
+    "with_clearance": {
+     "free": 253,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3283
+    }
+   },
+   "connection": "dropoff_station_01_via_east_service_aisle--south_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 3.5,
+   "id": "dropoff_station_01_via_east_service_aisle->south_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_01_via_east_service_aisle",
+   "status": "unmapped",
+   "target": "south_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 2.8,
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1742
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3121
+    }
+   },
+   "connection": "dropoff_station_02--dropoff_station_02_via_east_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.8,
+   "id": "dropoff_station_02->dropoff_station_02_via_east_service_aisle",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_02",
+   "status": "unmapped",
+   "target": "dropoff_station_02_via_east_service_aisle",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 2.8,
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1742
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3121
+    }
+   },
+   "connection": "dropoff_station_02--dropoff_station_02_via_east_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.8,
+   "id": "dropoff_station_02_via_east_service_aisle->dropoff_station_02",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_02_via_east_service_aisle",
+   "status": "unmapped",
+   "target": "dropoff_station_02",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 474,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2016
+    },
+    "with_clearance": {
+     "free": 806,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3597
+    }
+   },
+   "connection": "dropoff_station_02_via_east_service_aisle--main_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "dropoff_station_02_via_east_service_aisle->main_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_02_via_east_service_aisle",
+   "status": "unmapped",
+   "target": "main_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.5,
+   "cells": {
+    "core": {
+     "free": 53,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1928
+    },
+    "with_clearance": {
+     "free": 106,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3425
+    }
+   },
+   "connection": "dropoff_station_02_via_east_service_aisle--north_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 3.5,
+   "id": "dropoff_station_02_via_east_service_aisle->north_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "dropoff_station_02_via_east_service_aisle",
+   "status": "unmapped",
+   "target": "north_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 2222,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 3934,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--main_cross_aisle__aisle_02",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__aisle_01->main_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "known free footprint and clearance",
+   "source": "main_cross_aisle__aisle_01",
+   "status": "validated",
+   "target": "main_cross_aisle__aisle_02",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 2224,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 3939,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--main_cross_aisle__west_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__aisle_01->main_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "known free footprint and clearance",
+   "source": "main_cross_aisle__aisle_01",
+   "status": "validated",
+   "target": "main_cross_aisle__west_service_aisle",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 2253,
+     "occupied": 3,
+     "outside": 0,
+     "unknown": 1433
+    },
+    "with_clearance": {
+     "free": 3986,
+     "occupied": 5,
+     "outside": 0,
+     "unknown": 2439
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--north_cross_aisle__aisle_01",
+   "corridor_id": "aisle_01",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "main_cross_aisle__aisle_01->north_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "main_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 2789,
+     "occupied": 44,
+     "outside": 0,
+     "unknown": 853
+    },
+    "with_clearance": {
+     "free": 4817,
+     "occupied": 52,
+     "outside": 0,
+     "unknown": 1562
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--south_cross_aisle__aisle_01",
+   "corridor_id": "aisle_01",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "main_cross_aisle__aisle_01->south_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "main_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "south_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": [
+    "aisle_01_block"
+   ]
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 2222,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 3934,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--main_cross_aisle__aisle_02",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__aisle_02->main_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "known free footprint and clearance",
+   "source": "main_cross_aisle__aisle_02",
+   "status": "validated",
+   "target": "main_cross_aisle__aisle_01",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1493,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 724
+    },
+    "with_clearance": {
+     "free": 3075,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 859
+    }
+   },
+   "connection": "main_cross_aisle__aisle_02--main_cross_aisle__aisle_03",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__aisle_02->main_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__aisle_02",
+   "status": "unmapped",
+   "target": "main_cross_aisle__aisle_03",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 3683,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 6429,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__aisle_02--north_cross_aisle__aisle_02",
+   "corridor_id": "aisle_02",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "main_cross_aisle__aisle_02->north_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "main_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 3414,
+     "occupied": 17,
+     "outside": 0,
+     "unknown": 254
+    },
+    "with_clearance": {
+     "free": 5824,
+     "occupied": 17,
+     "outside": 0,
+     "unknown": 591
+    }
+   },
+   "connection": "main_cross_aisle__aisle_02--south_cross_aisle__aisle_02",
+   "corridor_id": "aisle_02",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "main_cross_aisle__aisle_02->south_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "main_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "south_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1493,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 724
+    },
+    "with_clearance": {
+     "free": 3075,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 859
+    }
+   },
+   "connection": "main_cross_aisle__aisle_02--main_cross_aisle__aisle_03",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__aisle_03->main_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__aisle_03",
+   "status": "unmapped",
+   "target": "main_cross_aisle__aisle_02",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 178,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2034
+    },
+    "with_clearance": {
+     "free": 738,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3190
+    }
+   },
+   "connection": "main_cross_aisle__aisle_03--main_cross_aisle__east_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__aisle_03->main_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__aisle_03",
+   "status": "unmapped",
+   "target": "main_cross_aisle__east_service_aisle",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 2162,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1514
+    },
+    "with_clearance": {
+     "free": 3924,
+     "occupied": 1,
+     "outside": 0,
+     "unknown": 2502
+    }
+   },
+   "connection": "main_cross_aisle__aisle_03--north_cross_aisle__aisle_03",
+   "corridor_id": "aisle_03",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "main_cross_aisle__aisle_03->north_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "main_cross_aisle__aisle_03",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 1612,
+     "occupied": 15,
+     "outside": 0,
+     "unknown": 2052
+    },
+    "with_clearance": {
+     "free": 2897,
+     "occupied": 24,
+     "outside": 0,
+     "unknown": 3501
+    }
+   },
+   "connection": "main_cross_aisle__aisle_03--south_cross_aisle__aisle_03",
+   "corridor_id": "aisle_03",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "main_cross_aisle__aisle_03->south_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "main_cross_aisle__aisle_03",
+   "status": "blocked",
+   "target": "south_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.9,
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2116
+    },
+    "with_clearance": {
+     "free": 5,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3762
+    }
+   },
+   "connection": "dispatch--main_cross_aisle__east_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 3.9,
+   "id": "main_cross_aisle__east_service_aisle->dispatch",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "dispatch",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 578,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1914
+    },
+    "with_clearance": {
+     "free": 996,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3405
+    }
+   },
+   "connection": "dropoff_station_01_via_east_service_aisle--main_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "main_cross_aisle__east_service_aisle->dropoff_station_01_via_east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "dropoff_station_01_via_east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 474,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2016
+    },
+    "with_clearance": {
+     "free": 806,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3597
+    }
+   },
+   "connection": "dropoff_station_02_via_east_service_aisle--main_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "main_cross_aisle__east_service_aisle->dropoff_station_02_via_east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "dropoff_station_02_via_east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 178,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2034
+    },
+    "with_clearance": {
+     "free": 738,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3190
+    }
+   },
+   "connection": "main_cross_aisle__aisle_03--main_cross_aisle__east_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__east_service_aisle->main_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "main_cross_aisle__aisle_03",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 2.3,
+   "cells": {
+    "core": {
+     "free": 1560,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 15
+    },
+    "with_clearance": {
+     "free": 2769,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 65
+    }
+   },
+   "connection": "amr_01_spawn--main_cross_aisle__west_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 2.3,
+   "id": "main_cross_aisle__west_service_aisle->amr_01_spawn",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "main_cross_aisle__west_service_aisle",
+   "status": "unmapped",
+   "target": "amr_01_spawn",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 2224,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 3939,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--main_cross_aisle__west_service_aisle",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "main_cross_aisle__west_service_aisle->main_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "known free footprint and clearance",
+   "source": "main_cross_aisle__west_service_aisle",
+   "status": "validated",
+   "target": "main_cross_aisle__aisle_01",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 2492,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 4403,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__west_service_aisle--pickup_station_01_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "main_cross_aisle__west_service_aisle->pickup_station_01_via_west_service_aisle",
+   "kind": "corridor",
+   "reason": "known free footprint and clearance",
+   "source": "main_cross_aisle__west_service_aisle",
+   "status": "validated",
+   "target": "pickup_station_01_via_west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 1750,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 744
+    },
+    "with_clearance": {
+     "free": 3229,
+     "occupied": 1,
+     "outside": 0,
+     "unknown": 1165
+    }
+   },
+   "connection": "main_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "main_cross_aisle__west_service_aisle->pickup_station_02_via_west_service_aisle",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "main_cross_aisle__west_service_aisle",
+   "status": "blocked",
+   "target": "pickup_station_02_via_west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 2253,
+     "occupied": 3,
+     "outside": 0,
+     "unknown": 1433
+    },
+    "with_clearance": {
+     "free": 3986,
+     "occupied": 5,
+     "outside": 0,
+     "unknown": 2439
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--north_cross_aisle__aisle_01",
+   "corridor_id": "aisle_01",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "north_cross_aisle__aisle_01->main_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "north_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "main_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1449,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 777
+    },
+    "with_clearance": {
+     "free": 2571,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 1363
+    }
+   },
+   "connection": "north_cross_aisle__aisle_01--north_cross_aisle__aisle_02",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__aisle_01->north_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "north_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 769,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1456
+    },
+    "with_clearance": {
+     "free": 1476,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2457
+    }
+   },
+   "connection": "north_cross_aisle__aisle_01--north_cross_aisle__west_service_aisle",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__aisle_01->north_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__aisle_01",
+   "status": "unmapped",
+   "target": "north_cross_aisle__west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 3683,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 6429,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__aisle_02--north_cross_aisle__aisle_02",
+   "corridor_id": "aisle_02",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "north_cross_aisle__aisle_02->main_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "north_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "main_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1449,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 777
+    },
+    "with_clearance": {
+     "free": 2571,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 1363
+    }
+   },
+   "connection": "north_cross_aisle__aisle_01--north_cross_aisle__aisle_02",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__aisle_02->north_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "north_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1934,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 287
+    },
+    "with_clearance": {
+     "free": 3411,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 521
+    }
+   },
+   "connection": "north_cross_aisle__aisle_02--north_cross_aisle__aisle_03",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__aisle_02->north_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "north_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 2162,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1514
+    },
+    "with_clearance": {
+     "free": 3924,
+     "occupied": 1,
+     "outside": 0,
+     "unknown": 2502
+    }
+   },
+   "connection": "main_cross_aisle__aisle_03--north_cross_aisle__aisle_03",
+   "corridor_id": "aisle_03",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "north_cross_aisle__aisle_03->main_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "north_cross_aisle__aisle_03",
+   "status": "blocked",
+   "target": "main_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1934,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 287
+    },
+    "with_clearance": {
+     "free": 3411,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 521
+    }
+   },
+   "connection": "north_cross_aisle__aisle_02--north_cross_aisle__aisle_03",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__aisle_03->north_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "north_cross_aisle__aisle_03",
+   "status": "blocked",
+   "target": "north_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 888,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1328
+    },
+    "with_clearance": {
+     "free": 1555,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2378
+    }
+   },
+   "connection": "north_cross_aisle__aisle_03--north_cross_aisle__east_service_aisle",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__aisle_03->north_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__aisle_03",
+   "status": "unmapped",
+   "target": "north_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 1.9,
+   "cells": {
+    "core": {
+     "free": 53,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1386
+    },
+    "with_clearance": {
+     "free": 104,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2495
+    }
+   },
+   "connection": "charging_station_via_north_cross_aisle--north_cross_aisle__east_service_aisle",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 1.9,
+   "id": "north_cross_aisle__east_service_aisle->charging_station_via_north_cross_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "charging_station_via_north_cross_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.5,
+   "cells": {
+    "core": {
+     "free": 53,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1928
+    },
+    "with_clearance": {
+     "free": 106,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3425
+    }
+   },
+   "connection": "dropoff_station_02_via_east_service_aisle--north_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 3.5,
+   "id": "north_cross_aisle__east_service_aisle->dropoff_station_02_via_east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "dropoff_station_02_via_east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 888,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1328
+    },
+    "with_clearance": {
+     "free": 1555,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2378
+    }
+   },
+   "connection": "north_cross_aisle__aisle_03--north_cross_aisle__east_service_aisle",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__east_service_aisle->north_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "north_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 769,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1456
+    },
+    "with_clearance": {
+     "free": 1476,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2457
+    }
+   },
+   "connection": "north_cross_aisle__aisle_01--north_cross_aisle__west_service_aisle",
+   "corridor_id": "north_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "north_cross_aisle__west_service_aisle->north_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__west_service_aisle",
+   "status": "unmapped",
+   "target": "north_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.5,
+   "cells": {
+    "core": {
+     "free": 628,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1357
+    },
+    "with_clearance": {
+     "free": 1366,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2166
+    }
+   },
+   "connection": "north_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 3.5,
+   "id": "north_cross_aisle__west_service_aisle->pickup_station_02_via_west_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "north_cross_aisle__west_service_aisle",
+   "status": "unmapped",
+   "target": "pickup_station_02_via_west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 2.2,
+   "cells": {
+    "core": {
+     "free": 1406,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 135
+    },
+    "with_clearance": {
+     "free": 2507,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 268
+    }
+   },
+   "connection": "pickup_station_01--pickup_station_01_via_west_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.2,
+   "id": "pickup_station_01->pickup_station_01_via_west_service_aisle",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "pickup_station_01",
+   "status": "unmapped",
+   "target": "pickup_station_01_via_west_service_aisle",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 2492,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 4403,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "connection": "main_cross_aisle__west_service_aisle--pickup_station_01_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "pickup_station_01_via_west_service_aisle->main_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "known free footprint and clearance",
+   "source": "pickup_station_01_via_west_service_aisle",
+   "status": "validated",
+   "target": "main_cross_aisle__west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 2.2,
+   "cells": {
+    "core": {
+     "free": 1406,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 135
+    },
+    "with_clearance": {
+     "free": 2507,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 268
+    }
+   },
+   "connection": "pickup_station_01--pickup_station_01_via_west_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.2,
+   "id": "pickup_station_01_via_west_service_aisle->pickup_station_01",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "pickup_station_01_via_west_service_aisle",
+   "status": "unmapped",
+   "target": "pickup_station_01",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 2.0,
+   "cells": {
+    "core": {
+     "free": 1471,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 2659,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3
+    }
+   },
+   "connection": "pickup_station_01_via_west_service_aisle--staging_area_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 2.0,
+   "id": "pickup_station_01_via_west_service_aisle->staging_area_via_west_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "pickup_station_01_via_west_service_aisle",
+   "status": "unmapped",
+   "target": "staging_area_via_west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 2.2,
+   "cells": {
+    "core": {
+     "free": 1033,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 509
+    },
+    "with_clearance": {
+     "free": 1850,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 928
+    }
+   },
+   "connection": "pickup_station_02--pickup_station_02_via_west_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.2,
+   "id": "pickup_station_02->pickup_station_02_via_west_service_aisle",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "pickup_station_02",
+   "status": "unmapped",
+   "target": "pickup_station_02_via_west_service_aisle",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 5.0,
+   "cells": {
+    "core": {
+     "free": 1750,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 744
+    },
+    "with_clearance": {
+     "free": 3229,
+     "occupied": 1,
+     "outside": 0,
+     "unknown": 1165
+    }
+   },
+   "connection": "main_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 5.0,
+   "id": "pickup_station_02_via_west_service_aisle->main_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "occupied map cells inside the required clearance",
+   "source": "pickup_station_02_via_west_service_aisle",
+   "status": "blocked",
+   "target": "main_cross_aisle__west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.5,
+   "cells": {
+    "core": {
+     "free": 628,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1357
+    },
+    "with_clearance": {
+     "free": 1366,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2166
+    }
+   },
+   "connection": "north_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 3.5,
+   "id": "pickup_station_02_via_west_service_aisle->north_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "pickup_station_02_via_west_service_aisle",
+   "status": "unmapped",
+   "target": "north_cross_aisle__west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 2.2,
+   "cells": {
+    "core": {
+     "free": 1033,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 509
+    },
+    "with_clearance": {
+     "free": 1850,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 928
+    }
+   },
+   "connection": "pickup_station_02--pickup_station_02_via_west_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 2.2,
+   "id": "pickup_station_02_via_west_service_aisle->pickup_station_02",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "pickup_station_02_via_west_service_aisle",
+   "status": "unmapped",
+   "target": "pickup_station_02",
+   "width": 2.1,
+   "zones": []
+  },
+  {
+   "base_cost": 1.0,
+   "cells": {
+    "core": {
+     "free": 836,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 296
+    },
+    "with_clearance": {
+     "free": 1581,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 480
+    }
+   },
+   "connection": "amr_01_spawn--receiving",
+   "corridor_id": "main_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 1.0,
+   "id": "receiving->amr_01_spawn",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "receiving",
+   "status": "unmapped",
+   "target": "amr_01_spawn",
+   "width": 4,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 2789,
+     "occupied": 44,
+     "outside": 0,
+     "unknown": 853
+    },
+    "with_clearance": {
+     "free": 4817,
+     "occupied": 52,
+     "outside": 0,
+     "unknown": 1562
+    }
+   },
+   "connection": "main_cross_aisle__aisle_01--south_cross_aisle__aisle_01",
+   "corridor_id": "aisle_01",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "south_cross_aisle__aisle_01->main_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "main_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": [
+    "aisle_01_block"
+   ]
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1393,
+     "occupied": 15,
+     "outside": 0,
+     "unknown": 814
+    },
+    "with_clearance": {
+     "free": 2535,
+     "occupied": 25,
+     "outside": 0,
+     "unknown": 1375
+    }
+   },
+   "connection": "south_cross_aisle__aisle_01--south_cross_aisle__aisle_02",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__aisle_01->south_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "south_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1796,
+     "occupied": 31,
+     "outside": 0,
+     "unknown": 393
+    },
+    "with_clearance": {
+     "free": 3106,
+     "occupied": 45,
+     "outside": 0,
+     "unknown": 785
+    }
+   },
+   "connection": "south_cross_aisle__aisle_01--south_cross_aisle__west_service_aisle",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__aisle_01->south_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__aisle_01",
+   "status": "blocked",
+   "target": "south_cross_aisle__west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 3414,
+     "occupied": 17,
+     "outside": 0,
+     "unknown": 254
+    },
+    "with_clearance": {
+     "free": 5824,
+     "occupied": 17,
+     "outside": 0,
+     "unknown": 591
+    }
+   },
+   "connection": "main_cross_aisle__aisle_02--south_cross_aisle__aisle_02",
+   "corridor_id": "aisle_02",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "south_cross_aisle__aisle_02->main_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "main_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1393,
+     "occupied": 15,
+     "outside": 0,
+     "unknown": 814
+    },
+    "with_clearance": {
+     "free": 2535,
+     "occupied": 25,
+     "outside": 0,
+     "unknown": 1375
+    }
+   },
+   "connection": "south_cross_aisle__aisle_01--south_cross_aisle__aisle_02",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__aisle_02->south_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__aisle_02",
+   "status": "blocked",
+   "target": "south_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 910,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1313
+    },
+    "with_clearance": {
+     "free": 1604,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2325
+    }
+   },
+   "connection": "south_cross_aisle__aisle_02--south_cross_aisle__aisle_03",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__aisle_02->south_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "south_cross_aisle__aisle_02",
+   "status": "unmapped",
+   "target": "south_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 8.5,
+   "cells": {
+    "core": {
+     "free": 1612,
+     "occupied": 15,
+     "outside": 0,
+     "unknown": 2052
+    },
+    "with_clearance": {
+     "free": 2897,
+     "occupied": 24,
+     "outside": 0,
+     "unknown": 3501
+    }
+   },
+   "connection": "main_cross_aisle__aisle_03--south_cross_aisle__aisle_03",
+   "corridor_id": "aisle_03",
+   "direction": "bidirectional",
+   "distance": 8.5,
+   "id": "south_cross_aisle__aisle_03->main_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__aisle_03",
+   "status": "blocked",
+   "target": "main_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 910,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1313
+    },
+    "with_clearance": {
+     "free": 1604,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2325
+    }
+   },
+   "connection": "south_cross_aisle__aisle_02--south_cross_aisle__aisle_03",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__aisle_03->south_cross_aisle__aisle_02",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "south_cross_aisle__aisle_03",
+   "status": "unmapped",
+   "target": "south_cross_aisle__aisle_02",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 123,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2098
+    },
+    "with_clearance": {
+     "free": 240,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3689
+    }
+   },
+   "connection": "south_cross_aisle__aisle_03--south_cross_aisle__east_service_aisle",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__aisle_03->south_cross_aisle__east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "south_cross_aisle__aisle_03",
+   "status": "unmapped",
+   "target": "south_cross_aisle__east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 3.5,
+   "cells": {
+    "core": {
+     "free": 130,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1854
+    },
+    "with_clearance": {
+     "free": 253,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3283
+    }
+   },
+   "connection": "dropoff_station_01_via_east_service_aisle--south_cross_aisle__east_service_aisle",
+   "corridor_id": "east_service_aisle",
+   "direction": "bidirectional",
+   "distance": 3.5,
+   "id": "south_cross_aisle__east_service_aisle->dropoff_station_01_via_east_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "south_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "dropoff_station_01_via_east_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 123,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 2098
+    },
+    "with_clearance": {
+     "free": 240,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3689
+    }
+   },
+   "connection": "south_cross_aisle__aisle_03--south_cross_aisle__east_service_aisle",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__east_service_aisle->south_cross_aisle__aisle_03",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "south_cross_aisle__east_service_aisle",
+   "status": "unmapped",
+   "target": "south_cross_aisle__aisle_03",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 4.2,
+   "cells": {
+    "core": {
+     "free": 1796,
+     "occupied": 31,
+     "outside": 0,
+     "unknown": 393
+    },
+    "with_clearance": {
+     "free": 3106,
+     "occupied": 45,
+     "outside": 0,
+     "unknown": 785
+    }
+   },
+   "connection": "south_cross_aisle__aisle_01--south_cross_aisle__west_service_aisle",
+   "corridor_id": "south_cross_aisle",
+   "direction": "bidirectional",
+   "distance": 4.2,
+   "id": "south_cross_aisle__west_service_aisle->south_cross_aisle__aisle_01",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__west_service_aisle",
+   "status": "blocked",
+   "target": "south_cross_aisle__aisle_01",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 1.5,
+   "cells": {
+    "core": {
+     "free": 1292,
+     "occupied": 2,
+     "outside": 0,
+     "unknown": 7
+    },
+    "with_clearance": {
+     "free": 2341,
+     "occupied": 6,
+     "outside": 0,
+     "unknown": 20
+    }
+   },
+   "connection": "south_cross_aisle__west_service_aisle--staging_area_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 1.5,
+   "id": "south_cross_aisle__west_service_aisle->staging_area_via_west_service_aisle",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "south_cross_aisle__west_service_aisle",
+   "status": "blocked",
+   "target": "staging_area_via_west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 1.529706,
+   "cells": {
+    "core": {
+     "free": 978,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 328
+    },
+    "with_clearance": {
+     "free": 1718,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 665
+    }
+   },
+   "connection": "staging_area--staging_area_via_west_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 1.529706,
+   "id": "staging_area->staging_area_via_west_service_aisle",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "staging_area",
+   "status": "unmapped",
+   "target": "staging_area_via_west_service_aisle",
+   "width": 2.6,
+   "zones": []
+  },
+  {
+   "base_cost": 2.0,
+   "cells": {
+    "core": {
+     "free": 1471,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 2659,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3
+    }
+   },
+   "connection": "pickup_station_01_via_west_service_aisle--staging_area_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 2.0,
+   "id": "staging_area_via_west_service_aisle->pickup_station_01_via_west_service_aisle",
+   "kind": "corridor",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "staging_area_via_west_service_aisle",
+   "status": "unmapped",
+   "target": "pickup_station_01_via_west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 1.5,
+   "cells": {
+    "core": {
+     "free": 1292,
+     "occupied": 2,
+     "outside": 0,
+     "unknown": 7
+    },
+    "with_clearance": {
+     "free": 2341,
+     "occupied": 6,
+     "outside": 0,
+     "unknown": 20
+    }
+   },
+   "connection": "south_cross_aisle__west_service_aisle--staging_area_via_west_service_aisle",
+   "corridor_id": "west_service_aisle",
+   "direction": "bidirectional",
+   "distance": 1.5,
+   "id": "staging_area_via_west_service_aisle->south_cross_aisle__west_service_aisle",
+   "kind": "corridor",
+   "reason": "occupied map cells under the robot footprint",
+   "source": "staging_area_via_west_service_aisle",
+   "status": "blocked",
+   "target": "south_cross_aisle__west_service_aisle",
+   "width": 3,
+   "zones": []
+  },
+  {
+   "base_cost": 1.529706,
+   "cells": {
+    "core": {
+     "free": 978,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 328
+    },
+    "with_clearance": {
+     "free": 1718,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 665
+    }
+   },
+   "connection": "staging_area--staging_area_via_west_service_aisle",
+   "corridor_id": null,
+   "direction": "bidirectional",
+   "distance": 1.529706,
+   "id": "staging_area_via_west_service_aisle->staging_area",
+   "kind": "station_access",
+   "reason": "unknown map cells under the footprint or clearance band",
+   "source": "staging_area_via_west_service_aisle",
+   "status": "unmapped",
+   "target": "staging_area",
+   "width": 2.6,
+   "zones": []
+  }
+ ],
+ "frame_id": "world",
+ "graph_version": "0e127f48069cca0a",
+ "map": {
+  "height": 491,
+  "origin": [
+   -10.196,
+   -10.052,
+   0.0
+  ],
+  "resolution": 0.05,
+  "version": "0b67a616ecd4055363e50f0213daf27fd31611f564fede853ca90fdc4214e91d",
+  "width": 729
+ },
+ "nodes": [
+  {
+   "cells": {
+    "core": {
+     "free": 606,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 15
+    },
+    "with_clearance": {
+     "free": 1196,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 65
+    }
+   },
+   "corridors": [
+    "main_cross_aisle"
+   ],
+   "entity": "amr_01_spawn",
+   "frame_id": "world",
+   "id": "amr_01_spawn",
+   "map_position": [
+    0.0387,
+    -0.0945
+   ],
+   "position": [
+    -11,
+    0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0689,
+   "status": "unmapped",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 618
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1261
+    }
+   },
+   "corridors": [],
+   "entity": "charging_station",
+   "frame_id": "world",
+   "id": "charging_station",
+   "map_position": [
+    22.6174,
+    8.4338
+   ],
+   "map_yaw": 1.585296,
+   "position": [
+    11.7,
+    8.2
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": null,
+   "status": "unmapped",
+   "type": "STATION",
+   "yaw": 1.570796327
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 621
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1260
+    }
+   },
+   "corridors": [
+    "north_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "charging_station_via_north_cross_aisle",
+   "map_position": [
+    20.9132,
+    8.7091
+   ],
+   "position": [
+    10.0,
+    8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.2863,
+   "status": "unmapped",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 618
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1261
+    }
+   },
+   "corridors": [
+    "main_cross_aisle"
+   ],
+   "entity": "dispatch",
+   "frame_id": "world",
+   "id": "dispatch",
+   "map_position": [
+    23.0362,
+    0.239
+   ],
+   "position": [
+    12,
+    0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0419,
+   "status": "unmapped",
+   "type": "OPEN_AREA",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 618
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1253
+    }
+   },
+   "corridors": [],
+   "entity": "dropoff_station_01",
+   "frame_id": "world",
+   "id": "dropoff_station_01",
+   "map_position": [
+    22.0089,
+    -4.7764
+   ],
+   "map_yaw": 0.0145,
+   "position": [
+    10.9,
+    -5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": null,
+   "status": "unmapped",
+   "type": "STATION",
+   "yaw": 0.0
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 44,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 576
+    },
+    "with_clearance": {
+     "free": 80,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1181
+    }
+   },
+   "corridors": [
+    "east_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "dropoff_station_01_via_east_service_aisle",
+   "map_position": [
+    19.2091,
+    -4.817
+   ],
+   "position": [
+    8.1,
+    -5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0666,
+   "status": "unmapped",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 615
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1260
+    }
+   },
+   "corridors": [],
+   "entity": "dropoff_station_02",
+   "frame_id": "world",
+   "id": "dropoff_station_02",
+   "map_position": [
+    21.8639,
+    5.2225
+   ],
+   "map_yaw": 0.0145,
+   "position": [
+    10.9,
+    5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0564,
+   "status": "unmapped",
+   "type": "STATION",
+   "yaw": 0.0
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 618
+    },
+    "with_clearance": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1261
+    }
+   },
+   "corridors": [
+    "east_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "dropoff_station_02_via_east_service_aisle",
+   "map_position": [
+    19.0642,
+    5.1819
+   ],
+   "position": [
+    8.1,
+    5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.032,
+   "status": "unmapped",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 622,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1258,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_01",
+    "main_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__aisle_01",
+   "map_position": [
+    6.538,
+    -0.0002
+   ],
+   "position": [
+    -4.5,
+    0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0508,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 618,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1264,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_02",
+    "main_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__aisle_02",
+   "map_position": [
+    10.7375,
+    0.0607
+   ],
+   "position": [
+    -0.3,
+    0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.065,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 178,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 434
+    },
+    "with_clearance": {
+     "free": 610,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 645
+    }
+   },
+   "corridors": [
+    "aisle_03",
+    "main_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__aisle_03",
+   "map_position": [
+    14.9371,
+    0.1215
+   ],
+   "position": [
+    3.9,
+    0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0477,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 0,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 617
+    },
+    "with_clearance": {
+     "free": 5,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1256
+    }
+   },
+   "corridors": [
+    "east_service_aisle",
+    "main_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__east_service_aisle",
+   "map_position": [
+    19.1366,
+    0.1824
+   ],
+   "position": [
+    8.1,
+    0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0401,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 619,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1261,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "main_cross_aisle",
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__west_service_aisle",
+   "map_position": [
+    2.3384,
+    -0.0611
+   ],
+   "position": [
+    -8.7,
+    0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0529,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 166,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 456
+    },
+    "with_clearance": {
+     "free": 368,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 894
+    }
+   },
+   "corridors": [
+    "aisle_01",
+    "north_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "north_cross_aisle__aisle_01",
+   "map_position": [
+    6.4147,
+    8.4989
+   ],
+   "position": [
+    -4.5,
+    8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0381,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 620,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1252,
+     "occupied": 8,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_02",
+    "north_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "north_cross_aisle__aisle_02",
+   "map_position": [
+    10.6143,
+    8.5598
+   ],
+   "position": [
+    -0.3,
+    8.5
+   ],
+   "reason": "occupied map cells inside the required clearance",
+   "registration_residual_m": 0.0625,
+   "status": "blocked",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 443,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 172
+    },
+    "with_clearance": {
+     "free": 885,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 371
+    }
+   },
+   "corridors": [
+    "aisle_03",
+    "north_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "north_cross_aisle__aisle_03",
+   "map_position": [
+    14.8138,
+    8.6207
+   ],
+   "position": [
+    3.9,
+    8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.2646,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 53,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 565
+    },
+    "with_clearance": {
+     "free": 100,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1161
+    }
+   },
+   "corridors": [
+    "east_service_aisle",
+    "north_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "north_cross_aisle__east_service_aisle",
+   "map_position": [
+    19.0134,
+    8.6816
+   ],
+   "position": [
+    8.1,
+    8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.2888,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 332,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 290
+    },
+    "with_clearance": {
+     "free": 738,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 522
+    }
+   },
+   "corridors": [
+    "north_cross_aisle",
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "north_cross_aisle__west_service_aisle",
+   "map_position": [
+    2.2152,
+    8.438
+   ],
+   "position": [
+    -8.7,
+    8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0443,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 485,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 133
+    },
+    "with_clearance": {
+     "free": 994,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 267
+    }
+   },
+   "corridors": [],
+   "entity": "pickup_station_01",
+   "frame_id": "world",
+   "id": "pickup_station_01",
+   "map_position": [
+    0.2111,
+    -5.0925
+   ],
+   "map_yaw": -3.127093,
+   "position": [
+    -10.9,
+    -5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.07,
+   "status": "unmapped",
+   "type": "STATION",
+   "yaw": 3.141592654
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 618,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1261,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "pickup_station_01_via_west_service_aisle",
+   "map_position": [
+    2.4109,
+    -5.0606
+   ],
+   "position": [
+    -8.7,
+    -5.0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0468,
+   "status": "validated",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 621,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1259,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1
+    }
+   },
+   "corridors": [],
+   "entity": "pickup_station_02",
+   "frame_id": "world",
+   "id": "pickup_station_02",
+   "map_position": [
+    0.0661,
+    4.9064
+   ],
+   "map_yaw": -3.127093,
+   "position": [
+    -10.9,
+    5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.1371,
+   "status": "unmapped",
+   "type": "STATION",
+   "yaw": 3.141592654
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 113,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 507
+    },
+    "with_clearance": {
+     "free": 352,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 907
+    }
+   },
+   "corridors": [
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "pickup_station_02_via_west_service_aisle",
+   "map_position": [
+    2.2659,
+    4.9383
+   ],
+   "position": [
+    -8.7,
+    5.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0381,
+   "status": "unmapped",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 327,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 294
+    },
+    "with_clearance": {
+     "free": 799,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 462
+    }
+   },
+   "corridors": [
+    "main_cross_aisle"
+   ],
+   "entity": "receiving",
+   "frame_id": "world",
+   "id": "receiving",
+   "map_position": [
+    -0.9612,
+    -0.109
+   ],
+   "position": [
+    -12,
+    0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0591,
+   "status": "unmapped",
+   "type": "OPEN_AREA",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 246,
+     "occupied": 15,
+     "outside": 0,
+     "unknown": 357
+    },
+    "with_clearance": {
+     "free": 513,
+     "occupied": 25,
+     "outside": 0,
+     "unknown": 727
+    }
+   },
+   "corridors": [
+    "aisle_01",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__aisle_01",
+   "map_position": [
+    6.6612,
+    -8.4994
+   ],
+   "position": [
+    -4.5,
+    -8.5
+   ],
+   "reason": "occupied map cells under the robot footprint",
+   "registration_residual_m": 0.077,
+   "status": "blocked",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 450,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 171
+    },
+    "with_clearance": {
+     "free": 929,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 330
+    }
+   },
+   "corridors": [
+    "aisle_02",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__aisle_02",
+   "map_position": [
+    10.8608,
+    -8.4385
+   ],
+   "position": [
+    -0.3,
+    -8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0333,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 10,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 608
+    },
+    "with_clearance": {
+     "free": 11,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1242
+    }
+   },
+   "corridors": [
+    "aisle_03",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__aisle_03",
+   "map_position": [
+    15.0603,
+    -8.3776
+   ],
+   "position": [
+    3.9,
+    -8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0807,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 41,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 580
+    },
+    "with_clearance": {
+     "free": 131,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 1129
+    }
+   },
+   "corridors": [
+    "east_service_aisle",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__east_service_aisle",
+   "map_position": [
+    19.2599,
+    -8.3167
+   ],
+   "position": [
+    8.1,
+    -8.5
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.3576,
+   "status": "unmapped",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 609,
+     "occupied": 2,
+     "outside": 0,
+     "unknown": 7
+    },
+    "with_clearance": {
+     "free": 1237,
+     "occupied": 6,
+     "outside": 0,
+     "unknown": 17
+    }
+   },
+   "corridors": [
+    "south_cross_aisle",
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__west_service_aisle",
+   "map_position": [
+    2.4617,
+    -8.5603
+   ],
+   "position": [
+    -8.7,
+    -8.5
+   ],
+   "reason": "occupied map cells under the robot footprint",
+   "registration_residual_m": 0.0933,
+   "status": "blocked",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 289,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 325
+    },
+    "with_clearance": {
+     "free": 602,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 654
+    }
+   },
+   "corridors": [],
+   "entity": "staging_area",
+   "frame_id": "world",
+   "id": "staging_area",
+   "map_position": [
+    0.9444,
+    -7.3821
+   ],
+   "map_yaw": -3.127093,
+   "position": [
+    -10.2,
+    -7.3
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.0944,
+   "status": "unmapped",
+   "type": "STATION",
+   "yaw": 3.141592654
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 620,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1258,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 3
+    }
+   },
+   "corridors": [
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "staging_area_via_west_service_aisle",
+   "map_position": [
+    2.4399,
+    -7.0604
+   ],
+   "position": [
+    -8.7,
+    -7.0
+   ],
+   "reason": "unknown map cells under the footprint or clearance band",
+   "registration_residual_m": 0.098,
+   "status": "unmapped",
+   "type": "CORRIDOR_POINT",
+   "yaw": null
+  }
+ ],
+ "registration": {
+  "child_frame": "map",
+  "id": "7287e1893844515d",
+  "method": "Robust truncated-mean (0.5 m) fit of real SLAM occupied cells to compiled static collision geometry (walls, racks, pillars, fixed objects); grid search then coordinate descent.",
+  "parent_frame": "world",
+  "residuals": {
+   "cells": 3722,
+   "inlier_fraction_0_10": 0.7055346587855992,
+   "inlier_fraction_0_20": 0.8073616335303601,
+   "median_m": 0.05641978589066862,
+   "p75_m": 0.12794573649025878,
+   "p90_m": 0.3235989294496844
+  },
+  "transform": {
+   "x": 11.0375,
+   "y": 0.065,
+   "yaw": 0.0145
+  },
+  "valid": true
+ },
+ "robot": {
+  "circumscribed_radius_m": 0.666108,
+  "footprint": {
+   "back_m": 0.52,
+   "front_m": 0.54,
+   "half_width_m": 0.38999999999999996
+  },
+  "required_clearance_m": 0.3
+ },
+ "schema_version": 1,
+ "sources": {
+  "amr_dimensions": {
+   "package": "amr_description",
+   "path": "config/amr_dimensions.json",
+   "sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575"
+  },
+  "building_model": {
+   "package": "amr_simulation",
+   "path": "models/wh_building/model.sdf",
+   "sha256": "774e221909c77ecdb3fbf04bac93cdf865bf3d08826a0c90bb813771c53e66a3"
+  },
+  "compiler": {
+   "package": "amr_simulation",
+   "path": "scripts/generate_warehouse.py",
+   "sha256": "5086abcbfe514e8b2c047a5d1bab6bb7f7ce663a1d9458d3493d455ace97aef3"
+  },
+  "generated_manifest": {
+   "package": "amr_simulation",
+   "path": "config/generated_manifest.json",
+   "sha256": "49badd1df24817b793f52a620cafbda4508d3834c9c16496d82780bb7a21e473"
+  },
+  "layout": {
+   "package": "amr_simulation",
+   "path": "config/warehouse_layout.json",
+   "sha256": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71"
+  },
+  "map_image": {
+   "package": "amr_navigation",
+   "path": "maps/warehouse.pgm",
+   "sha256": "ee82c5009a96cf256ac4af4fa999f53f6510b372d083b79a51a475b328021a74"
+  },
+  "map_provenance": {
+   "package": "amr_navigation",
+   "path": "maps/provenance.json",
+   "sha256": "fbfc98eca0b0fd345d8455093ec45e30b2c02aa8d1874645c1ff7ef8e9f6b231"
+  },
+  "map_yaml": {
+   "package": "amr_navigation",
+   "path": "maps/warehouse.yaml",
+   "sha256": "efff854f324b357b2dee07f55f9849ee5a82fdf1d94b9d0a3d1c167b797fd5ca"
+  },
+  "nav2_params": {
+   "package": "amr_navigation",
+   "path": "config/nav2_params.yaml",
+   "sha256": "c64eca6631a11bd9ae5642b46e514645f055ee1fb78d0fb2dbca8cd5366eed23"
+  },
+  "planner_config": {
+   "package": "amr_route_planner",
+   "path": "config/route_planner.yaml",
+   "sha256": "90773b56b64bf14df79ae30cf6ebc7151e920a797917744ecf455b6239a2f586"
+  },
+  "registration": {
+   "package": "amr_route_planner",
+   "path": "config/map_registration.json",
+   "sha256": "6cce62274bc09c66ca424394f0df52f7b2c1a18f0387a90b263260cfa187e711"
+  }
+ },
+ "stations": [
+  {
+   "approach_nodes": [
+    "charging_station_via_north_cross_aisle"
+   ],
+   "dock_node": "charging_station",
+   "dock_source": "pose",
+   "id": "charging_station",
+   "label": "CHARGING",
+   "marking": {
+    "centre": [
+     11.7,
+     8.2
+    ],
+    "size": [
+     2.6,
+     2.2
+    ],
+    "yaw": 1.5707963267948966
+   },
+   "reason": "dock: unknown map cells under the footprint or clearance band",
+   "status": "unmapped",
+   "validated_approaches": []
+  },
+  {
+   "approach_nodes": [
+    "dropoff_station_01_via_east_service_aisle"
+   ],
+   "dock_node": "dropoff_station_01",
+   "dock_source": "pose",
+   "id": "dropoff_station_01",
+   "label": "DROPOFF 01",
+   "marking": {
+    "centre": [
+     10.9,
+     -5
+    ],
+    "size": [
+     2.1,
+     2.4
+    ],
+    "yaw": 0
+   },
+   "reason": "dock: unknown map cells under the footprint or clearance band",
+   "status": "unmapped",
+   "validated_approaches": []
+  },
+  {
+   "approach_nodes": [
+    "dropoff_station_02_via_east_service_aisle"
+   ],
+   "dock_node": "dropoff_station_02",
+   "dock_source": "pose",
+   "id": "dropoff_station_02",
+   "label": "DROPOFF 02",
+   "marking": {
+    "centre": [
+     10.9,
+     5
+    ],
+    "size": [
+     2.1,
+     2.4
+    ],
+    "yaw": 0
+   },
+   "reason": "dock: unknown map cells under the footprint or clearance band",
+   "status": "unmapped",
+   "validated_approaches": []
+  },
+  {
+   "approach_nodes": [
+    "pickup_station_01_via_west_service_aisle"
+   ],
+   "dock_node": "pickup_station_01",
+   "dock_source": "pose",
+   "id": "pickup_station_01",
+   "label": "PICKUP 01",
+   "marking": {
+    "centre": [
+     -10.9,
+     -5
+    ],
+    "size": [
+     2.1,
+     2.4
+    ],
+    "yaw": 3.141592653589793
+   },
+   "reason": "dock: unknown map cells under the footprint or clearance band",
+   "status": "unmapped",
+   "validated_approaches": []
+  },
+  {
+   "approach_nodes": [
+    "pickup_station_02_via_west_service_aisle"
+   ],
+   "dock_node": "pickup_station_02",
+   "dock_source": "pose",
+   "id": "pickup_station_02",
+   "label": "PICKUP 02",
+   "marking": {
+    "centre": [
+     -10.9,
+     5
+    ],
+    "size": [
+     2.1,
+     2.4
+    ],
+    "yaw": 3.141592653589793
+   },
+   "reason": "dock: unknown map cells under the footprint or clearance band",
+   "status": "unmapped",
+   "validated_approaches": []
+  },
+  {
+   "approach_nodes": [
+    "staging_area_via_west_service_aisle"
+   ],
+   "dock_node": "staging_area",
+   "dock_source": "goal_pose",
+   "id": "staging_area",
+   "label": "STAGING",
+   "marking": {
+    "centre": [
+     -12.4,
+     -8.3
+    ],
+    "size": [
+     4.3,
+     2.6
+    ],
+    "yaw": 0
+   },
+   "reason": "dock: unknown map cells under the footprint or clearance band",
+   "status": "unmapped",
+   "validated_approaches": []
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "notes": [
+   "charging_station via aisle_01: rejected access candidate (robot footprint intersects static layout geometry at (-2.4, 5.75))",
+   "charging_station via aisle_02: rejected access candidate (robot footprint intersects static layout geometry at (1.8, 5.75))",
+   "charging_station via aisle_03: rejected access candidate (robot footprint intersects static layout geometry at (6.0, 5.75))",
+   "charging_station via main_cross_aisle: rejected access candidate (required clearance intersects static layout geometry at (10.8, 2.5))",
+   "charging_station via south_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (10.8, 2.5))",
+   "charging_station via west_service_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, 5.75))",
+   "dropoff_station_01 via aisle_01: rejected access candidate (robot footprint intersects static layout geometry at (-2.4, -5.75))",
+   "dropoff_station_01 via aisle_02: rejected access candidate (robot footprint intersects static layout geometry at (1.8, -5.75))",
+   "dropoff_station_01 via aisle_03: rejected access candidate (robot footprint intersects static layout geometry at (6.0, -5.75))",
+   "dropoff_station_01 via north_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (10.8, 2.5))",
+   "dropoff_station_01 via west_service_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "dropoff_station_02 via aisle_01: rejected access candidate (robot footprint intersects static layout geometry at (-2.4, 5.75))",
+   "dropoff_station_02 via aisle_02: rejected access candidate (robot footprint intersects static layout geometry at (1.8, 5.75))",
+   "dropoff_station_02 via aisle_03: rejected access candidate (robot footprint intersects static layout geometry at (6.0, 5.75))",
+   "dropoff_station_02 via main_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (10.8, 2.5))",
+   "dropoff_station_02 via south_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (10.8, 2.5))",
+   "dropoff_station_02 via west_service_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, 5.75))",
+   "pickup_station_01 via aisle_01: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "pickup_station_01 via aisle_02: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "pickup_station_01 via aisle_03: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "pickup_station_01 via east_service_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "pickup_station_01 via north_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-10.9, 2.5))",
+   "pickup_station_01 via south_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-10, -8.5))",
+   "pickup_station_02 via aisle_01: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, 5.75))",
+   "pickup_station_02 via aisle_02: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, 5.75))",
+   "pickup_station_02 via aisle_03: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, 5.75))",
+   "pickup_station_02 via east_service_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, 5.75))",
+   "pickup_station_02 via main_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-10.9, 2.5))",
+   "pickup_station_02 via north_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-11.2, 7.4))",
+   "pickup_station_02 via south_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-10.9, 2.5))",
+   "staging_area via aisle_01: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "staging_area via aisle_02: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "staging_area via aisle_03: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "staging_area via east_service_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-6.6, -5.75))",
+   "staging_area via north_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-10.9, 8.9))",
+   "staging_area via south_cross_aisle: rejected access candidate (robot footprint intersects static layout geometry at (-10, -8.5))"
+  ],
+  "warnings": []
+ },
+ "summary": {
+  "connection_status": {
+   "blocked": 12,
+   "invalid": 0,
+   "unmapped": 22,
+   "validated": 3
+  },
+  "connections": 37,
+  "directed_edges": 74,
+  "node_status": {
+   "blocked": 3,
+   "invalid": 0,
+   "unmapped": 23,
+   "validated": 4
+  },
+  "nodes": 30,
+  "station_status": {
+   "charging_station": "unmapped",
+   "dropoff_station_01": "unmapped",
+   "dropoff_station_02": "unmapped",
+   "pickup_station_01": "unmapped",
+   "pickup_station_02": "unmapped",
+   "staging_area": "unmapped"
+  }
+ },
+ "topology_version": "70cdd3c14357b07c462884b3740c31b5905ece322282aa4e695e388b80da6790",
+ "zones": [
+  {
+   "centre": [
+    -4.5,
+    -4.5
+   ],
+   "enabled": null,
+   "id": "aisle_01_block",
+   "kind": "temporary_blocked",
+   "scenario": "corridor_blocked",
+   "size": [
+    3,
+    0.6
+   ]
+  },
+  {
+   "centre": [
+    13.7,
+    8.5
+   ],
+   "enabled": false,
+   "id": "electrical_clearance",
+   "kind": "restricted",
+   "scenario": null,
+   "size": [
+    1.4,
+    2
+   ]
+  }
+ ]
+}

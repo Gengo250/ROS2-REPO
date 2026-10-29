@@ -13,7 +13,8 @@ def start(context):
     for package,executable in [('nav2_controller','controller_server'),('nav2_planner','planner_server'),
                               ('nav2_behaviors','behavior_server'),('nav2_bt_navigator','bt_navigator')]:
         params=[config]
-        if executable=='bt_navigator':params.append({'default_nav_to_pose_bt_xml':str(share()/'config/navigate_to_pose.xml')})
+        if executable=='bt_navigator':params.append({'default_nav_to_pose_bt_xml':str(share()/'config/navigate_to_pose.xml'),
+                                                     'default_nav_through_poses_bt_xml':str(share()/'config/navigate_through_poses.xml')})
         nodes.append(Node(package=package,executable=executable,name=executable,output='screen',parameters=params,
                           remappings=[('cmd_vel','nav_cmd_vel')] if executable in ['controller_server','behavior_server'] else []))
     nodes += [Node(package='amr_navigation',executable='command_guard',output='screen',parameters=[{'use_sim_time':True}],on_exit=Shutdown(reason='Navigation command interlock exited')),

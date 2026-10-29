@@ -9,13 +9,16 @@ function typeSchema(value) {
   }
   return value;
 }
-for (const name of ['twin-state', 'twin-state-v2', 'connection-status', 'warehouse-scene']) {
+// [schema file, generated type module]; route contracts are independently versioned.
+for (const [name, typeName] of [['twin-state', 'twin-state'], ['twin-state-v2', 'twin-state-v2'],
+  ['connection-status', 'connection-status'], ['warehouse-scene', 'warehouse-scene'],
+  ['route-graph.v1', 'route-graph'], ['route-status.v1', 'route-status']]) {
   const schema = JSON.parse(await readFile(new URL(`../../../shared/schemas/${name}.schema.json`, import.meta.url)));
   const result = await compile(typeSchema(schema), schema.title, {
     bannerComment: '/* Generated from shared/schemas. Run npm run generate:types. */',
     additionalProperties: false,
   });
-  const output = new URL(`../src/core/types/${name}.ts`, import.meta.url);
+  const output = new URL(`../src/core/types/${typeName}.ts`, import.meta.url);
   if (process.argv.includes('--check')) {
     if (await readFile(output, 'utf8') !== result) throw new Error(`Type drift: ${name}`);
   } else await writeFile(output, result);

@@ -96,8 +96,12 @@ bt_navigator:
     wait_for_service_timeout: 2000
     navigators:
     - navigate_to_pose
+    - navigate_through_poses
     navigate_to_pose:
       plugin: nav2_bt_navigator::NavigateToPoseNavigator
+    # Phase 5 graph routes: ordered corridor objectives in one action, no stop at each.
+    navigate_through_poses:
+      plugin: nav2_bt_navigator::NavigateThroughPosesNavigator
     error_code_names:
     - compute_path_error_code
     - follow_path_error_code
