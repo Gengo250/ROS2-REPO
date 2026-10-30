@@ -1,0 +1,110 @@
+{
+ "description": "Phase 5.1 SLAM drift experiments A-F. World headings in degrees; spawn (-11, 0) facing east. Rotations split into 90 degree steps (mapping_jog bounds |turn| <= pi). North targets stop at y=8.0: the pillar at (0, 9.7) correctly triggers the forward safety stop at y=8.5.",
+ "steps": [
+  {
+   "label": "A_main_corridor_east",
+   "heading_deg": 0,
+   "distance": 10.7
+  },
+  {
+   "label": "D_rotate_open_360_part1_q1",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "D_rotate_open_360_part1_q2",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "D_rotate_open_360_part2_q1",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "D_rotate_open_360_part2_q2",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "turn_north_in_junction",
+   "heading_deg": 90,
+   "distance": 0
+  },
+  {
+   "label": "transit_aisle02_north",
+   "heading_deg": 90,
+   "distance": 8.0
+  },
+  {
+   "label": "E_rotate_facing_wall_180_q1",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "E_rotate_facing_wall_180_q2",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "E_rotate_back_to_wall_180_q1",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "E_rotate_back_to_wall_180_q2",
+   "turn_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "turn_west_at_wall",
+   "heading_deg": 180,
+   "distance": 0
+  },
+  {
+   "label": "B_north_cross_aisle_west",
+   "heading_deg": 180,
+   "distance": 8.4
+  },
+  {
+   "label": "turn_south",
+   "heading_deg": -90,
+   "distance": 0
+  },
+  {
+   "label": "transit_west_service_south",
+   "heading_deg": -90,
+   "distance": 16.5
+  },
+  {
+   "label": "turn_east",
+   "heading_deg": 0,
+   "distance": 0
+  },
+  {
+   "label": "C_south_cross_aisle_east",
+   "heading_deg": 0,
+   "distance": 8.4
+  },
+  {
+   "label": "turn_north_F",
+   "heading_deg": 90,
+   "distance": 0
+  },
+  {
+   "label": "F_return_aisle02_north",
+   "heading_deg": 90,
+   "distance": 8.5
+  },
+  {
+   "label": "turn_west_F",
+   "heading_deg": 180,
+   "distance": 0
+  },
+  {
+   "label": "F_return_main_west",
+   "heading_deg": 180,
+   "distance": 10.7
+  }
+ ]
+}

@@ -250,3 +250,30 @@ Final run on the code in the working tree (`tests/*.txt`):
 5. `/route_planner/status` uses `std_msgs/String` with a versioned, schema-validated
    JSON document, because there is no interface package. A typed interface package
    would be preferable once multiple robots publish route state.
+
+## Addendum — Phase 5.1 findings (2026-10-29)
+
+Appended by Phase 5.1. The record above is unchanged; details are in
+`PHASE_5_1_REMEDIATION.md` and `PHASE_5_1_VALIDATION.md`.
+
+- **The simulated front LiDAR delivered only ±45°, not ±90°, in every Phase 4/5 run
+  on this host.** The headless sensor renderer ran on Mesa zink-on-NVK, which renders
+  only the forward camera face of `gpu_lidar`. Beams at 45–90° returned nothing, or
+  occasionally phantom ranges. Fix: `sim.launch.py` sets `NOUVEAU_USE_ZINK=0`;
+  `audit.py` fails on a blind front sector; `validate_lidar_rendering.py` accepts the
+  rendering.
+- **Mapping prerequisite, "Coverage extension BLOCKED".** The drift attributed to rack
+  aliasing and wall-facing rotations was caused by this defect. With correct rendering,
+  the untouched Phase 5 stack maps the 71 m diagnostic plan to 0.020 m. One remaining
+  issue, false loop closures between identical aisles, is fixed by narrowing the loop
+  search. A full-warehouse candidate (`candidate-v11`) meets all engineering targets,
+  validates all six stations, and has three independent cycles.
+- **Test F, "zero contacts FAILED".** The ≈77° left-side contact was outside the real
+  ±45° coverage as well as the laser's geometric ±98°. The 360° scanner and worker
+  yielding close it: 0 contacts in 5 runs and 20 routes, including the same
+  `person_crossing` sequence at three timings.
+- The recommendations "do not travel along the north/south cross aisles" and "do not
+  rotate in place facing the end walls" in "Known limitations" above were symptoms of
+  the defect and are withdrawn.
+- `execute_route --timeout` is now simulation time (600 s), with a separate wall-clock
+  guard.

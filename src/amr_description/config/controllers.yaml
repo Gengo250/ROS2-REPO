@@ -20,7 +20,7 @@
       "right_wheel_names": [
         "right_wheel_joint"
       ],
-      "wheel_separation": 0.58,
+      "wheel_separation": 0.5258,
       "wheel_radius": 0.12,
       "base_frame_id": "base_link",
       "odom_frame_id": "odom",

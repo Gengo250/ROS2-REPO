@@ -52,6 +52,9 @@ def main():
     p.add_argument('--planner-scenario', help='Scenario the planner is told (default: the simulated one). Telling it '
                    '"normal" while simulating corridor_blocked makes the barrier an unannounced physical obstruction.')
     p.add_argument('--browser', action='store_true')
+    p.add_argument('--step-delay', type=float, default=0., help='Wall seconds before each step (0-120): varies AMR/worker timing')
+    p.add_argument('--candidate', type=Path, help='Candidate map package (warehouse.yaml, registration, graph) to validate before approval')
+    p.add_argument('--amcl-scan-topic', default='', help='AMCL scan topic; must match the sensor that built the map')
     p.add_argument('--domain', type=int, default=47)
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
@@ -61,7 +64,8 @@ def main():
            'ROS_AUTOMATIC_DISCOVERY_RANGE': 'LOCALHOST', 'PATH': str(ROOT/'.tools/node_modules/.bin')+os.pathsep+os.environ['PATH']}
     children, logs = [], []
     planner_scenario = a.planner_scenario or a.scenario
-    report = {'scenario': a.scenario, 'planner_scenario': planner_scenario, 'initial_map_pose': a.initial, 'steps': [], 'passed': False}
+    report = {'scenario': a.scenario, 'planner_scenario': planner_scenario, 'initial_map_pose': a.initial, 'steps': [], 'passed': False,
+              'step_delay_s': a.step_delay}
     done = threading.Event()
 
     def launch(name, cmd, cwd=ROOT, extra=None):
@@ -86,8 +90,14 @@ def main():
             with socket.socket() as s:
                 if s.connect_ex(('127.0.0.1', port)) == 0:
                     raise RuntimeError(f'Port {port} occupied; stop the existing owned stack first')
+        extra = (['map:='+str((a.candidate/'warehouse.yaml').resolve())] if a.candidate else []) + \
+            (['amcl_scan_topic:='+a.amcl_scan_topic] if a.amcl_scan_topic else [])
+        report['candidate'] = str(a.candidate) if a.candidate else None
+        # The Gateway serves the candidate's graph so the browser overlay can be validated too.
+        gateway_env = {'TWIN_ROUTE_GRAPH_PATH': str((a.candidate/'warehouse_graph.json').resolve())} if a.candidate else None
         sim = launch('autonomous-demo', ['ros2', 'launch', 'amr_navigation', 'autonomous_demo.launch.py', 'scenario:='+a.scenario,
-                                         'initialize:=true', *[f'initial_{k}:={v}' for k, v in zip(['x', 'y', 'yaw'], a.initial)]])
+                                         'initialize:=true', *[f'initial_{k}:={v}' for k, v in zip(['x', 'y', 'yaw'], a.initial)], *extra],
+                     extra=gateway_env)
         deadline = time.monotonic()+150
         while time.monotonic() < deadline:
             if sim.poll() is not None:
@@ -106,25 +116,31 @@ def main():
         report['route_graph_endpoint'] = get('/api/v1/routes/graph')['graph_version']
         duration = str(900*len(a.step))
         launch('contacts', [str(ROOT/'.venv/bin/python'), str(NAV/'observe_contacts.py'), '--duration', duration, '--output', str(out/'contacts.json')])
-        launch('obstacles', ['python3', str(NAV/'observe_obstacles.py'), '--duration', duration, '--output', str(out/'obstacles.json')])
+        launch('obstacles', ['python3', str(NAV/'observe_obstacles.py'), '--duration', duration, '--output', str(out/'obstacles.json')]
+               + (['--candidate', str(a.candidate.resolve())] if a.candidate else []))
         threading.Thread(target=record_gateway, daemon=True).start()
         browser = None
         if a.browser:
             launch('vite', ['npm', '--prefix', 'web/digital-twin', 'run', 'dev', '--', '--strictPort'])
             browser = launch('browser', ['npx', 'playwright', 'test', 'routes.browser.ts'], ROOT/'web/digital-twin',
-                             {'ROUTE_EVIDENCE_DIR': str(out), 'ROUTE_OBSERVE_SECONDS': str(min(1500, 600*len(a.step)))})
+                             {'ROUTE_EVIDENCE_DIR': str(out), 'ROUTE_OBSERVE_SECONDS': str(min(7200, 900*len(a.step)))})
             deadline = time.monotonic()+90
             while not (out/'browser.ready').exists():
                 if browser.poll() is not None or time.monotonic() > deadline:
                     raise RuntimeError('Browser did not become ready before routing')
                 time.sleep(.2)
+        if not 0 <= a.step_delay <= 120:
+            raise ValueError('step-delay must be 0-120 s')
         for i, step in enumerate(a.step):
+            time.sleep(a.step_delay)
             args = shlex.split(step)
             expect = 0
             if '--expect' in args:
                 k = args.index('--expect')
                 expect = int(args[k+1])
                 del args[k:k+2]
+            if a.candidate:
+                args += ['--candidate', str(a.candidate.resolve())]
             proc = launch(f'route-{i}', ['ros2', 'run', 'amr_route_planner', 'execute_route', *args, '--scenario', planner_scenario,
                                         '--output', str(out/f'route-{i}.json')])
             closures = []

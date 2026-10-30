@@ -46,3 +46,13 @@ def test_through_poses_navigator_shares_the_bounded_tree():
     tree=(ROOT/'config/navigate_through_poses.xml').read_text()
     assert 'number_of_retries="3" name="NavigateRecovery"' in tree and 'RemovePassedGoals' in tree
     assert "default_nav_through_poses_bt_xml" in (ROOT/'launch/navigation.launch.py').read_text()
+
+def test_each_scanner_feeds_its_own_obstacle_layer():
+    p=yaml.safe_load((ROOT/'config/nav2_params.yaml').read_text())
+    for name in ['local_costmap','global_costmap']:
+        c=p[name][name]['ros__parameters']
+        assert c['plugins']==['static_layer','obstacle_layer','top_obstacle_layer','inflation_layer']
+        assert c['obstacle_layer']['observation_sources']=='scan' and c['obstacle_layer']['scan']['topic']=='/scan'
+        top=c['top_obstacle_layer']
+        assert top['observation_sources']=='top_scan' and top['top_scan']['topic']=='/top_scan'
+        assert top['top_scan']['observation_persistence']==0.0 and top['top_scan']['marking'] and top['top_scan']['clearing']

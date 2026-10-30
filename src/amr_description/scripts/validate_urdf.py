@@ -18,7 +18,8 @@ def validate(xml, p, simulation):
     robot = ET.fromstring(xml)
     links = {link.attrib['name']:link for link in robot.findall('link')}
     joints = robot.findall('joint')
-    assert len(links) == 15 and len(joints) == 14, (len(links),len(joints))
+    # 15 original links + the elevated 360-degree scanner (mast, housing, laser frame).
+    assert len(links) == 18 and len(joints) == 17, (len(links),len(joints))
     children = [j.find('child').attrib['link'] for j in joints]
     assert len(set(children)) == len(children)
     assert set(links)-set(children) == {'base_link'}
@@ -36,10 +37,11 @@ def validate(xml, p, simulation):
         assert len(pending)<old,'Disconnected or cyclic TF tree'
     expected = {'chassis_link':[0,0,p['chassis_z']], 'platform_link':[0,0,p['platform_z']],
                 'left_wheel_link':[0,p['wheel_y'],p['wheel_z']], 'right_wheel_link':[0,-p['wheel_y'],p['wheel_z']],
-                'laser_frame':[p['lidar_x'],0,p['laser_z']], 'camera_link':[p['camera_x'],0,p['camera_z']]}
+                'laser_frame':[p['lidar_x'],0,p['laser_z']], 'camera_link':[p['camera_x'],0,p['camera_z']],
+                'top_laser_frame':[p['top_lidar_x'],0,p['top_laser_z']]}
     for name,point in expected.items():
         assert all(abs(a-b)<1e-8 for a,b in zip(xyz[name],point)),name
-    virtual = {'base_link','laser_frame','camera_optical_frame','camera_depth_frame'}
+    virtual = {'base_link','laser_frame','top_laser_frame','camera_optical_frame','camera_depth_frame'}
     mass = 0
     for name,link in links.items():
         inertial = link.find('inertial')
@@ -63,7 +65,8 @@ def validate(xml, p, simulation):
         path = ROOT/mesh.attrib['filename'].split('package://amr_description/')[1]
         assert path.stat().st_size>84,path
     assert len(robot.findall('ros2_control')) == int(simulation)
-    assert len(robot.findall('.//sensor')) == (3 if simulation else 0)
+    # front LiDAR, elevated 360-degree LiDAR, IMU, RGB-D camera
+    assert len(robot.findall('.//sensor')) == (4 if simulation else 0)
     return {'links':list(links),'joints':[{**j.attrib,'parent':j.find('parent').attrib['link'],
             'child':j.find('child').attrib['link']} for j in joints],'link_positions':xyz,'mass_kg':mass}
 
@@ -86,7 +89,7 @@ def main():
                 sdf = subprocess.run(['gz','sdf','-p',str(urdf)],text=True,capture_output=True,check=True)
                 converted = ET.fromstring(sdf.stdout)
                 assert converted.find('model').attrib['name'] == 'warehouse_amr'
-                assert len(converted.findall('.//sensor')) == 3
+                assert len(converted.findall('.//sensor')) == 4
                 assert 'Error' not in sdf.stderr,sdf.stderr
                 # gz_frame_id is a Gazebo extension retained by SDFormat, not a physics warning.
                 assert all('gz_frame_id' in line for line in sdf.stderr.splitlines() if 'Warning' in line),sdf.stderr

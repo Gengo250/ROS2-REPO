@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "config_sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575",
+  "config_sha256": "44e4d5da57bc6e1a112fa2b2ad76863112269bf8fe0a4b212d5610d8f4117b4c",
   "units": "metres",
   "source_axes": "X forward Y left Z up",
   "asset_axes": "X forward Y up Z right",
@@ -14,9 +14,9 @@
     [
       0.47599998116493225,
       0.3499999940395355,
-      0.3440000116825104
+      0.4740000069141388
     ]
   ],
-  "mesh_count": 10,
+  "mesh_count": 12,
   "blender_version": "5.2.2 LTS"
 }

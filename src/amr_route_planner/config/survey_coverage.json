@@ -1,0 +1,175 @@
+{
+ "description": "Phase 5.1 coverage survey: fresh SLAM, serpentine through every corridor at full length; turns at junctions only; returns through the main aisle for loop closure. North/south stops at |y| = 8.3 m keep the forward-stop margin from the pillars at (0, +/-9.7).",
+ "steps": [
+  {
+   "label": "turn_main_to_west_service",
+   "heading_deg": 0.0,
+   "distance": 0
+  },
+  {
+   "label": "main_to_west_service",
+   "heading_deg": 0.0,
+   "distance": 2.3
+  },
+  {
+   "label": "turn_west_service_north",
+   "heading_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "west_service_north",
+   "heading_deg": 90.0,
+   "distance": 8.3
+  },
+  {
+   "label": "turn_north_cross_aisle_east",
+   "heading_deg": 0.0,
+   "distance": 0
+  },
+  {
+   "label": "north_cross_aisle_east",
+   "heading_deg": 0.0,
+   "distance": 16.8
+  },
+  {
+   "label": "turn_east_service_south",
+   "heading_deg": -90.0,
+   "distance": 0
+  },
+  {
+   "label": "east_service_south",
+   "heading_deg": -90.0,
+   "distance": 16.6
+  },
+  {
+   "label": "turn_south_cross_aisle_west",
+   "heading_deg": 180.0,
+   "distance": 0
+  },
+  {
+   "label": "south_cross_aisle_west",
+   "heading_deg": 180.0,
+   "distance": 16.8
+  },
+  {
+   "label": "turn_west_service_to_main",
+   "heading_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "west_service_to_main",
+   "heading_deg": 90.0,
+   "distance": 8.3
+  },
+  {
+   "label": "turn_main_to_aisle01",
+   "heading_deg": 0.0,
+   "distance": 0
+  },
+  {
+   "label": "main_to_aisle01",
+   "heading_deg": 0.0,
+   "distance": 4.2
+  },
+  {
+   "label": "turn_aisle01_south",
+   "heading_deg": -90.0,
+   "distance": 0
+  },
+  {
+   "label": "aisle01_south",
+   "heading_deg": -90.0,
+   "distance": 8.3
+  },
+  {
+   "label": "turn_south_to_aisle02",
+   "heading_deg": 0.0,
+   "distance": 0
+  },
+  {
+   "label": "south_to_aisle02",
+   "heading_deg": 0.0,
+   "distance": 4.2
+  },
+  {
+   "label": "turn_aisle02_north",
+   "heading_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "aisle02_north",
+   "heading_deg": 90.0,
+   "distance": 16.6
+  },
+  {
+   "label": "turn_north_to_aisle03",
+   "heading_deg": 0.0,
+   "distance": 0
+  },
+  {
+   "label": "north_to_aisle03",
+   "heading_deg": 0.0,
+   "distance": 4.2
+  },
+  {
+   "label": "turn_aisle03_south",
+   "heading_deg": -90.0,
+   "distance": 0
+  },
+  {
+   "label": "aisle03_south",
+   "heading_deg": -90.0,
+   "distance": 16.6
+  },
+  {
+   "label": "turn_aisle03_to_main",
+   "heading_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "aisle03_to_main",
+   "heading_deg": 90.0,
+   "distance": 8.3
+  },
+  {
+   "label": "turn_main_west_to_aisle01",
+   "heading_deg": 180.0,
+   "distance": 0
+  },
+  {
+   "label": "main_west_to_aisle01",
+   "heading_deg": 180.0,
+   "distance": 8.4
+  },
+  {
+   "label": "turn_aisle01_north",
+   "heading_deg": 90.0,
+   "distance": 0
+  },
+  {
+   "label": "aisle01_north",
+   "heading_deg": 90.0,
+   "distance": 8.3
+  },
+  {
+   "label": "turn_aisle01_back_to_main",
+   "heading_deg": -90.0,
+   "distance": 0
+  },
+  {
+   "label": "aisle01_back_to_main",
+   "heading_deg": -90.0,
+   "distance": 8.3
+  },
+  {
+   "label": "turn_main_back_to_spawn",
+   "heading_deg": 180.0,
+   "distance": 0
+  },
+  {
+   "label": "main_back_to_spawn",
+   "heading_deg": 180.0,
+   "distance": 6.5
+  }
+ ]
+}

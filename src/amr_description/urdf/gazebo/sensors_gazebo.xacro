@@ -11,6 +11,17 @@
         </horizontal></scan><range><min>${lidar_min_range}</min><max>${lidar_max_range}</max><resolution>${lidar_resolution}</resolution></range></lidar>
       </sensor>
     </gazebo>
+    <gazebo reference="top_lidar_link">
+      <!-- Full circle without a duplicated beam at +/-pi. -->
+      <sensor name="top_lidar" type="gpu_lidar">
+        <pose>0 0 ${top_laser_z-top_lidar_z} 0 0 0</pose>
+        <topic>/amr/top_scan</topic><gz_frame_id>top_laser_frame</gz_frame_id>
+        <always_on>true</always_on><update_rate>${top_lidar_rate}</update_rate><visualize>false</visualize>
+        <lidar><scan><horizontal><samples>${top_lidar_samples}</samples><resolution>1</resolution>
+          <min_angle>${-pi}</min_angle><max_angle>${pi-top_lidar_angle_step}</max_angle>
+        </horizontal></scan><range><min>${top_lidar_min_range}</min><max>${top_lidar_max_range}</max><resolution>${lidar_resolution}</resolution></range></lidar>
+      </sensor>
+    </gazebo>
     <gazebo reference="imu_link">
       <sensor name="imu" type="imu"><topic>/amr/imu</topic><gz_frame_id>imu_link</gz_frame_id>
         <always_on>true</always_on><update_rate>${imu_rate}</update_rate>

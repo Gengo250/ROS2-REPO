@@ -9,13 +9,13 @@ def fixture():
     # TF only needs stamps here; the real integration audit verifies connectivity.
     tf=SimpleNamespace(header=SimpleNamespace(stamp=SimpleNamespace(sec=10,nanosec=0)))
     guard=SimpleNamespace(last_clock=10.,clock_changed=now,command=cmd,covariance=[0.]*36,
-        received={k:now for k in ['scan','odom','command']},stamps={k:10. for k in ['scan','odom','command']},
+        received={k:now for k in ['scan','top_scan','odom','command']},stamps={k:10. for k in ['scan','top_scan','odom','command']},
         buffer=SimpleNamespace(lookup_transform=lambda *a:tf,clear=lambda:None),
         get_publishers_info_by_topic=lambda _:[],get_name=lambda:'navigation_command_guard')
     return guard,now
 
 def test_missing_sensors_fail_closed():
-    for key in ['scan','odom','command']:
+    for key in ['scan','top_scan','odom','command']:
         g,t=fixture();g.received.pop(key)
         assert CommandGuard.check(g,t,10.)=='Missing or stale '+key
 
@@ -69,3 +69,26 @@ def test_gazebo_timeout_exit_zero_is_not_a_pause_acknowledgement():
     guard.pause_process=SimpleNamespace(poll=lambda:0,communicate=lambda:('data: true\n',None))
     CommandGuard.emergency_pause(guard,11.)
     assert guard.pause_acknowledged
+
+
+def test_wrong_frame_or_empty_360_scan_is_not_fresh():
+    from sensor_msgs.msg import LaserScan
+    for frame,ranges in [('laser_frame',[1.]),('top_laser_frame',[float('inf')])]:
+        g=SimpleNamespace(received={},stamps={})
+        m=LaserScan();m.header.frame_id=frame;m.range_min,m.range_max=.12,20.;m.ranges=ranges
+        CommandGuard.sensor(g,'top_scan',m)
+        assert 'top_scan' not in g.received
+    g=SimpleNamespace(received={},stamps={})
+    m=LaserScan();m.header.frame_id='top_laser_frame';m.range_min,m.range_max=.12,20.;m.ranges=[3.]
+    CommandGuard.sensor(g,'top_scan',m)
+    assert 'top_scan' in g.received
+
+def test_audit_detects_blind_sectors():
+    from amr_navigation.audit import blind_arc
+    # Zink renderer fault: the left 45-90 deg of the front scanner never returns.
+    front=[True]*271+[False]*90
+    assert blind_arc(front,False)==90
+    # A 360 deg scan's blind arc may span the wrap-around (rear door).
+    ring=[False]*20+[True]*680+[False]*20
+    assert blind_arc(ring,True)==40 and blind_arc(ring,False)==20
+    assert blind_arc([False]*8,True)==8

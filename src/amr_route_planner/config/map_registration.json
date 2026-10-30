@@ -2,16 +2,16 @@
   "schema_version": 1,
   "parent_frame": "world",
   "child_frame": "map",
-  "map_version": "0b67a616ecd4055363e50f0213daf27fd31611f564fede853ca90fdc4214e91d",
+  "map_version": "09d8124316414625bf507bc806ace36692d948aab0c7e3e6e45acb111f44c575",
   "map_files_sha256": {
-    "yaml": "efff854f324b357b2dee07f55f9849ee5a82fdf1d94b9d0a3d1c167b797fd5ca",
-    "image": "ee82c5009a96cf256ac4af4fa999f53f6510b372d083b79a51a475b328021a74"
+    "yaml": "c1215f54f661fd9e4ad36b4ee35110d08a1f3eda5b0d0ea74eb3a9d6228665ab",
+    "image": "a38884cf8936a70dc323f77129d4655b249f5d7c0263db37ac74c414d55a19f7"
   },
-  "layout_sha256": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71",
+  "layout_sha256": "7e056cbe2833e7874255c289d739eefcc6e75a5d843f60129f570ab1001d03d6",
   "transform": {
-    "x": 11.0375,
-    "y": 0.065,
-    "yaw": 0.0145
+    "x": 11.065,
+    "y": -0.03,
+    "yaw": -0.006
   },
   "method": "Robust truncated-mean (0.5 m) fit of real SLAM occupied cells to compiled static collision geometry (walls, racks, pillars, fixed objects); grid search then coordinate descent.",
   "prior": {
@@ -23,22 +23,22 @@
     }
   },
   "residuals": {
-    "cells": 3722,
-    "median_m": 0.05641978589066862,
-    "p75_m": 0.12794573649025878,
-    "p90_m": 0.3235989294496844,
-    "inlier_fraction_0_10": 0.7055346587855992,
-    "inlier_fraction_0_20": 0.8073616335303601
+    "cells": 13935,
+    "median_m": 0.06471316739429811,
+    "p75_m": 0.13699534723005724,
+    "p90_m": 0.2577625296066208,
+    "inlier_fraction_0_10": 0.658772874058127,
+    "inlier_fraction_0_20": 0.8406889128094726
   },
   "prior_residuals": {
-    "cells": 3722,
-    "median_m": 0.0730000000000004,
-    "p75_m": 0.17900000000000016,
-    "p90_m": 0.4230000000000018,
-    "inlier_fraction_0_10": 0.61472326706072,
-    "inlier_fraction_0_20": 0.7786136485760344
+    "cells": 13935,
+    "median_m": 0.07800000000000151,
+    "p75_m": 0.1429999999999978,
+    "p90_m": 0.2779999999999997,
+    "inlier_fraction_0_10": 0.5749551489056333,
+    "inlier_fraction_0_20": 0.8349479727305347
   },
-  "objective_m": 0.113827,
+  "objective_m": 0.108395,
   "landmarks": 54,
   "thresholds": {
     "min_cells": 500,
@@ -50,5 +50,5 @@
   "usage": "Route geometry and visualization only; never published as TF or used to initialize AMCL.",
   "valid": true,
   "reasons": [],
-  "id": "7287e1893844515d"
+  "id": "788d6c32e623626e"
 }

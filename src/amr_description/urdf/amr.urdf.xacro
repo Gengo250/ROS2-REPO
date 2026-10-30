@@ -13,6 +13,7 @@
   <xacro:include filename="components/wheels.xacro"/>
   <xacro:include filename="components/casters.xacro"/>
   <xacro:include filename="sensors/lidar.xacro"/>
+  <xacro:include filename="sensors/top_lidar.xacro"/>
   <xacro:include filename="sensors/imu.xacro"/>
   <xacro:include filename="sensors/camera.xacro"/>
   <xacro:include filename="gazebo/gazebo.xacro"/>
@@ -26,7 +27,7 @@
   <!-- Kinematic root at floor height; physical inertia lives in chassis_link. -->
   <link name="base_link"/>
   <xacro:chassis/><xacro:platform/><xacro:wheels/><xacro:casters/>
-  <xacro:lidar/><xacro:imu debug="$(arg debug_imu)"/><xacro:camera/>
+  <xacro:lidar/><xacro:top_lidar/><xacro:imu debug="$(arg debug_imu)"/><xacro:camera/>
   <xacro:if value="$(arg gazebo)">
     <xacro:gazebo_properties/><xacro:gazebo_sensors/>
     <xacro:amr_control controllers_file="$(arg controllers_file)"/>

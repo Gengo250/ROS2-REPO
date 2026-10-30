@@ -368,6 +368,20 @@
         <range_tolerance>0.12</range_tolerance>
         <leg_height>0.805</leg_height>
         <shoulder_height>1.35625</shoulder_height>
+        <yield_enabled>true</yield_enabled>
+        <yield_robot_model>warehouse_amr</yield_robot_model>
+        <radius>0.28</radius>
+        <robot_half_length>0.5</robot_half_length>
+        <robot_half_width>0.35</robot_half_width>
+        <yield_margin>0.45</yield_margin>
+        <yield_horizon>3</yield_horizon>
+        <yield_step>0.1</yield_step>
+        <yield_clear_time>1</yield_clear_time>
+        <yield_release_hysteresis>0.15</yield_release_hysteresis>
+        <yield_stop_buffer>0.1</yield_stop_buffer>
+        <yield_max_wait>25</yield_max_wait>
+        <yield_decision_rate>50</yield_decision_rate>
+        <yield_robot_stationary_speed>0.05</yield_robot_stationary_speed>
         <waypoints>
           <waypoint>-8.7 6</waypoint>
           <waypoint>-8.7 3</waypoint>
@@ -576,6 +590,20 @@
         <range_tolerance>0.12</range_tolerance>
         <leg_height>0.805</leg_height>
         <shoulder_height>1.35625</shoulder_height>
+        <yield_enabled>true</yield_enabled>
+        <yield_robot_model>warehouse_amr</yield_robot_model>
+        <radius>0.28</radius>
+        <robot_half_length>0.5</robot_half_length>
+        <robot_half_width>0.35</robot_half_width>
+        <yield_margin>0.45</yield_margin>
+        <yield_horizon>3</yield_horizon>
+        <yield_step>0.1</yield_step>
+        <yield_clear_time>1</yield_clear_time>
+        <yield_release_hysteresis>0.15</yield_release_hysteresis>
+        <yield_stop_buffer>0.1</yield_stop_buffer>
+        <yield_max_wait>25</yield_max_wait>
+        <yield_decision_rate>50</yield_decision_rate>
+        <yield_robot_stationary_speed>0.05</yield_robot_stationary_speed>
         <waypoints>
           <waypoint>3.9 5.5</waypoint>
           <waypoint>3.9 -5.5</waypoint>

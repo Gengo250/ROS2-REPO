@@ -43,7 +43,9 @@ def run():
         assert tuple(sentinel.data.vertices[0].co) == (10,20,30)
         alternative = json.loads(source)
         alternative.update(chassis_length=1.0,chassis_width=0.74,chassis_height=0.26,
-                           platform_length=0.92,platform_width=0.67,track_width=0.60,wheel_radius=0.125)
+                           platform_length=0.92,platform_width=0.67,track_width=0.60,wheel_radius=0.125,
+                           # A different track needs its own contact calibration (inner rims).
+                           odometry_wheel_separation=0.545)
         (root/'config/amr_dimensions.json').write_text(json.dumps(alternative,indent=2))
         main(root,renders=False)
         assert hashes(root)['chassis.stl'] != first['chassis.stl']

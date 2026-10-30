@@ -190,6 +190,14 @@ def validate(c, amr):
     require(all(value > 0 for value in h['animation'].values()), 'Invalid human animation parameter')
     for human in c['humans']:
         require(0 < human.get('speed', h['motion']['speed']) <= 1.4, 'Human speed must be in (0, 1.4] m/s')
+    y = h['yielding']
+    require(isinstance(y['enabled'], bool) and isinstance(y['robot_model'], str) and y['robot_model'], 'Invalid yielding mode')
+    require(all(y[k] > 0 for k in y if k not in ('enabled', 'robot_model')), 'Yielding parameters must be positive')
+    # The yield envelope must contain the real AMR; the look-ahead must cover a full stop plus margin.
+    require(y['robot_half_length'] >= amr['chassis_length']/2 and y['robot_half_width'] >= amr['chassis_width']/2,
+            'Yield envelope smaller than the AMR')
+    fastest = max([h['motion']['speed']]+[x.get('speed', 0) for x in c['humans']])
+    require(fastest*y['horizon'] >= fastest**2/(2*h['motion']['braking'])+y['margin'], 'Yield horizon shorter than stopping distance')
     for item in c['industrial_objects']:
         require(item['kind'] in c['industrial_assets'], 'Unknown industrial asset')
         require(len(item['pose']) == 6, 'Industrial pose must contain XYZ RPY')
@@ -360,6 +368,12 @@ def human_model(c, human):
                       'mass':h['mass'], 'friction':h['friction'], 'gravity':abs(c['simulation']['gravity'][2]),
                       'yaw_inertia':h['inertia'][2], 'range_tolerance':h['range_tolerance'],
                       'leg_height':leg_h, 'shoulder_height':height*(.62+.31/2)}
+        y = h['yielding']
+        # Pedestrian decision-making only; nothing here reaches the AMR's sensors.
+        parameters.update({'yield_enabled': y['enabled'], 'yield_robot_model': y['robot_model'], 'radius': radius,
+                           'robot_half_length': y['robot_half_length'], 'robot_half_width': y['robot_half_width'],
+                           **{'yield_'+k: y[k] for k in ('margin', 'horizon', 'step', 'clear_time', 'release_hysteresis',
+                                                         'stop_buffer', 'max_wait', 'decision_rate', 'robot_stationary_speed')}})
         for key, value in parameters.items(): tag(plugin, key, value)
         waypoints = tag(plugin,'waypoints')
         for point in human['route']: tag(waypoints,'waypoint',point)

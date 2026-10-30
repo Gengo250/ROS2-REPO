@@ -14,10 +14,11 @@ def generate_launch_description():
           DeclareLaunchArgument('map',default_value=str(share()/'maps/warehouse.yaml')),
           DeclareLaunchArgument('initialize',default_value='false',choices=['true','false']),
           DeclareLaunchArgument('initial_x',default_value='0'),DeclareLaunchArgument('initial_y',default_value='0'),
-          DeclareLaunchArgument('initial_yaw',default_value='0'),DeclareLaunchArgument('rviz',default_value='false')]
+          DeclareLaunchArgument('initial_yaw',default_value='0'),DeclareLaunchArgument('rviz',default_value='false'),
+          DeclareLaunchArgument('amcl_scan_topic',default_value='')]
     return LaunchDescription(args+[
         SetEnvironmentVariable('GZ_PARTITION',os.environ.get('GZ_PARTITION') or 'amr_navigation_'+uuid.uuid4().hex),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(str(Path(get_package_share_directory('digital_twin_gateway'))/'launch/digital_twin.launch.py')),
                                  launch_arguments={'scenario':LaunchConfiguration('scenario')}.items()),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(str(share()/'launch/navigation.launch.py')),
-                                 launch_arguments={key:LaunchConfiguration(key) for key in ['map','initialize','initial_x','initial_y','initial_yaw','rviz']}.items())])
+                                 launch_arguments={key:LaunchConfiguration(key) for key in ['map','initialize','initial_x','initial_y','initial_yaw','rviz','amcl_scan_topic']}.items())])

@@ -3,6 +3,8 @@
 
 Requires SLAM and exclusive /cmd_vel ownership. Rotation first, then forward
 translation from SLAM pose feedback; stops on a forward LiDAR obstacle, stale input or a wall deadline.
+Rotations need the 360-degree /top_scan to show nothing inside the rotation clearance;
+without it a rotation is refused unless --allow-unobserved-rotation is given.
 No world poses, routes or map cells are synthesized here.
 """
 import argparse
@@ -26,6 +28,8 @@ def main():
     p=argparse.ArgumentParser(); p.add_argument('--turn',type=float,default=0.,help='Relative radians, at most pi')
     p.add_argument('--heading',type=float,help='Optional absolute heading in SLAM map frame')
     p.add_argument('--distance',type=float,default=0.,help='Forward metres after turning')
+    p.add_argument('--rotation-clearance',type=float,default=.80,help='Required free radius around base_link while turning, m')
+    p.add_argument('--allow-unobserved-rotation',action='store_true',help='Operator accepts turning without 360-degree observation')
     p.add_argument('--output',type=Path,required=True); args=p.parse_args()
     if not 0 <= args.distance <= 25 or abs(args.turn)>math.pi: p.error('Invalid bounded jog')
     rclpy.init(); n=rclpy.create_node('supervised_mapping_jog',parameter_overrides=[Parameter('use_sim_time',value=True)])
@@ -34,6 +38,8 @@ def main():
     def get(key,m): latest[key]=m; received[key]=time.monotonic()
     n.create_subscription(Odometry,'/odom',lambda m:get('odom',m),qos_profile_sensor_data)
     n.create_subscription(LaserScan,'/scan',lambda m:get('scan',m),qos_profile_sensor_data)
+    top={}
+    n.create_subscription(LaserScan,'/top_scan',lambda m:top.update(msg=m,received=time.monotonic()),qos_profile_sensor_data)
     deadline=time.monotonic()+25
     while len(latest)<2:
         if time.monotonic()>deadline: raise TimeoutError('Sensors unavailable')
@@ -55,6 +61,30 @@ def main():
         state=Pose();state.position.x=tf.transform.translation.x;state.position.y=tf.transform.translation.y;state.orientation=tf.transform.rotation
         return state
     target=wrap(args.heading if args.heading is not None else yaw(pose().orientation)+args.turn); phase='turn'; origin=None
+    mount=None
+    def rotation_clearance():
+        """Smallest distance from base_link to any 360-degree return; None if unobserved."""
+        nonlocal mount
+        # Freshness by simulation stamp (robust to a slow real-time factor); a wall-clock
+        # bound still catches a stalled simulator or bridge.
+        if 'msg' not in top or time.monotonic()-top['received']>3.:return None
+        m=top['msg']
+        if n.get_clock().now().nanoseconds/1e9-(m.header.stamp.sec+m.header.stamp.nanosec/1e9)>.6:return None
+        if mount is None:
+            try:t=buffer.lookup_transform('base_link',m.header.frame_id,rclpy.time.Time()).transform
+            except Exception:return None  # static TF not received yet: treated as unobserved
+            mount=(t.translation.x,t.translation.y,yaw(t.rotation))
+        return min((math.hypot(mount[0]+r*math.cos(mount[2]+m.angle_min+i*m.angle_increment),
+                               mount[1]+r*math.sin(mount[2]+m.angle_min+i*m.angle_increment))
+                    for i,r in enumerate(m.ranges) if math.isfinite(r) and m.range_min<=r<=m.range_max),default=math.inf)
+    if abs(wrap(target-yaw(pose().orientation)))>=.02:
+        settle=time.monotonic()+5.
+        # Wait for the 360-degree scan AND its static mount transform before turning.
+        while ('msg' not in top or not buffer.can_transform('base_link',top['msg'].header.frame_id,rclpy.time.Time())) and time.monotonic()<settle:
+            rclpy.spin_once(n,timeout_sec=.1)
+        if 'msg' not in top and not args.allow_unobserved_rotation:
+            raise RuntimeError('Rotation refused: no 360-degree observation (/top_scan); pass --allow-unobserved-rotation only after inspecting the surroundings')
+    report['rotation_clearance_m']=None
     deadline=time.monotonic()+max(120,args.distance*10+120)
     last_sample=0;last_progress=0
     try:
@@ -69,9 +99,15 @@ def main():
             if now-last_progress>5:
                 print(json.dumps({'phase':phase,'map_pose':[state.position.x,state.position.y,yaw(state.orientation)],'remaining_m':args.distance-dist}),flush=True);last_progress=now
             if phase=='turn':
-                command(0.,max(-.15,min(.15,error)))
+                # Already aligned: no rotation is commanded, so no rotation clearance is needed.
                 if abs(error)<.02:
-                    phase='drive';origin=(state.position.x,state.position.y)
+                    phase='drive';origin=(state.position.x,state.position.y);continue
+                clearance=rotation_clearance()
+                if clearance is not None:
+                    report['rotation_clearance_m']=clearance if report['rotation_clearance_m'] is None else min(report['rotation_clearance_m'],clearance)
+                    if clearance<args.rotation_clearance: raise RuntimeError(f'Rotation stopped: obstacle {clearance:.2f} m from base_link')
+                elif not args.allow_unobserved_rotation: raise RuntimeError('Rotation stopped: 360-degree observation stale')
+                command(0.,max(-.15,min(.15,error)))
             elif args.distance-dist<.04:
                 report['passed']=True;report['distance_measured_m']=dist;break
             else:

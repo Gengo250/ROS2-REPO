@@ -36,10 +36,33 @@
   ],
   "validated": [
    [
+    "amr_01_spawn",
+    "charging_station",
+    "charging_station_via_north_cross_aisle",
+    "dispatch",
+    "dropoff_station_01",
+    "dropoff_station_01_via_east_service_aisle",
+    "dropoff_station_02",
+    "dropoff_station_02_via_east_service_aisle",
     "main_cross_aisle__aisle_01",
     "main_cross_aisle__aisle_02",
+    "main_cross_aisle__aisle_03",
+    "main_cross_aisle__east_service_aisle",
     "main_cross_aisle__west_service_aisle",
-    "pickup_station_01_via_west_service_aisle"
+    "north_cross_aisle__aisle_01",
+    "north_cross_aisle__aisle_03",
+    "north_cross_aisle__east_service_aisle",
+    "north_cross_aisle__west_service_aisle",
+    "pickup_station_01",
+    "pickup_station_01_via_west_service_aisle",
+    "pickup_station_02",
+    "pickup_station_02_via_west_service_aisle",
+    "receiving",
+    "south_cross_aisle__aisle_01",
+    "south_cross_aisle__aisle_03",
+    "south_cross_aisle__east_service_aisle",
+    "staging_area",
+    "staging_area_via_west_service_aisle"
    ]
   ]
  },
@@ -146,16 +169,16 @@
    "base_cost": 2.3,
    "cells": {
     "core": {
-     "free": 1560,
+     "free": 1578,
      "occupied": 0,
      "outside": 0,
-     "unknown": 15
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2769,
+     "free": 2836,
      "occupied": 0,
      "outside": 0,
-     "unknown": 65
+     "unknown": 0
     }
    },
    "connection": "amr_01_spawn--main_cross_aisle__west_service_aisle",
@@ -164,9 +187,9 @@
    "distance": 2.3,
    "id": "amr_01_spawn->main_cross_aisle__west_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "amr_01_spawn",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__west_service_aisle",
    "width": 4,
    "zones": []
@@ -175,16 +198,16 @@
    "base_cost": 1.0,
    "cells": {
     "core": {
-     "free": 836,
+     "free": 1129,
      "occupied": 0,
      "outside": 0,
-     "unknown": 296
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1581,
+     "free": 2051,
      "occupied": 0,
      "outside": 0,
-     "unknown": 480
+     "unknown": 0
     }
    },
    "connection": "amr_01_spawn--receiving",
@@ -193,9 +216,9 @@
    "distance": 1.0,
    "id": "amr_01_spawn->receiving",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "amr_01_spawn",
-   "status": "unmapped",
+   "status": "validated",
    "target": "receiving",
    "width": 4,
    "zones": []
@@ -204,16 +227,16 @@
    "base_cost": 1.726268,
    "cells": {
     "core": {
-     "free": 0,
+     "free": 1372,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1381
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 2495,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2496
+     "unknown": 0
     }
    },
    "connection": "charging_station--charging_station_via_north_cross_aisle",
@@ -222,9 +245,9 @@
    "distance": 1.726268,
    "id": "charging_station->charging_station_via_north_cross_aisle",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "charging_station",
-   "status": "unmapped",
+   "status": "validated",
    "target": "charging_station_via_north_cross_aisle",
    "width": 2.2,
    "zones": []
@@ -233,16 +256,16 @@
    "base_cost": 1.726268,
    "cells": {
     "core": {
-     "free": 0,
+     "free": 1372,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1381
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 2495,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2496
+     "unknown": 0
     }
    },
    "connection": "charging_station--charging_station_via_north_cross_aisle",
@@ -251,9 +274,9 @@
    "distance": 1.726268,
    "id": "charging_station_via_north_cross_aisle->charging_station",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "charging_station_via_north_cross_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "charging_station",
    "width": 2.2,
    "zones": []
@@ -262,16 +285,16 @@
    "base_cost": 1.9,
    "cells": {
     "core": {
-     "free": 53,
+     "free": 1436,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1386
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 104,
+     "free": 2593,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2495
+     "unknown": 0
     }
    },
    "connection": "charging_station_via_north_cross_aisle--north_cross_aisle__east_service_aisle",
@@ -280,9 +303,9 @@
    "distance": 1.9,
    "id": "charging_station_via_north_cross_aisle->north_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "charging_station_via_north_cross_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -291,16 +314,16 @@
    "base_cost": 3.9,
    "cells": {
     "core": {
-     "free": 0,
+     "free": 2117,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2116
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 5,
+     "free": 3758,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3762
+     "unknown": 0
     }
    },
    "connection": "dispatch--main_cross_aisle__east_service_aisle",
@@ -309,9 +332,9 @@
    "distance": 3.9,
    "id": "dispatch->main_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dispatch",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__east_service_aisle",
    "width": 4,
    "zones": []
@@ -320,16 +343,16 @@
    "base_cost": 2.8,
    "cells": {
     "core": {
-     "free": 44,
+     "free": 1737,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1703
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 80,
+     "free": 3122,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3037
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_01--dropoff_station_01_via_east_service_aisle",
@@ -338,9 +361,9 @@
    "distance": 2.8,
    "id": "dropoff_station_01->dropoff_station_01_via_east_service_aisle",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_01",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_01_via_east_service_aisle",
    "width": 2.1,
    "zones": []
@@ -349,16 +372,16 @@
    "base_cost": 2.8,
    "cells": {
     "core": {
-     "free": 44,
+     "free": 1737,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1703
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 80,
+     "free": 3122,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3037
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_01--dropoff_station_01_via_east_service_aisle",
@@ -367,9 +390,9 @@
    "distance": 2.8,
    "id": "dropoff_station_01_via_east_service_aisle->dropoff_station_01",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_01_via_east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_01",
    "width": 2.1,
    "zones": []
@@ -378,16 +401,16 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 578,
+     "free": 2492,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1914
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 996,
+     "free": 4397,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3405
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_01_via_east_service_aisle--main_cross_aisle__east_service_aisle",
@@ -396,9 +419,9 @@
    "distance": 5.0,
    "id": "dropoff_station_01_via_east_service_aisle->main_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_01_via_east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -407,16 +430,16 @@
    "base_cost": 3.5,
    "cells": {
     "core": {
-     "free": 130,
+     "free": 1982,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1854
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 253,
+     "free": 3533,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3283
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_01_via_east_service_aisle--south_cross_aisle__east_service_aisle",
@@ -425,9 +448,9 @@
    "distance": 3.5,
    "id": "dropoff_station_01_via_east_service_aisle->south_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_01_via_east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "south_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -436,16 +459,16 @@
    "base_cost": 2.8,
    "cells": {
     "core": {
-     "free": 0,
+     "free": 1741,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1742
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 3120,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3121
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_02--dropoff_station_02_via_east_service_aisle",
@@ -454,9 +477,9 @@
    "distance": 2.8,
    "id": "dropoff_station_02->dropoff_station_02_via_east_service_aisle",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_02",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_02_via_east_service_aisle",
    "width": 2.1,
    "zones": []
@@ -465,16 +488,16 @@
    "base_cost": 2.8,
    "cells": {
     "core": {
-     "free": 0,
+     "free": 1741,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1742
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 3120,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3121
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_02--dropoff_station_02_via_east_service_aisle",
@@ -483,9 +506,9 @@
    "distance": 2.8,
    "id": "dropoff_station_02_via_east_service_aisle->dropoff_station_02",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_02_via_east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_02",
    "width": 2.1,
    "zones": []
@@ -494,16 +517,16 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 474,
+     "free": 2493,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2016
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 806,
+     "free": 4402,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3597
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_02_via_east_service_aisle--main_cross_aisle__east_service_aisle",
@@ -512,9 +535,9 @@
    "distance": 5.0,
    "id": "dropoff_station_02_via_east_service_aisle->main_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_02_via_east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -523,16 +546,16 @@
    "base_cost": 3.5,
    "cells": {
     "core": {
-     "free": 53,
+     "free": 1983,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1928
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 106,
+     "free": 3525,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3425
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_02_via_east_service_aisle--north_cross_aisle__east_service_aisle",
@@ -541,9 +564,9 @@
    "distance": 3.5,
    "id": "dropoff_station_02_via_east_service_aisle->north_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "dropoff_station_02_via_east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -552,13 +575,13 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 2222,
+     "free": 2223,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 3934,
+     "free": 3941,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -581,13 +604,13 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 2224,
+     "free": 2221,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 3939,
+     "free": 3930,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -610,16 +633,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 2253,
-     "occupied": 3,
+     "free": 3684,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 1433
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3986,
-     "occupied": 5,
+     "free": 6436,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 2439
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_01--north_cross_aisle__aisle_01",
@@ -628,9 +651,9 @@
    "distance": 8.5,
    "id": "main_cross_aisle__aisle_01->north_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_01",
-   "status": "blocked",
+   "status": "validated",
    "target": "north_cross_aisle__aisle_01",
    "width": 3,
    "zones": []
@@ -639,16 +662,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 2789,
-     "occupied": 44,
+     "free": 3684,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 853
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 4817,
-     "occupied": 52,
+     "free": 6426,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 1562
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_01--south_cross_aisle__aisle_01",
@@ -657,9 +680,9 @@
    "distance": 8.5,
    "id": "main_cross_aisle__aisle_01->south_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_01",
-   "status": "blocked",
+   "status": "validated",
    "target": "south_cross_aisle__aisle_01",
    "width": 3,
    "zones": [
@@ -670,13 +693,13 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 2222,
+     "free": 2223,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 3934,
+     "free": 3941,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -699,16 +722,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1493,
+     "free": 2220,
      "occupied": 0,
      "outside": 0,
-     "unknown": 724
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3075,
+     "free": 3939,
      "occupied": 0,
      "outside": 0,
-     "unknown": 859
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_02--main_cross_aisle__aisle_03",
@@ -717,9 +740,9 @@
    "distance": 4.2,
    "id": "main_cross_aisle__aisle_02->main_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_02",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_03",
    "width": 4,
    "zones": []
@@ -728,14 +751,14 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 3683,
+     "free": 3686,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 6429,
-     "occupied": 8,
+     "free": 6424,
+     "occupied": 1,
      "outside": 0,
      "unknown": 0
     }
@@ -757,16 +780,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 3414,
-     "occupied": 17,
+     "free": 3686,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 254
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 5824,
-     "occupied": 17,
+     "free": 6431,
+     "occupied": 3,
      "outside": 0,
-     "unknown": 591
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_02--south_cross_aisle__aisle_02",
@@ -775,7 +798,7 @@
    "distance": 8.5,
    "id": "main_cross_aisle__aisle_02->south_cross_aisle__aisle_02",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "main_cross_aisle__aisle_02",
    "status": "blocked",
    "target": "south_cross_aisle__aisle_02",
@@ -786,16 +809,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1493,
+     "free": 2220,
      "occupied": 0,
      "outside": 0,
-     "unknown": 724
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3075,
+     "free": 3939,
      "occupied": 0,
      "outside": 0,
-     "unknown": 859
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_02--main_cross_aisle__aisle_03",
@@ -804,9 +827,9 @@
    "distance": 4.2,
    "id": "main_cross_aisle__aisle_03->main_cross_aisle__aisle_02",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_03",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_02",
    "width": 4,
    "zones": []
@@ -815,16 +838,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 178,
+     "free": 2222,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2034
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 738,
+     "free": 3940,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3190
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_03--main_cross_aisle__east_service_aisle",
@@ -833,9 +856,9 @@
    "distance": 4.2,
    "id": "main_cross_aisle__aisle_03->main_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_03",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__east_service_aisle",
    "width": 4,
    "zones": []
@@ -844,16 +867,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 2162,
+     "free": 3683,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1514
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3924,
-     "occupied": 1,
+     "free": 6435,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 2502
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_03--north_cross_aisle__aisle_03",
@@ -862,9 +885,9 @@
    "distance": 8.5,
    "id": "main_cross_aisle__aisle_03->north_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "occupied map cells inside the required clearance",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_03",
-   "status": "blocked",
+   "status": "validated",
    "target": "north_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -873,16 +896,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 1612,
-     "occupied": 15,
+     "free": 3684,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 2052
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2897,
-     "occupied": 24,
+     "free": 6426,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 3501
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_03--south_cross_aisle__aisle_03",
@@ -891,9 +914,9 @@
    "distance": 8.5,
    "id": "main_cross_aisle__aisle_03->south_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__aisle_03",
-   "status": "blocked",
+   "status": "validated",
    "target": "south_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -902,16 +925,16 @@
    "base_cost": 3.9,
    "cells": {
     "core": {
-     "free": 0,
+     "free": 2117,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2116
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 5,
+     "free": 3758,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3762
+     "unknown": 0
     }
    },
    "connection": "dispatch--main_cross_aisle__east_service_aisle",
@@ -920,9 +943,9 @@
    "distance": 3.9,
    "id": "main_cross_aisle__east_service_aisle->dispatch",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dispatch",
    "width": 4,
    "zones": []
@@ -931,16 +954,16 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 578,
+     "free": 2492,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1914
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 996,
+     "free": 4397,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3405
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_01_via_east_service_aisle--main_cross_aisle__east_service_aisle",
@@ -949,9 +972,9 @@
    "distance": 5.0,
    "id": "main_cross_aisle__east_service_aisle->dropoff_station_01_via_east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_01_via_east_service_aisle",
    "width": 3,
    "zones": []
@@ -960,16 +983,16 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 474,
+     "free": 2493,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2016
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 806,
+     "free": 4402,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3597
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_02_via_east_service_aisle--main_cross_aisle__east_service_aisle",
@@ -978,9 +1001,9 @@
    "distance": 5.0,
    "id": "main_cross_aisle__east_service_aisle->dropoff_station_02_via_east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_02_via_east_service_aisle",
    "width": 3,
    "zones": []
@@ -989,16 +1012,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 178,
+     "free": 2222,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2034
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 738,
+     "free": 3940,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3190
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_03--main_cross_aisle__east_service_aisle",
@@ -1007,9 +1030,9 @@
    "distance": 4.2,
    "id": "main_cross_aisle__east_service_aisle->main_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_03",
    "width": 4,
    "zones": []
@@ -1018,16 +1041,16 @@
    "base_cost": 2.3,
    "cells": {
     "core": {
-     "free": 1560,
+     "free": 1578,
      "occupied": 0,
      "outside": 0,
-     "unknown": 15
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2769,
+     "free": 2836,
      "occupied": 0,
      "outside": 0,
-     "unknown": 65
+     "unknown": 0
     }
    },
    "connection": "amr_01_spawn--main_cross_aisle__west_service_aisle",
@@ -1036,9 +1059,9 @@
    "distance": 2.3,
    "id": "main_cross_aisle__west_service_aisle->amr_01_spawn",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "amr_01_spawn",
    "width": 4,
    "zones": []
@@ -1047,13 +1070,13 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 2224,
+     "free": 2221,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 3939,
+     "free": 3930,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -1076,13 +1099,13 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 2492,
+     "free": 2493,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 4403,
+     "free": 4405,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -1105,16 +1128,16 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 1750,
+     "free": 2492,
      "occupied": 0,
      "outside": 0,
-     "unknown": 744
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3229,
-     "occupied": 1,
+     "free": 4393,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 1165
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
@@ -1123,9 +1146,9 @@
    "distance": 5.0,
    "id": "main_cross_aisle__west_service_aisle->pickup_station_02_via_west_service_aisle",
    "kind": "corridor",
-   "reason": "occupied map cells inside the required clearance",
+   "reason": "known free footprint and clearance",
    "source": "main_cross_aisle__west_service_aisle",
-   "status": "blocked",
+   "status": "validated",
    "target": "pickup_station_02_via_west_service_aisle",
    "width": 3,
    "zones": []
@@ -1134,16 +1157,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 2253,
-     "occupied": 3,
+     "free": 3684,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 1433
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3986,
-     "occupied": 5,
+     "free": 6436,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 2439
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_01--north_cross_aisle__aisle_01",
@@ -1152,9 +1175,9 @@
    "distance": 8.5,
    "id": "north_cross_aisle__aisle_01->main_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__aisle_01",
-   "status": "blocked",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_01",
    "width": 3,
    "zones": []
@@ -1163,16 +1186,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1449,
+     "free": 2220,
      "occupied": 0,
      "outside": 0,
-     "unknown": 777
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2571,
-     "occupied": 8,
+     "free": 3940,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 1363
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_01--north_cross_aisle__aisle_02",
@@ -1192,16 +1215,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 769,
+     "free": 2218,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1456
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1476,
+     "free": 3929,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2457
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_01--north_cross_aisle__west_service_aisle",
@@ -1210,9 +1233,9 @@
    "distance": 4.2,
    "id": "north_cross_aisle__aisle_01->north_cross_aisle__west_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__aisle_01",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__west_service_aisle",
    "width": 3,
    "zones": []
@@ -1221,14 +1244,14 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 3683,
+     "free": 3686,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 6429,
-     "occupied": 8,
+     "free": 6424,
+     "occupied": 1,
      "outside": 0,
      "unknown": 0
     }
@@ -1250,16 +1273,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1449,
+     "free": 2220,
      "occupied": 0,
      "outside": 0,
-     "unknown": 777
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2571,
-     "occupied": 8,
+     "free": 3940,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 1363
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_01--north_cross_aisle__aisle_02",
@@ -1279,16 +1302,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1934,
+     "free": 2220,
      "occupied": 0,
      "outside": 0,
-     "unknown": 287
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3411,
-     "occupied": 8,
+     "free": 3937,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 521
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_02--north_cross_aisle__aisle_03",
@@ -1308,16 +1331,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 2162,
+     "free": 3683,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1514
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3924,
-     "occupied": 1,
+     "free": 6435,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 2502
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_03--north_cross_aisle__aisle_03",
@@ -1326,9 +1349,9 @@
    "distance": 8.5,
    "id": "north_cross_aisle__aisle_03->main_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "occupied map cells inside the required clearance",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__aisle_03",
-   "status": "blocked",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -1337,16 +1360,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1934,
+     "free": 2220,
      "occupied": 0,
      "outside": 0,
-     "unknown": 287
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3411,
-     "occupied": 8,
+     "free": 3937,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 521
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_02--north_cross_aisle__aisle_03",
@@ -1366,16 +1389,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 888,
+     "free": 2222,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1328
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1555,
+     "free": 3942,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2378
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_03--north_cross_aisle__east_service_aisle",
@@ -1384,9 +1407,9 @@
    "distance": 4.2,
    "id": "north_cross_aisle__aisle_03->north_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__aisle_03",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -1395,16 +1418,16 @@
    "base_cost": 1.9,
    "cells": {
     "core": {
-     "free": 53,
+     "free": 1436,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1386
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 104,
+     "free": 2593,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2495
+     "unknown": 0
     }
    },
    "connection": "charging_station_via_north_cross_aisle--north_cross_aisle__east_service_aisle",
@@ -1413,9 +1436,9 @@
    "distance": 1.9,
    "id": "north_cross_aisle__east_service_aisle->charging_station_via_north_cross_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "charging_station_via_north_cross_aisle",
    "width": 3,
    "zones": []
@@ -1424,16 +1447,16 @@
    "base_cost": 3.5,
    "cells": {
     "core": {
-     "free": 53,
+     "free": 1983,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1928
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 106,
+     "free": 3525,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3425
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_02_via_east_service_aisle--north_cross_aisle__east_service_aisle",
@@ -1442,9 +1465,9 @@
    "distance": 3.5,
    "id": "north_cross_aisle__east_service_aisle->dropoff_station_02_via_east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_02_via_east_service_aisle",
    "width": 3,
    "zones": []
@@ -1453,16 +1476,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 888,
+     "free": 2222,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1328
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1555,
+     "free": 3942,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2378
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_03--north_cross_aisle__east_service_aisle",
@@ -1471,9 +1494,9 @@
    "distance": 4.2,
    "id": "north_cross_aisle__east_service_aisle->north_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -1482,16 +1505,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 769,
+     "free": 2218,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1456
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1476,
+     "free": 3929,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2457
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__aisle_01--north_cross_aisle__west_service_aisle",
@@ -1500,9 +1523,9 @@
    "distance": 4.2,
    "id": "north_cross_aisle__west_service_aisle->north_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__aisle_01",
    "width": 3,
    "zones": []
@@ -1511,16 +1534,16 @@
    "base_cost": 3.5,
    "cells": {
     "core": {
-     "free": 628,
+     "free": 1984,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1357
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1366,
+     "free": 3533,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2166
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
@@ -1529,9 +1552,9 @@
    "distance": 3.5,
    "id": "north_cross_aisle__west_service_aisle->pickup_station_02_via_west_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "north_cross_aisle__west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "pickup_station_02_via_west_service_aisle",
    "width": 3,
    "zones": []
@@ -1540,16 +1563,16 @@
    "base_cost": 2.2,
    "cells": {
     "core": {
-     "free": 1406,
+     "free": 1541,
      "occupied": 0,
      "outside": 0,
-     "unknown": 135
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2507,
+     "free": 2775,
      "occupied": 0,
      "outside": 0,
-     "unknown": 268
+     "unknown": 0
     }
    },
    "connection": "pickup_station_01--pickup_station_01_via_west_service_aisle",
@@ -1558,9 +1581,9 @@
    "distance": 2.2,
    "id": "pickup_station_01->pickup_station_01_via_west_service_aisle",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_01",
-   "status": "unmapped",
+   "status": "validated",
    "target": "pickup_station_01_via_west_service_aisle",
    "width": 2.1,
    "zones": []
@@ -1569,13 +1592,13 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 2492,
+     "free": 2493,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 4403,
+     "free": 4405,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -1598,16 +1621,16 @@
    "base_cost": 2.2,
    "cells": {
     "core": {
-     "free": 1406,
+     "free": 1541,
      "occupied": 0,
      "outside": 0,
-     "unknown": 135
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2507,
+     "free": 2775,
      "occupied": 0,
      "outside": 0,
-     "unknown": 268
+     "unknown": 0
     }
    },
    "connection": "pickup_station_01--pickup_station_01_via_west_service_aisle",
@@ -1616,9 +1639,9 @@
    "distance": 2.2,
    "id": "pickup_station_01_via_west_service_aisle->pickup_station_01",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_01_via_west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "pickup_station_01",
    "width": 2.1,
    "zones": []
@@ -1627,16 +1650,16 @@
    "base_cost": 2.0,
    "cells": {
     "core": {
-     "free": 1471,
+     "free": 1465,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 2659,
+     "free": 2658,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3
+     "unknown": 0
     }
    },
    "connection": "pickup_station_01_via_west_service_aisle--staging_area_via_west_service_aisle",
@@ -1645,9 +1668,9 @@
    "distance": 2.0,
    "id": "pickup_station_01_via_west_service_aisle->staging_area_via_west_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_01_via_west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "staging_area_via_west_service_aisle",
    "width": 3,
    "zones": []
@@ -1656,16 +1679,16 @@
    "base_cost": 2.2,
    "cells": {
     "core": {
-     "free": 1033,
+     "free": 1540,
      "occupied": 0,
      "outside": 0,
-     "unknown": 509
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1850,
+     "free": 2771,
      "occupied": 0,
      "outside": 0,
-     "unknown": 928
+     "unknown": 0
     }
    },
    "connection": "pickup_station_02--pickup_station_02_via_west_service_aisle",
@@ -1674,9 +1697,9 @@
    "distance": 2.2,
    "id": "pickup_station_02->pickup_station_02_via_west_service_aisle",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_02",
-   "status": "unmapped",
+   "status": "validated",
    "target": "pickup_station_02_via_west_service_aisle",
    "width": 2.1,
    "zones": []
@@ -1685,16 +1708,16 @@
    "base_cost": 5.0,
    "cells": {
     "core": {
-     "free": 1750,
+     "free": 2492,
      "occupied": 0,
      "outside": 0,
-     "unknown": 744
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3229,
-     "occupied": 1,
+     "free": 4393,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 1165
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
@@ -1703,9 +1726,9 @@
    "distance": 5.0,
    "id": "pickup_station_02_via_west_service_aisle->main_cross_aisle__west_service_aisle",
    "kind": "corridor",
-   "reason": "occupied map cells inside the required clearance",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_02_via_west_service_aisle",
-   "status": "blocked",
+   "status": "validated",
    "target": "main_cross_aisle__west_service_aisle",
    "width": 3,
    "zones": []
@@ -1714,16 +1737,16 @@
    "base_cost": 3.5,
    "cells": {
     "core": {
-     "free": 628,
+     "free": 1984,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1357
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1366,
+     "free": 3533,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2166
+     "unknown": 0
     }
    },
    "connection": "north_cross_aisle__west_service_aisle--pickup_station_02_via_west_service_aisle",
@@ -1732,9 +1755,9 @@
    "distance": 3.5,
    "id": "pickup_station_02_via_west_service_aisle->north_cross_aisle__west_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_02_via_west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "north_cross_aisle__west_service_aisle",
    "width": 3,
    "zones": []
@@ -1743,16 +1766,16 @@
    "base_cost": 2.2,
    "cells": {
     "core": {
-     "free": 1033,
+     "free": 1540,
      "occupied": 0,
      "outside": 0,
-     "unknown": 509
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1850,
+     "free": 2771,
      "occupied": 0,
      "outside": 0,
-     "unknown": 928
+     "unknown": 0
     }
    },
    "connection": "pickup_station_02--pickup_station_02_via_west_service_aisle",
@@ -1761,9 +1784,9 @@
    "distance": 2.2,
    "id": "pickup_station_02_via_west_service_aisle->pickup_station_02",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "pickup_station_02_via_west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "pickup_station_02",
    "width": 2.1,
    "zones": []
@@ -1772,16 +1795,16 @@
    "base_cost": 1.0,
    "cells": {
     "core": {
-     "free": 836,
+     "free": 1129,
      "occupied": 0,
      "outside": 0,
-     "unknown": 296
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1581,
+     "free": 2051,
      "occupied": 0,
      "outside": 0,
-     "unknown": 480
+     "unknown": 0
     }
    },
    "connection": "amr_01_spawn--receiving",
@@ -1790,9 +1813,9 @@
    "distance": 1.0,
    "id": "receiving->amr_01_spawn",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "receiving",
-   "status": "unmapped",
+   "status": "validated",
    "target": "amr_01_spawn",
    "width": 4,
    "zones": []
@@ -1801,16 +1824,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 2789,
-     "occupied": 44,
+     "free": 3684,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 853
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 4817,
-     "occupied": 52,
+     "free": 6426,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 1562
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_01--south_cross_aisle__aisle_01",
@@ -1819,9 +1842,9 @@
    "distance": 8.5,
    "id": "south_cross_aisle__aisle_01->main_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "known free footprint and clearance",
    "source": "south_cross_aisle__aisle_01",
-   "status": "blocked",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_01",
    "width": 3,
    "zones": [
@@ -1832,16 +1855,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1393,
-     "occupied": 15,
+     "free": 2224,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 814
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2535,
-     "occupied": 25,
+     "free": 3937,
+     "occupied": 3,
      "outside": 0,
-     "unknown": 1375
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_01--south_cross_aisle__aisle_02",
@@ -1850,7 +1873,7 @@
    "distance": 4.2,
    "id": "south_cross_aisle__aisle_01->south_cross_aisle__aisle_02",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__aisle_01",
    "status": "blocked",
    "target": "south_cross_aisle__aisle_02",
@@ -1861,16 +1884,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1796,
-     "occupied": 31,
+     "free": 2222,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 393
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3106,
-     "occupied": 45,
+     "free": 3928,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 785
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_01--south_cross_aisle__west_service_aisle",
@@ -1879,7 +1902,7 @@
    "distance": 4.2,
    "id": "south_cross_aisle__aisle_01->south_cross_aisle__west_service_aisle",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__aisle_01",
    "status": "blocked",
    "target": "south_cross_aisle__west_service_aisle",
@@ -1890,16 +1913,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 3414,
-     "occupied": 17,
+     "free": 3686,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 254
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 5824,
-     "occupied": 17,
+     "free": 6431,
+     "occupied": 3,
      "outside": 0,
-     "unknown": 591
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_02--south_cross_aisle__aisle_02",
@@ -1908,7 +1931,7 @@
    "distance": 8.5,
    "id": "south_cross_aisle__aisle_02->main_cross_aisle__aisle_02",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__aisle_02",
    "status": "blocked",
    "target": "main_cross_aisle__aisle_02",
@@ -1919,16 +1942,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1393,
-     "occupied": 15,
+     "free": 2224,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 814
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2535,
-     "occupied": 25,
+     "free": 3937,
+     "occupied": 3,
      "outside": 0,
-     "unknown": 1375
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_01--south_cross_aisle__aisle_02",
@@ -1937,7 +1960,7 @@
    "distance": 4.2,
    "id": "south_cross_aisle__aisle_02->south_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__aisle_02",
    "status": "blocked",
    "target": "south_cross_aisle__aisle_01",
@@ -1948,16 +1971,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 910,
+     "free": 2222,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1313
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1604,
-     "occupied": 0,
+     "free": 3935,
+     "occupied": 3,
      "outside": 0,
-     "unknown": 2325
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_02--south_cross_aisle__aisle_03",
@@ -1966,9 +1989,9 @@
    "distance": 4.2,
    "id": "south_cross_aisle__aisle_02->south_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__aisle_02",
-   "status": "unmapped",
+   "status": "blocked",
    "target": "south_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -1977,16 +2000,16 @@
    "base_cost": 8.5,
    "cells": {
     "core": {
-     "free": 1612,
-     "occupied": 15,
+     "free": 3684,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 2052
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2897,
-     "occupied": 24,
+     "free": 6426,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 3501
+     "unknown": 0
     }
    },
    "connection": "main_cross_aisle__aisle_03--south_cross_aisle__aisle_03",
@@ -1995,9 +2018,9 @@
    "distance": 8.5,
    "id": "south_cross_aisle__aisle_03->main_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "known free footprint and clearance",
    "source": "south_cross_aisle__aisle_03",
-   "status": "blocked",
+   "status": "validated",
    "target": "main_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -2006,16 +2029,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 910,
+     "free": 2222,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1313
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1604,
-     "occupied": 0,
+     "free": 3935,
+     "occupied": 3,
      "outside": 0,
-     "unknown": 2325
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_02--south_cross_aisle__aisle_03",
@@ -2024,9 +2047,9 @@
    "distance": 4.2,
    "id": "south_cross_aisle__aisle_03->south_cross_aisle__aisle_02",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__aisle_03",
-   "status": "unmapped",
+   "status": "blocked",
    "target": "south_cross_aisle__aisle_02",
    "width": 3,
    "zones": []
@@ -2035,16 +2058,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 123,
+     "free": 2225,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2098
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 240,
+     "free": 3941,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3689
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_03--south_cross_aisle__east_service_aisle",
@@ -2053,9 +2076,9 @@
    "distance": 4.2,
    "id": "south_cross_aisle__aisle_03->south_cross_aisle__east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "south_cross_aisle__aisle_03",
-   "status": "unmapped",
+   "status": "validated",
    "target": "south_cross_aisle__east_service_aisle",
    "width": 3,
    "zones": []
@@ -2064,16 +2087,16 @@
    "base_cost": 3.5,
    "cells": {
     "core": {
-     "free": 130,
+     "free": 1982,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1854
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 253,
+     "free": 3533,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3283
+     "unknown": 0
     }
    },
    "connection": "dropoff_station_01_via_east_service_aisle--south_cross_aisle__east_service_aisle",
@@ -2082,9 +2105,9 @@
    "distance": 3.5,
    "id": "south_cross_aisle__east_service_aisle->dropoff_station_01_via_east_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "south_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "dropoff_station_01_via_east_service_aisle",
    "width": 3,
    "zones": []
@@ -2093,16 +2116,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 123,
+     "free": 2225,
      "occupied": 0,
      "outside": 0,
-     "unknown": 2098
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 240,
+     "free": 3941,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3689
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_03--south_cross_aisle__east_service_aisle",
@@ -2111,9 +2134,9 @@
    "distance": 4.2,
    "id": "south_cross_aisle__east_service_aisle->south_cross_aisle__aisle_03",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "south_cross_aisle__east_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "south_cross_aisle__aisle_03",
    "width": 3,
    "zones": []
@@ -2122,16 +2145,16 @@
    "base_cost": 4.2,
    "cells": {
     "core": {
-     "free": 1796,
-     "occupied": 31,
+     "free": 2222,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 393
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 3106,
-     "occupied": 45,
+     "free": 3928,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 785
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__aisle_01--south_cross_aisle__west_service_aisle",
@@ -2140,7 +2163,7 @@
    "distance": 4.2,
    "id": "south_cross_aisle__west_service_aisle->south_cross_aisle__aisle_01",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__west_service_aisle",
    "status": "blocked",
    "target": "south_cross_aisle__aisle_01",
@@ -2151,16 +2174,16 @@
    "base_cost": 1.5,
    "cells": {
     "core": {
-     "free": 1292,
-     "occupied": 2,
+     "free": 1303,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 7
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2341,
-     "occupied": 6,
+     "free": 2361,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 20
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__west_service_aisle--staging_area_via_west_service_aisle",
@@ -2169,7 +2192,7 @@
    "distance": 1.5,
    "id": "south_cross_aisle__west_service_aisle->staging_area_via_west_service_aisle",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "south_cross_aisle__west_service_aisle",
    "status": "blocked",
    "target": "staging_area_via_west_service_aisle",
@@ -2180,16 +2203,16 @@
    "base_cost": 1.529706,
    "cells": {
     "core": {
-     "free": 978,
+     "free": 1309,
      "occupied": 0,
      "outside": 0,
-     "unknown": 328
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1718,
+     "free": 2375,
      "occupied": 0,
      "outside": 0,
-     "unknown": 665
+     "unknown": 0
     }
    },
    "connection": "staging_area--staging_area_via_west_service_aisle",
@@ -2198,9 +2221,9 @@
    "distance": 1.529706,
    "id": "staging_area->staging_area_via_west_service_aisle",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "staging_area",
-   "status": "unmapped",
+   "status": "validated",
    "target": "staging_area_via_west_service_aisle",
    "width": 2.6,
    "zones": []
@@ -2209,16 +2232,16 @@
    "base_cost": 2.0,
    "cells": {
     "core": {
-     "free": 1471,
+     "free": 1465,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 2659,
+     "free": 2658,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3
+     "unknown": 0
     }
    },
    "connection": "pickup_station_01_via_west_service_aisle--staging_area_via_west_service_aisle",
@@ -2227,9 +2250,9 @@
    "distance": 2.0,
    "id": "staging_area_via_west_service_aisle->pickup_station_01_via_west_service_aisle",
    "kind": "corridor",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "staging_area_via_west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "pickup_station_01_via_west_service_aisle",
    "width": 3,
    "zones": []
@@ -2238,16 +2261,16 @@
    "base_cost": 1.5,
    "cells": {
     "core": {
-     "free": 1292,
-     "occupied": 2,
+     "free": 1303,
+     "occupied": 0,
      "outside": 0,
-     "unknown": 7
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 2341,
-     "occupied": 6,
+     "free": 2361,
+     "occupied": 1,
      "outside": 0,
-     "unknown": 20
+     "unknown": 0
     }
    },
    "connection": "south_cross_aisle__west_service_aisle--staging_area_via_west_service_aisle",
@@ -2256,7 +2279,7 @@
    "distance": 1.5,
    "id": "staging_area_via_west_service_aisle->south_cross_aisle__west_service_aisle",
    "kind": "corridor",
-   "reason": "occupied map cells under the robot footprint",
+   "reason": "occupied map cells inside the required clearance",
    "source": "staging_area_via_west_service_aisle",
    "status": "blocked",
    "target": "south_cross_aisle__west_service_aisle",
@@ -2267,16 +2290,16 @@
    "base_cost": 1.529706,
    "cells": {
     "core": {
-     "free": 978,
+     "free": 1309,
      "occupied": 0,
      "outside": 0,
-     "unknown": 328
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1718,
+     "free": 2375,
      "occupied": 0,
      "outside": 0,
-     "unknown": 665
+     "unknown": 0
     }
    },
    "connection": "staging_area--staging_area_via_west_service_aisle",
@@ -2285,41 +2308,41 @@
    "distance": 1.529706,
    "id": "staging_area_via_west_service_aisle->staging_area",
    "kind": "station_access",
-   "reason": "unknown map cells under the footprint or clearance band",
+   "reason": "known free footprint and clearance",
    "source": "staging_area_via_west_service_aisle",
-   "status": "unmapped",
+   "status": "validated",
    "target": "staging_area",
    "width": 2.6,
    "zones": []
   }
  ],
  "frame_id": "world",
- "graph_version": "0e127f48069cca0a",
+ "graph_version": "31fba3aa050bd251",
  "map": {
-  "height": 491,
+  "height": 925,
   "origin": [
-   -10.196,
-   -10.052,
+   -12.147,
+   -27.918,
    0.0
   ],
   "resolution": 0.05,
-  "version": "0b67a616ecd4055363e50f0213daf27fd31611f564fede853ca90fdc4214e91d",
-  "width": 729
+  "version": "09d8124316414625bf507bc806ace36692d948aab0c7e3e6e45acb111f44c575",
+  "width": 898
  },
  "nodes": [
   {
    "cells": {
     "core": {
-     "free": 606,
+     "free": 620,
      "occupied": 0,
      "outside": 0,
-     "unknown": 15
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 1196,
+     "free": 1259,
      "occupied": 0,
      "outside": 0,
-     "unknown": 65
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2329,32 +2352,32 @@
    "frame_id": "world",
    "id": "amr_01_spawn",
    "map_position": [
-    0.0387,
-    -0.0945
+    0.0652,
+    0.036
    ],
    "position": [
     -11,
     0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0689,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0785,
+   "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 0,
+     "free": 613,
      "occupied": 0,
      "outside": 0,
-     "unknown": 618
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 1256,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1261
+     "unknown": 0
     }
    },
    "corridors": [],
@@ -2362,33 +2385,33 @@
    "frame_id": "world",
    "id": "charging_station",
    "map_position": [
-    22.6174,
-    8.4338
+    22.814,
+    8.0997
    ],
-   "map_yaw": 1.585296,
+   "map_yaw": 1.564796,
    "position": [
     11.7,
     8.2
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": null,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0403,
+   "status": "validated",
    "type": "STATION",
    "yaw": 1.570796327
   },
   {
    "cells": {
     "core": {
-     "free": 0,
+     "free": 615,
      "occupied": 0,
      "outside": 0,
-     "unknown": 621
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 1260,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1260
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2398,32 +2421,32 @@
    "frame_id": "world",
    "id": "charging_station_via_north_cross_aisle",
    "map_position": [
-    20.9132,
-    8.7091
+    21.1158,
+    8.4098
    ],
    "position": [
     10.0,
     8.5
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.2863,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0325,
+   "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 0,
+     "free": 618,
      "occupied": 0,
      "outside": 0,
-     "unknown": 618
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 1263,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1261
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2433,32 +2456,32 @@
    "frame_id": "world",
    "id": "dispatch",
    "map_position": [
-    23.0362,
-    0.239
+    23.0648,
+    -0.102
    ],
    "position": [
     12,
     0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0419,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0541,
+   "status": "validated",
    "type": "OPEN_AREA",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 0,
+     "free": 612,
      "occupied": 0,
      "outside": 0,
-     "unknown": 618
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 1255,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1253
+     "unknown": 0
     }
    },
    "corridors": [],
@@ -2466,33 +2489,33 @@
    "frame_id": "world",
    "id": "dropoff_station_01",
    "map_position": [
-    22.0089,
-    -4.7764
+    21.9348,
+    -5.0953
    ],
-   "map_yaw": 0.0145,
+   "map_yaw": -0.006,
    "position": [
     10.9,
     -5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": null,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.084,
+   "status": "validated",
    "type": "STATION",
    "yaw": 0.0
   },
   {
    "cells": {
     "core": {
-     "free": 44,
+     "free": 617,
      "occupied": 0,
      "outside": 0,
-     "unknown": 576
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 80,
+     "free": 1262,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1181
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2502,32 +2525,32 @@
    "frame_id": "world",
    "id": "dropoff_station_01_via_east_service_aisle",
    "map_position": [
-    19.2091,
-    -4.817
+    19.1349,
+    -5.0785
    ],
    "position": [
     8.1,
     -5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0666,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0593,
+   "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 0,
+     "free": 616,
      "occupied": 0,
      "outside": 0,
-     "unknown": 615
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 1256,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1260
+     "unknown": 0
     }
    },
    "corridors": [],
@@ -2535,33 +2558,33 @@
    "frame_id": "world",
    "id": "dropoff_station_02",
    "map_position": [
-    21.8639,
-    5.2225
+    21.9948,
+    4.9045
    ],
-   "map_yaw": 0.0145,
+   "map_yaw": -0.006,
    "position": [
     10.9,
     5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0564,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0905,
+   "status": "validated",
    "type": "STATION",
    "yaw": 0.0
   },
   {
    "cells": {
     "core": {
-     "free": 0,
+     "free": 619,
      "occupied": 0,
      "outside": 0,
-     "unknown": 618
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 0,
+     "free": 1260,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1261
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2571,29 +2594,29 @@
    "frame_id": "world",
    "id": "dropoff_station_02_via_east_service_aisle",
    "map_position": [
-    19.0642,
-    5.1819
+    19.1949,
+    4.9213
    ],
    "position": [
     8.1,
     5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.032,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0785,
+   "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 622,
+     "free": 620,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 1258,
+     "free": 1262,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -2607,15 +2630,15 @@
    "frame_id": "world",
    "id": "main_cross_aisle__aisle_01",
    "map_position": [
-    6.538,
-    -0.0002
+    6.5651,
+    -0.003
    ],
    "position": [
     -4.5,
     0
    ],
    "reason": "known free footprint and clearance",
-   "registration_residual_m": 0.0508,
+   "registration_residual_m": 0.1069,
    "status": "validated",
    "type": "INTERSECTION",
    "yaw": null
@@ -2623,13 +2646,13 @@
   {
    "cells": {
     "core": {
-     "free": 618,
+     "free": 620,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 1264,
+     "free": 1260,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -2643,88 +2666,16 @@
    "frame_id": "world",
    "id": "main_cross_aisle__aisle_02",
    "map_position": [
-    10.7375,
-    0.0607
+    10.765,
+    -0.0282
    ],
    "position": [
     -0.3,
     0
    ],
    "reason": "known free footprint and clearance",
-   "registration_residual_m": 0.065,
+   "registration_residual_m": 0.0966,
    "status": "validated",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 178,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 434
-    },
-    "with_clearance": {
-     "free": 610,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 645
-    }
-   },
-   "corridors": [
-    "aisle_03",
-    "main_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "main_cross_aisle__aisle_03",
-   "map_position": [
-    14.9371,
-    0.1215
-   ],
-   "position": [
-    3.9,
-    0
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0477,
-   "status": "unmapped",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 0,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 617
-    },
-    "with_clearance": {
-     "free": 5,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 1256
-    }
-   },
-   "corridors": [
-    "east_service_aisle",
-    "main_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "main_cross_aisle__east_service_aisle",
-   "map_position": [
-    19.1366,
-    0.1824
-   ],
-   "position": [
-    8.1,
-    0
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0401,
-   "status": "unmapped",
    "type": "INTERSECTION",
    "yaw": null
   },
@@ -2744,59 +2695,23 @@
     }
    },
    "corridors": [
-    "main_cross_aisle",
-    "west_service_aisle"
+    "aisle_03",
+    "main_cross_aisle"
    ],
    "entity": null,
    "frame_id": "world",
-   "id": "main_cross_aisle__west_service_aisle",
+   "id": "main_cross_aisle__aisle_03",
    "map_position": [
-    2.3384,
-    -0.0611
+    14.9649,
+    -0.0534
    ],
    "position": [
-    -8.7,
+    3.9,
     0
    ],
    "reason": "known free footprint and clearance",
-   "registration_residual_m": 0.0529,
+   "registration_residual_m": 0.0828,
    "status": "validated",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 166,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 456
-    },
-    "with_clearance": {
-     "free": 368,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 894
-    }
-   },
-   "corridors": [
-    "aisle_01",
-    "north_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "north_cross_aisle__aisle_01",
-   "map_position": [
-    6.4147,
-    8.4989
-   ],
-   "position": [
-    -4.5,
-    8.5
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0381,
-   "status": "unmapped",
    "type": "INTERSECTION",
    "yaw": null
   },
@@ -2809,8 +2724,116 @@
      "unknown": 0
     },
     "with_clearance": {
-     "free": 1252,
-     "occupied": 8,
+     "free": 1260,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "east_service_aisle",
+    "main_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__east_service_aisle",
+   "map_position": [
+    19.1649,
+    -0.0786
+   ],
+   "position": [
+    8.1,
+    0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0781,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 620,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1260,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "main_cross_aisle",
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "main_cross_aisle__west_service_aisle",
+   "map_position": [
+    2.3652,
+    0.0222
+   ],
+   "position": [
+    -8.7,
+    0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.1003,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 617,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1262,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_01",
+    "north_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "north_cross_aisle__aisle_01",
+   "map_position": [
+    6.6161,
+    8.4968
+   ],
+   "position": [
+    -4.5,
+    8.5
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0521,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 620,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1258,
+     "occupied": 1,
      "outside": 0,
      "unknown": 0
     }
@@ -2823,15 +2846,15 @@
    "frame_id": "world",
    "id": "north_cross_aisle__aisle_02",
    "map_position": [
-    10.6143,
-    8.5598
+    10.816,
+    8.4716
    ],
    "position": [
     -0.3,
     8.5
    ],
    "reason": "occupied map cells inside the required clearance",
-   "registration_residual_m": 0.0625,
+   "registration_residual_m": 0.034,
    "status": "blocked",
    "type": "INTERSECTION",
    "yaw": null
@@ -2839,16 +2862,16 @@
   {
    "cells": {
     "core": {
-     "free": 443,
+     "free": 618,
      "occupied": 0,
      "outside": 0,
-     "unknown": 172
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 885,
+     "free": 1262,
      "occupied": 0,
      "outside": 0,
-     "unknown": 371
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2859,32 +2882,32 @@
    "frame_id": "world",
    "id": "north_cross_aisle__aisle_03",
    "map_position": [
-    14.8138,
-    8.6207
+    15.0159,
+    8.4464
    ],
    "position": [
     3.9,
     8.5
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.2646,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0364,
+   "status": "validated",
    "type": "INTERSECTION",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 53,
+     "free": 620,
      "occupied": 0,
      "outside": 0,
-     "unknown": 565
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 100,
+     "free": 1260,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1161
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2895,32 +2918,32 @@
    "frame_id": "world",
    "id": "north_cross_aisle__east_service_aisle",
    "map_position": [
-    19.0134,
-    8.6816
+    19.2159,
+    8.4212
    ],
    "position": [
     8.1,
     8.5
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.2888,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0329,
+   "status": "validated",
    "type": "INTERSECTION",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 332,
+     "free": 619,
      "occupied": 0,
      "outside": 0,
-     "unknown": 290
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 738,
+     "free": 1259,
      "occupied": 0,
      "outside": 0,
-     "unknown": 522
+     "unknown": 0
     }
    },
    "corridors": [
@@ -2931,32 +2954,32 @@
    "frame_id": "world",
    "id": "north_cross_aisle__west_service_aisle",
    "map_position": [
-    2.2152,
-    8.438
+    2.4162,
+    8.522
    ],
    "position": [
     -8.7,
     8.5
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0443,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0452,
+   "status": "validated",
    "type": "INTERSECTION",
    "yaw": null
   },
   {
    "cells": {
     "core": {
-     "free": 485,
+     "free": 621,
      "occupied": 0,
      "outside": 0,
-     "unknown": 133
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 994,
+     "free": 1261,
      "occupied": 0,
      "outside": 0,
-     "unknown": 267
+     "unknown": 0
     }
    },
    "corridors": [],
@@ -2964,24 +2987,24 @@
    "frame_id": "world",
    "id": "pickup_station_01",
    "map_position": [
-    0.2111,
-    -5.0925
+    0.1352,
+    -4.9645
    ],
-   "map_yaw": -3.127093,
+   "map_yaw": 3.135593,
    "position": [
     -10.9,
     -5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.07,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.1405,
+   "status": "validated",
    "type": "STATION",
    "yaw": 3.141592654
   },
   {
    "cells": {
     "core": {
-     "free": 618,
+     "free": 617,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
@@ -3000,15 +3023,15 @@
    "frame_id": "world",
    "id": "pickup_station_01_via_west_service_aisle",
    "map_position": [
-    2.4109,
-    -5.0606
+    2.3352,
+    -4.9777
    ],
    "position": [
     -8.7,
     -5.0
    ],
    "reason": "known free footprint and clearance",
-   "registration_residual_m": 0.0468,
+   "registration_residual_m": 0.1531,
    "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
@@ -3016,16 +3039,16 @@
   {
    "cells": {
     "core": {
-     "free": 621,
+     "free": 618,
      "occupied": 0,
      "outside": 0,
      "unknown": 0
     },
     "with_clearance": {
-     "free": 1259,
+     "free": 1264,
      "occupied": 0,
      "outside": 0,
-     "unknown": 1
+     "unknown": 0
     }
    },
    "corridors": [],
@@ -3033,33 +3056,33 @@
    "frame_id": "world",
    "id": "pickup_station_02",
    "map_position": [
-    0.0661,
-    4.9064
+    0.1952,
+    5.0353
    ],
-   "map_yaw": -3.127093,
+   "map_yaw": 3.135593,
    "position": [
     -10.9,
     5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.1371,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0896,
+   "status": "validated",
    "type": "STATION",
    "yaw": 3.141592654
   },
   {
    "cells": {
     "core": {
-     "free": 113,
+     "free": 619,
      "occupied": 0,
      "outside": 0,
-     "unknown": 507
+     "unknown": 0
     },
     "with_clearance": {
-     "free": 352,
+     "free": 1260,
      "occupied": 0,
      "outside": 0,
-     "unknown": 907
+     "unknown": 0
     }
    },
    "corridors": [
@@ -3069,267 +3092,18 @@
    "frame_id": "world",
    "id": "pickup_station_02_via_west_service_aisle",
    "map_position": [
-    2.2659,
-    4.9383
+    2.3952,
+    5.0221
    ],
    "position": [
     -8.7,
     5.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0381,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0901,
+   "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 327,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 294
-    },
-    "with_clearance": {
-     "free": 799,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 462
-    }
-   },
-   "corridors": [
-    "main_cross_aisle"
-   ],
-   "entity": "receiving",
-   "frame_id": "world",
-   "id": "receiving",
-   "map_position": [
-    -0.9612,
-    -0.109
-   ],
-   "position": [
-    -12,
-    0
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0591,
-   "status": "unmapped",
-   "type": "OPEN_AREA",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 246,
-     "occupied": 15,
-     "outside": 0,
-     "unknown": 357
-    },
-    "with_clearance": {
-     "free": 513,
-     "occupied": 25,
-     "outside": 0,
-     "unknown": 727
-    }
-   },
-   "corridors": [
-    "aisle_01",
-    "south_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "south_cross_aisle__aisle_01",
-   "map_position": [
-    6.6612,
-    -8.4994
-   ],
-   "position": [
-    -4.5,
-    -8.5
-   ],
-   "reason": "occupied map cells under the robot footprint",
-   "registration_residual_m": 0.077,
-   "status": "blocked",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 450,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 171
-    },
-    "with_clearance": {
-     "free": 929,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 330
-    }
-   },
-   "corridors": [
-    "aisle_02",
-    "south_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "south_cross_aisle__aisle_02",
-   "map_position": [
-    10.8608,
-    -8.4385
-   ],
-   "position": [
-    -0.3,
-    -8.5
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0333,
-   "status": "unmapped",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 10,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 608
-    },
-    "with_clearance": {
-     "free": 11,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 1242
-    }
-   },
-   "corridors": [
-    "aisle_03",
-    "south_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "south_cross_aisle__aisle_03",
-   "map_position": [
-    15.0603,
-    -8.3776
-   ],
-   "position": [
-    3.9,
-    -8.5
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0807,
-   "status": "unmapped",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 41,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 580
-    },
-    "with_clearance": {
-     "free": 131,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 1129
-    }
-   },
-   "corridors": [
-    "east_service_aisle",
-    "south_cross_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "south_cross_aisle__east_service_aisle",
-   "map_position": [
-    19.2599,
-    -8.3167
-   ],
-   "position": [
-    8.1,
-    -8.5
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.3576,
-   "status": "unmapped",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 609,
-     "occupied": 2,
-     "outside": 0,
-     "unknown": 7
-    },
-    "with_clearance": {
-     "free": 1237,
-     "occupied": 6,
-     "outside": 0,
-     "unknown": 17
-    }
-   },
-   "corridors": [
-    "south_cross_aisle",
-    "west_service_aisle"
-   ],
-   "entity": null,
-   "frame_id": "world",
-   "id": "south_cross_aisle__west_service_aisle",
-   "map_position": [
-    2.4617,
-    -8.5603
-   ],
-   "position": [
-    -8.7,
-    -8.5
-   ],
-   "reason": "occupied map cells under the robot footprint",
-   "registration_residual_m": 0.0933,
-   "status": "blocked",
-   "type": "INTERSECTION",
-   "yaw": null
-  },
-  {
-   "cells": {
-    "core": {
-     "free": 289,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 325
-    },
-    "with_clearance": {
-     "free": 602,
-     "occupied": 0,
-     "outside": 0,
-     "unknown": 654
-    }
-   },
-   "corridors": [],
-   "entity": "staging_area",
-   "frame_id": "world",
-   "id": "staging_area",
-   "map_position": [
-    0.9444,
-    -7.3821
-   ],
-   "map_yaw": -3.127093,
-   "position": [
-    -10.2,
-    -7.3
-   ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.0944,
-   "status": "unmapped",
-   "type": "STATION",
-   "yaw": 3.141592654
   },
   {
    "cells": {
@@ -3340,10 +3114,259 @@
      "unknown": 0
     },
     "with_clearance": {
-     "free": 1258,
+     "free": 1260,
      "occupied": 0,
      "outside": 0,
-     "unknown": 3
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "main_cross_aisle"
+   ],
+   "entity": "receiving",
+   "frame_id": "world",
+   "id": "receiving",
+   "map_position": [
+    -0.9348,
+    0.042
+   ],
+   "position": [
+    -12,
+    0
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0713,
+   "status": "validated",
+   "type": "OPEN_AREA",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 619,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1260,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_01",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__aisle_01",
+   "map_position": [
+    6.5141,
+    -8.5028
+   ],
+   "position": [
+    -4.5,
+    -8.5
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0795,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 622,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1257,
+     "occupied": 3,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_02",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__aisle_02",
+   "map_position": [
+    10.714,
+    -8.528
+   ],
+   "position": [
+    -0.3,
+    -8.5
+   ],
+   "reason": "occupied map cells inside the required clearance",
+   "registration_residual_m": 0.0737,
+   "status": "blocked",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 619,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1260,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "aisle_03",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__aisle_03",
+   "map_position": [
+    14.9139,
+    -8.5532
+   ],
+   "position": [
+    3.9,
+    -8.5
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0529,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 622,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1260,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "east_service_aisle",
+    "south_cross_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__east_service_aisle",
+   "map_position": [
+    19.1139,
+    -8.5784
+   ],
+   "position": [
+    8.1,
+    -8.5
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0599,
+   "status": "validated",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 622,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1259,
+     "occupied": 1,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [
+    "south_cross_aisle",
+    "west_service_aisle"
+   ],
+   "entity": null,
+   "frame_id": "world",
+   "id": "south_cross_aisle__west_service_aisle",
+   "map_position": [
+    2.3142,
+    -8.4776
+   ],
+   "position": [
+    -8.7,
+    -8.5
+   ],
+   "reason": "occupied map cells inside the required clearance",
+   "registration_residual_m": 0.056,
+   "status": "blocked",
+   "type": "INTERSECTION",
+   "yaw": null
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 616,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1251,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    }
+   },
+   "corridors": [],
+   "entity": "staging_area",
+   "frame_id": "world",
+   "id": "staging_area",
+   "map_position": [
+    0.8214,
+    -7.2687
+   ],
+   "map_yaw": 3.135593,
+   "position": [
+    -10.2,
+    -7.3
+   ],
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0928,
+   "status": "validated",
+   "type": "STATION",
+   "yaw": 3.141592654
+  },
+  {
+   "cells": {
+    "core": {
+     "free": 614,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
+    },
+    "with_clearance": {
+     "free": 1256,
+     "occupied": 0,
+     "outside": 0,
+     "unknown": 0
     }
    },
    "corridors": [
@@ -3353,37 +3376,37 @@
    "frame_id": "world",
    "id": "staging_area_via_west_service_aisle",
    "map_position": [
-    2.4399,
-    -7.0604
+    2.3232,
+    -6.9777
    ],
    "position": [
     -8.7,
     -7.0
    ],
-   "reason": "unknown map cells under the footprint or clearance band",
-   "registration_residual_m": 0.098,
-   "status": "unmapped",
+   "reason": "known free footprint and clearance",
+   "registration_residual_m": 0.0958,
+   "status": "validated",
    "type": "CORRIDOR_POINT",
    "yaw": null
   }
  ],
  "registration": {
   "child_frame": "map",
-  "id": "7287e1893844515d",
+  "id": "788d6c32e623626e",
   "method": "Robust truncated-mean (0.5 m) fit of real SLAM occupied cells to compiled static collision geometry (walls, racks, pillars, fixed objects); grid search then coordinate descent.",
   "parent_frame": "world",
   "residuals": {
-   "cells": 3722,
-   "inlier_fraction_0_10": 0.7055346587855992,
-   "inlier_fraction_0_20": 0.8073616335303601,
-   "median_m": 0.05641978589066862,
-   "p75_m": 0.12794573649025878,
-   "p90_m": 0.3235989294496844
+   "cells": 13935,
+   "inlier_fraction_0_10": 0.658772874058127,
+   "inlier_fraction_0_20": 0.8406889128094726,
+   "median_m": 0.06471316739429811,
+   "p75_m": 0.13699534723005724,
+   "p90_m": 0.2577625296066208
   },
   "transform": {
-   "x": 11.0375,
-   "y": 0.065,
-   "yaw": 0.0145
+   "x": 11.065,
+   "y": -0.03,
+   "yaw": -0.006
   },
   "valid": true
  },
@@ -3401,7 +3424,7 @@
   "amr_dimensions": {
    "package": "amr_description",
    "path": "config/amr_dimensions.json",
-   "sha256": "596454c664261c4021bc6cac17e182c4c0d72f9f59ec5ae922fdf126b610c575"
+   "sha256": "44e4d5da57bc6e1a112fa2b2ad76863112269bf8fe0a4b212d5610d8f4117b4c"
   },
   "building_model": {
    "package": "amr_simulation",
@@ -3411,37 +3434,37 @@
   "compiler": {
    "package": "amr_simulation",
    "path": "scripts/generate_warehouse.py",
-   "sha256": "5086abcbfe514e8b2c047a5d1bab6bb7f7ce663a1d9458d3493d455ace97aef3"
+   "sha256": "6622cdba1df6b4a2d21dbaea762154af97f7bb69de2ca643274b8abf1d4da402"
   },
   "generated_manifest": {
    "package": "amr_simulation",
    "path": "config/generated_manifest.json",
-   "sha256": "49badd1df24817b793f52a620cafbda4508d3834c9c16496d82780bb7a21e473"
+   "sha256": "642f851d3063ebabecbc5169e2501d65afe7911bdf7b8de69dfe5833e2da6e7a"
   },
   "layout": {
    "package": "amr_simulation",
    "path": "config/warehouse_layout.json",
-   "sha256": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71"
+   "sha256": "7e056cbe2833e7874255c289d739eefcc6e75a5d843f60129f570ab1001d03d6"
   },
   "map_image": {
    "package": "amr_navigation",
    "path": "maps/warehouse.pgm",
-   "sha256": "ee82c5009a96cf256ac4af4fa999f53f6510b372d083b79a51a475b328021a74"
+   "sha256": "a38884cf8936a70dc323f77129d4655b249f5d7c0263db37ac74c414d55a19f7"
   },
   "map_provenance": {
    "package": "amr_navigation",
    "path": "maps/provenance.json",
-   "sha256": "fbfc98eca0b0fd345d8455093ec45e30b2c02aa8d1874645c1ff7ef8e9f6b231"
+   "sha256": "38960e30899cd6090a079db6c2a53f5249a3dc3b914df300341e5582afc7081e"
   },
   "map_yaml": {
    "package": "amr_navigation",
    "path": "maps/warehouse.yaml",
-   "sha256": "efff854f324b357b2dee07f55f9849ee5a82fdf1d94b9d0a3d1c167b797fd5ca"
+   "sha256": "c1215f54f661fd9e4ad36b4ee35110d08a1f3eda5b0d0ea74eb3a9d6228665ab"
   },
   "nav2_params": {
    "package": "amr_navigation",
    "path": "config/nav2_params.yaml",
-   "sha256": "c64eca6631a11bd9ae5642b46e514645f055ee1fb78d0fb2dbca8cd5366eed23"
+   "sha256": "fa9ebb480c0cb2c15569b54fbd208e88f4dd61c30bcd2bd000270cc8b36d29a4"
   },
   "planner_config": {
    "package": "amr_route_planner",
@@ -3451,7 +3474,7 @@
   "registration": {
    "package": "amr_route_planner",
    "path": "config/map_registration.json",
-   "sha256": "6cce62274bc09c66ca424394f0df52f7b2c1a18f0387a90b263260cfa187e711"
+   "sha256": "4cc2671f914290f9fa442af43bc2bd9b440c16ac15c5b568c46cb3d3129025f1"
   }
  },
  "stations": [
@@ -3474,9 +3497,11 @@
     ],
     "yaw": 1.5707963267948966
    },
-   "reason": "dock: unknown map cells under the footprint or clearance band",
-   "status": "unmapped",
-   "validated_approaches": []
+   "reason": "dock, approach and access lane validated",
+   "status": "validated",
+   "validated_approaches": [
+    "charging_station_via_north_cross_aisle"
+   ]
   },
   {
    "approach_nodes": [
@@ -3497,9 +3522,11 @@
     ],
     "yaw": 0
    },
-   "reason": "dock: unknown map cells under the footprint or clearance band",
-   "status": "unmapped",
-   "validated_approaches": []
+   "reason": "dock, approach and access lane validated",
+   "status": "validated",
+   "validated_approaches": [
+    "dropoff_station_01_via_east_service_aisle"
+   ]
   },
   {
    "approach_nodes": [
@@ -3520,9 +3547,11 @@
     ],
     "yaw": 0
    },
-   "reason": "dock: unknown map cells under the footprint or clearance band",
-   "status": "unmapped",
-   "validated_approaches": []
+   "reason": "dock, approach and access lane validated",
+   "status": "validated",
+   "validated_approaches": [
+    "dropoff_station_02_via_east_service_aisle"
+   ]
   },
   {
    "approach_nodes": [
@@ -3543,9 +3572,11 @@
     ],
     "yaw": 3.141592653589793
    },
-   "reason": "dock: unknown map cells under the footprint or clearance band",
-   "status": "unmapped",
-   "validated_approaches": []
+   "reason": "dock, approach and access lane validated",
+   "status": "validated",
+   "validated_approaches": [
+    "pickup_station_01_via_west_service_aisle"
+   ]
   },
   {
    "approach_nodes": [
@@ -3566,9 +3597,11 @@
     ],
     "yaw": 3.141592653589793
    },
-   "reason": "dock: unknown map cells under the footprint or clearance band",
-   "status": "unmapped",
-   "validated_approaches": []
+   "reason": "dock, approach and access lane validated",
+   "status": "validated",
+   "validated_approaches": [
+    "pickup_station_02_via_west_service_aisle"
+   ]
   },
   {
    "approach_nodes": [
@@ -3589,9 +3622,11 @@
     ],
     "yaw": 0
    },
-   "reason": "dock: unknown map cells under the footprint or clearance band",
-   "status": "unmapped",
-   "validated_approaches": []
+   "reason": "dock, approach and access lane validated",
+   "status": "validated",
+   "validated_approaches": [
+    "staging_area_via_west_service_aisle"
+   ]
   }
  ],
  "structure": {
@@ -3638,27 +3673,27 @@
  },
  "summary": {
   "connection_status": {
-   "blocked": 12,
+   "blocked": 8,
    "invalid": 0,
-   "unmapped": 22,
-   "validated": 3
+   "unmapped": 0,
+   "validated": 29
   },
   "connections": 37,
   "directed_edges": 74,
   "node_status": {
    "blocked": 3,
    "invalid": 0,
-   "unmapped": 23,
-   "validated": 4
+   "unmapped": 0,
+   "validated": 27
   },
   "nodes": 30,
   "station_status": {
-   "charging_station": "unmapped",
-   "dropoff_station_01": "unmapped",
-   "dropoff_station_02": "unmapped",
-   "pickup_station_01": "unmapped",
-   "pickup_station_02": "unmapped",
-   "staging_area": "unmapped"
+   "charging_station": "validated",
+   "dropoff_station_01": "validated",
+   "dropoff_station_02": "validated",
+   "pickup_station_01": "validated",
+   "pickup_station_02": "validated",
+   "staging_area": "validated"
   }
  },
  "topology_version": "70cdd3c14357b07c462884b3740c31b5905ece322282aa4e695e388b80da6790",

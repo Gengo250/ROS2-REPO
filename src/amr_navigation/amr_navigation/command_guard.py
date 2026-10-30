@@ -1,7 +1,8 @@
 """Fail-closed stamped command interlock; no path planning or motion generation.
 
 The only /cmd_vel writer during Nav2 operation. Passes Nav2 commands only while
-scan, odom, clock and localization TF are fresh. Uses a wall-clock timer so a
+both scanners (front /scan and 360-degree /top_scan), odom, clock and localization
+TF are fresh. Uses a wall-clock timer so a
 paused simulator cannot freeze the guard. Original drive limits remain in force.
 """
 import math
@@ -34,6 +35,7 @@ class CommandGuard(Node):
         self.received={};self.stamps={};self.command=None;self.covariance=None
         self.last_clock=None;self.clock_changed=0.;self.last_motion=0.;self.emergency_latched=False;self.pause_process=None;self.pause_acknowledged=False;self.next_pause_retry=0.;self.reason='Waiting for sensors and localization';self.last_report=0.
         self.create_subscription(LaserScan,'/scan',lambda m:self.sensor('scan',m),qos_profile_sensor_data)
+        self.create_subscription(LaserScan,'/top_scan',lambda m:self.sensor('top_scan',m),qos_profile_sensor_data)
         self.create_subscription(Odometry,'/odom',lambda m:self.sensor('odom',m),qos_profile_sensor_data)
         self.create_subscription(PoseWithCovarianceStamped,'/amcl_pose',self.localized,10)
         self.create_subscription(TwistStamped,'/nav_cmd_vel',self.velocity,10)
@@ -42,7 +44,8 @@ class CommandGuard(Node):
         self.timer=self.create_timer(.05,self.tick,clock=Clock(clock_type=ClockType.STEADY_TIME))
     def sensor(self,key,msg):
         self.received[key]=time.monotonic();self.stamps[key]=msg.header.stamp.sec+msg.header.stamp.nanosec/1e9
-        if key=='scan' and (msg.header.frame_id!='laser_frame' or not any(math.isfinite(r) and msg.range_min<=r<=msg.range_max for r in msg.ranges)):
+        frames={'scan':'laser_frame','top_scan':'top_laser_frame'}
+        if key in frames and (msg.header.frame_id!=frames[key] or not any(math.isfinite(r) and msg.range_min<=r<=msg.range_max for r in msg.ranges)):
             self.received.pop(key,None)
     def localized(self,msg):
         self.covariance=msg.pose.covariance
@@ -56,7 +59,7 @@ class CommandGuard(Node):
                 return 'Simulation clock reset'
             self.last_clock=sim;self.clock_changed=wall
         if sim<=0 or wall-self.clock_changed>1.:return 'Simulation clock stopped or reset'
-        for key in ['scan','odom','command']:
+        for key in ['scan','top_scan','odom','command']:
             if key not in self.received or wall-self.received[key]>1.:return 'Missing or stale '+key
             age=sim-self.stamps[key]
             if age < -.1 or age > .4:return 'Invalid simulation timestamp: '+key
@@ -68,6 +71,7 @@ class CommandGuard(Node):
                 age=sim-(t.header.stamp.sec+t.header.stamp.nanosec/1e9)
                 if age>.5 or age<-.8:return 'Stale localization/odometry TF'
             self.buffer.lookup_transform('base_link','laser_frame',rclpy.time.Time())
+            self.buffer.lookup_transform('base_link','top_laser_frame',rclpy.time.Time())
         except Exception:return 'Localization TF unavailable'
         others=[p.node_name for p in self.get_publishers_info_by_topic('/cmd_vel') if p.node_name!=self.get_name()]
         if others:return 'Conflicting command publishers: '+','.join(others)

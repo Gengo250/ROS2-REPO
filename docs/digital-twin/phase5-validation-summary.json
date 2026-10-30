@@ -194,5 +194,10 @@
     ],
     "scoped_amr_contact_samples": 0
   },
-  "graph_version_note": "run1-normal and run2-person-crossing-tolerance-0.35 used graph 2c7f8be6c77f3cb8; widening executor.plan_deviation_tolerance_m (0.35 to 1.0 m) changed only the planner-config hash, giving 0e127f48069cca0a with identical topology and map validation."
+  "graph_version_note": "run1-normal and run2-person-crossing-tolerance-0.35 used graph 2c7f8be6c77f3cb8; widening executor.plan_deviation_tolerance_m (0.35 to 1.0 m) changed only the planner-config hash, giving 0e127f48069cca0a with identical topology and map validation.",
+  "phase5_1_addendum": {
+    "date": "2026-10-30",
+    "summary": "phase5-1-validation-summary.json",
+    "note": "Phase 5 entries above are unchanged. The front LiDAR delivered only +/-45 deg in Phase 4/5 runs (zink rendering defect); map coverage BLOCKED and dynamic-obstacle FAILED were resolved in Phase 5.1: approved full-warehouse map (6 stations, 3 cycles) and 0 contacts in 5 runs / 20 routes."
+  }
 }

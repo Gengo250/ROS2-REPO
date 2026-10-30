@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Elevated 360-degree safety/perception scanner on a mast at the platform rear edge.
+       Its scan plane lies above every robot part; payload must stay below it. -->
+  <xacro:macro name="top_lidar" params="">
+    <link name="top_lidar_mast">
+      <xacro:mesh_visual stem="top_lidar_mast" material="metal"/>
+      <collision><geometry><cylinder radius="${top_lidar_mast_radius}" length="${top_lidar_clearance}"/></geometry></collision>
+      <xacro:cylinder_inertial mass="${top_lidar_mast_mass}" radius="${top_lidar_mast_radius}" length="${top_lidar_clearance}"/>
+    </link>
+    <xacro:fixed_joint name="top_lidar_mast_joint" parent="platform_link" child="top_lidar_mast" xyz="${top_lidar_x} 0 ${top_mast_z-platform_z}"/>
+    <link name="top_lidar_link">
+      <xacro:mesh_visual stem="top_lidar_housing" material="sensor"/>
+      <collision><geometry><cylinder radius="${top_lidar_radius}" length="${top_lidar_height}"/></geometry></collision>
+      <xacro:cylinder_inertial mass="${top_lidar_mass}" radius="${top_lidar_radius}" length="${top_lidar_height}"/>
+    </link>
+    <xacro:fixed_joint name="top_lidar_joint" parent="top_lidar_mast" child="top_lidar_link" xyz="0 0 ${top_lidar_z-top_mast_z}"/>
+    <link name="top_laser_frame"/>
+    <xacro:fixed_joint name="top_laser_frame_joint" parent="top_lidar_link" child="top_laser_frame" xyz="0 0 ${top_laser_z-top_lidar_z}"/>
+  </xacro:macro>
+</robot>

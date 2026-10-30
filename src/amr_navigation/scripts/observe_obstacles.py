@@ -16,13 +16,18 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import TwistStamped
 from diagnostic_msgs.msg import DiagnosticArray
 from amr_navigation.goal_client import yaw, grid_coordinates
+from amr_route_planner.coordinate_registration import active
 
 
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--duration',type=float,default=300)
+    parser.add_argument('--candidate',type=Path,help='Candidate map package under validation (its own registration)')
     args=parser.parse_args()
+    from amr_route_planner.graph_builder import Paths
+    # Verified for the map Nav2 is running and the layout; never a fixed offset.
+    reg,record=active(Paths.candidate(args.candidate) if args.candidate else None)
     rclpy.init();node=rclpy.create_node('obstacle_evaluation',parameter_overrides=[Parameter('use_sim_time',value=True)])
     buffer=Buffer(node=node);listener=TransformListener(buffer,node)
     latest={};rows=[];running=True
@@ -31,6 +36,8 @@ def main():
     node.create_subscription(TFMessage,'/digital_twin/simulation/poses',poses,qos_profile_sensor_data)
     node.create_subscription(OccupancyGrid,'/local_costmap/costmap',lambda m:latest.update(grid=m),QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL))
     node.create_subscription(LaserScan,'/scan',lambda m:latest.update(scan=m),qos_profile_sensor_data)
+    node.create_subscription(LaserScan,'/top_scan',lambda m:latest.update(top_scan=m),qos_profile_sensor_data)
+    node.create_subscription(OccupancyGrid,'/global_costmap/costmap',lambda m:latest.update(global_grid=m),QoSProfile(depth=1))
     node.create_subscription(TwistStamped,'/cmd_vel',lambda m:latest.update(command=[m.twist.linear.x,m.twist.angular.z]),10)
     node.create_subscription(DiagnosticArray,'/navigation/diagnostics',lambda m:latest.update(interlock=next((s.message for s in m.status if s.name=='navigation/interlock'),latest.get('interlock'))),10)
     def stop(*_):
@@ -45,27 +52,37 @@ def main():
             last=time.monotonic();grid=latest['grid'];scan=latest['scan']
             try:
                 # These transforms are read solely to compare observations in the grid frame.
-                laser=buffer.lookup_transform(grid.header.frame_id,scan.header.frame_id,rclpy.time.Time.from_msg(scan.header.stamp)).transform
                 map_tf=buffer.lookup_transform(grid.header.frame_id,'map',rclpy.time.Time()).transform
                 robot=buffer.lookup_transform(grid.header.frame_id,'base_link',rclpy.time.Time()).transform
             except Exception:continue
-            points=[];angle=yaw(laser.rotation)
-            for i,r in enumerate(scan.ranges):
-                if math.isfinite(r) and scan.range_min<=r<=scan.range_max:
-                    theta=angle+scan.angle_min+i*scan.angle_increment
-                    points.append((laser.translation.x+r*math.cos(theta),laser.translation.y+r*math.sin(theta)))
-            row={'wall':time.time(),'sim':scan.header.stamp.sec+scan.header.stamp.nanosec/1e9,'command':latest.get('command'),'interlock':latest.get('interlock'),'humans':{}}
+            def endpoints(message):
+                # Scan endpoints expressed in the costmap frame at the scan's own stamp.
+                try:
+                    tf=buffer.lookup_transform(grid.header.frame_id,message.header.frame_id,rclpy.time.Time.from_msg(message.header.stamp)).transform
+                except Exception:return None
+                out=[];base=yaw(tf.rotation)
+                for i,r in enumerate(message.ranges):
+                    if math.isfinite(r) and message.range_min<=r<=message.range_max:
+                        theta=base+message.angle_min+i*message.angle_increment
+                        out.append((tf.translation.x+r*math.cos(theta),tf.translation.y+r*math.sin(theta)))
+                return out
+            points=endpoints(scan) or []
+            top_points=endpoints(latest['top_scan']) if 'top_scan' in latest else None
+            row={'wall':time.time(),'sim':scan.header.stamp.sec+scan.header.stamp.nanosec/1e9,'command':latest.get('command'),'interlock':latest.get('interlock'),'humans':{},
+                 'robot_grid':[robot.translation.x,robot.translation.y,yaw(robot.rotation)]}
             for name,(wx,wy) in latest['humans'].items():
-                # Explicit independently validated map/world registration, never published.
-                mx,my=wx+11.,wy;theta=yaw(map_tf.rotation)
+                # Verified map/world registration, evaluation only, never published.
+                mx,my=reg.apply(wx,wy);theta=yaw(map_tf.rotation)
                 x=map_tf.translation.x+mx*math.cos(theta)-my*math.sin(theta)
                 y=map_tf.translation.y+mx*math.sin(theta)+my*math.cos(theta)
                 cx,cy=grid_coordinates(grid,x,y);radius=math.ceil(.4/grid.info.resolution)
                 values=[grid.data[j*grid.info.width+i] for j in range(cy-radius,cy+radius+1) for i in range(cx-radius,cx+radius+1) if 0<=i<grid.info.width and 0<=j<grid.info.height]
-                row['humans'][name]={'world':[wx,wy],'grid':[x,y],'distance_to_robot_m':math.hypot(x-robot.translation.x,y-robot.translation.y),'nearest_scan_endpoint_m':min((math.hypot(x-px,y-py) for px,py in points),default=None),'local_cost_max_near_worker':max(values) if values else None}
+                row['humans'][name]={'world':[wx,wy],'grid':[x,y],'distance_to_robot_m':math.hypot(x-robot.translation.x,y-robot.translation.y),'nearest_scan_endpoint_m':min((math.hypot(x-px,y-py) for px,py in points),default=None),
+                    'nearest_top_scan_endpoint_m':None if top_points is None else min((math.hypot(x-px,y-py) for px,py in top_points),default=None),
+                    'local_cost_max_near_worker':max(values) if values else None}
             rows.append(row)
     finally:
-        args.output.write_text(json.dumps({'registration_for_evaluation_only':[11.,0.,0.],'samples':rows},indent=2)+'\n')
+        args.output.write_text(json.dumps({'registration_for_evaluation_only':{'id':record['id'],'transform':record['transform']},'samples':rows},indent=2)+'\n')
         node.destroy_node()
         if rclpy.ok():rclpy.shutdown()
 if __name__=='__main__':main()

@@ -163,3 +163,21 @@ def load(path, map_version, layout_sha256):
     except (OSError, ValueError) as exc:
         raise RegistrationError(f'Registration unavailable: {path}') from exc
     return record, evaluate(record, map_version, layout_sha256)
+
+
+def active(paths=None):
+    """The verified registration of the installed approved map and layout, for evaluation tools.
+
+    Raises RegistrationError (never falls back to a fixed offset) when the record does
+    not belong to the active map version and warehouse layout.
+    """
+    from . import graph_builder as gb
+    from . import map_validation as mv
+    paths = paths or gb.Paths()
+    try:
+        record = json.loads(paths.file('registration').read_text())
+        version = mv.OccupancyMap.from_yaml(paths.file('map_yaml')).version()
+        layout = gb.digest(paths.file('layout'))
+    except (OSError, ValueError) as exc:
+        raise RegistrationError(f'Active registration unavailable: {exc}') from exc
+    return evaluate(record, version, layout), record

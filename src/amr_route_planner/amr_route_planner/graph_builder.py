@@ -69,7 +69,17 @@ class Paths:
         return self.package(package)/relative
 
     def artifact(self):
+        if 'graph' in self.overrides:
+            return self.overrides['graph']
         return self.package('amr_route_planner')/'config/warehouse_graph.json'
+
+    @classmethod
+    def candidate(cls, directory, source_root=None):
+        """A candidate map package (warehouse.yaml, map_registration.json, warehouse_graph.json)
+        evaluated without touching the approved artifacts."""
+        directory = Path(directory)
+        return cls(source_root, {'map_yaml': directory/'warehouse.yaml', 'registration': directory/'map_registration.json',
+                                 'graph': directory/'warehouse_graph.json'})
 
     @classmethod
     def source_tree(cls):

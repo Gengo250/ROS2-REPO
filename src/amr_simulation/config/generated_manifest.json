@@ -1,12 +1,12 @@
 {
-  "amr_config_sha256": "8766a42676c695a84993e09f9f6e3614062648cb3c6c2caa3a32f500c934069b",
+  "amr_config_sha256": "414409251adb2b18e1dda883b108d72b705d505173bbbf20d21bc5d0c37e0a40",
   "amr_dimensions": {
     "chassis_height": 0.25,
     "chassis_length": 0.95,
     "chassis_width": 0.7
   },
   "boxes_normal": 80,
-  "config_sha256": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71",
+  "config_sha256": "7e056cbe2833e7874255c289d739eefcc6e75a5d843f60129f570ab1001d03d6",
   "files": {
     "config/station_poses.json": "6f346fb2ad2acb066ca5fc2679f109f1a3b3d92e4ea607bff568f2e908563bb0",
     "config/warehouse_bridge.yaml": "57e20ec963a0a22ceb944d21c04afd74973a87febd72cd875fd3020553e490b5",
@@ -52,10 +52,10 @@
     "models/wh_stacked_crates/model.sdf": "1245ad2c017a9a55ee12448b0d5db26916382359e737303ee56951125ca0cf3a",
     "models/wh_tool_cart/model.config": "7e6320d2e726308e3c5de6164d861b08bdf2e5ade2f4f4e7914781c67b876722",
     "models/wh_tool_cart/model.sdf": "2adbb322d38f0a9e12168d2ac5a06157a58ad17218d72cae27a59dedbb4fb94d",
-    "worlds/warehouse_corridor_blocked.sdf": "3f8bbea3db98a4797d41577d1bde630e230a3c3efbf50bc52ac450b569aa8731",
-    "worlds/warehouse_normal.sdf": "b00bc6f43d1d0bc8f02053cea52c25b124760911bad1e1b60ab88eb78122690f",
-    "worlds/warehouse_obstacle_in_aisle.sdf": "e2ce211fba5afbcf136927f85b4d7806ef564bbe73c9fb0871897dcc92f959ca",
-    "worlds/warehouse_person_crossing.sdf": "54d75f47808fe2cc0a8c025ffc8a2bde6927fc10337c2ce1be0505e438cc676e"
+    "worlds/warehouse_corridor_blocked.sdf": "513a7c6a9902850a9420b5dcd15d602e4a669b19c4fa5b1640091ece76b21432",
+    "worlds/warehouse_normal.sdf": "816aa55f0fcf90abae08ffe14d8a513da3b1555e9976b16817668546eeaef5bc",
+    "worlds/warehouse_obstacle_in_aisle.sdf": "b75b88bae3c64017176f39ccba98ba933e2061aae7d44e813d5a62585a02e95d",
+    "worlds/warehouse_person_crossing.sdf": "c70bbe23d0c943b7b8f84847b44f4ddad71cb5d5bfbed61b98b0f01360e7da07"
   },
   "humans": 3,
   "pallets_normal": 40,
@@ -66,7 +66,7 @@
     "config/scenarios/normal.json": "c47bc2258dc8c5b2098427ae8a144c9fe0275054996734c64d876deb2f5a60e9",
     "config/scenarios/obstacle_in_aisle.json": "77b56870847320565036f0c61b369ca19724df0889bb91c05f45b8a319b70a5c",
     "config/scenarios/person_crossing.json": "7e951752e10ef3d3affe481a6cf89004cda4feb29937f09c61ede6b029cf1fea",
-    "config/warehouse_layout.json": "290a95b675660fa91edfdc8a0fddcfd412d59a752db6d16873506232df022d71"
+    "config/warehouse_layout.json": "7e056cbe2833e7874255c289d739eefcc6e75a5d843f60129f570ab1001d03d6"
   },
   "turning_diameter_with_clearance": 1.7800423721205947
 }

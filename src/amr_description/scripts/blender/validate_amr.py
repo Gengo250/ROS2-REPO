@@ -40,7 +40,9 @@ def validate_scene(scene, p):
         'AMR_Bumper_Front': (p['bumper_x'],0,p['bumper_z']),
         'AMR_Bumper_Rear': (-p['bumper_x'],0,p['bumper_z']),
         'AMR_Lidar_Housing': (p['lidar_x'],0,p['lidar_z']),
-        'AMR_Camera_Housing': (p['camera_x'],0,p['camera_z'])}
+        'AMR_Camera_Housing': (p['camera_x'],0,p['camera_z']),
+        'AMR_Top_Lidar_Mast': (p['top_lidar_x'],0,p['top_mast_z']),
+        'AMR_Top_Lidar_Housing': (p['top_lidar_x'],0,p['top_lidar_z'])}
     require(scene.unit_settings.scale_length == 1 and scene.unit_settings.system == 'METRIC','metric scene, unit scale 1')
     require(scene.get('config_sha256') == p['config_sha256'],'scene matches parameter file')
     depsgraph = bpy.context.evaluated_depsgraph_get()
@@ -89,6 +91,28 @@ def validate_scene(scene, p):
             if hit[0] is not None:
                 raise AssertionError(f'LiDAR beam {i} obstructed by {obj.name}')
     require(True,'LiDAR entire configured FOV clear of robot geometry')
+    # Elevated scanner: every one of its 360-degree beams must clear the robot.
+    top = Vector((p['top_lidar_x'],0,p['top_laser_z']))
+    for obj in scene.objects:
+        if obj.type != 'MESH' or obj.hide_render:
+            continue
+        tree = BVHTree.FromObject(obj,depsgraph)
+        for i in range(int(p['top_lidar_samples'])):
+            a = -math.pi+i*p['top_lidar_angle_step']
+            if tree.ray_cast(obj.matrix_world.inverted() @ top,Vector((math.cos(a),math.sin(a),0)),2)[0] is not None:
+                raise AssertionError(f'Top LiDAR beam {i} obstructed by {obj.name}')
+    require(True,'Top LiDAR full 360-degree circle clear of robot geometry')
+    # Evidence for the sensor comparison: how far past +/-90 degrees the front bay stays clear.
+    clear = 0.
+    for k in range(0, 451):
+        a = math.pi/2+math.radians(k*0.1)
+        hits = [BVHTree.FromObject(o,depsgraph).ray_cast(o.matrix_world.inverted() @ origin,Vector((math.cos(a),math.sin(a),0)),2)[0]
+                for o in scene.objects if o.type == 'MESH' and not o.hide_render]
+        if any(h is not None for h in hits):
+            break
+        clear = math.degrees(a)
+    scene['front_bay_clear_half_fov_deg'] = clear
+    print('FRONT BAY MAXIMUM CLEAR HALF-FOV DEG', round(clear,1))
     print('BLENDER GEOMETRY VALIDATED')
 
 
@@ -100,7 +124,9 @@ def validate_exports(root, p):
                 'lidar_housing':(2*p['lidar_radius'],2*p['lidar_radius'],p['lidar_height']),
                 'camera_housing':(p['camera_length']+p['camera_lens_gap']/2,p['camera_width'],p['camera_height']),
                 'bumper_front':(p['bumper_length'],p['bumper_width'],p['bumper_height']),
-                'bumper_rear':(p['bumper_length'],p['bumper_width'],p['bumper_height'])}
+                'bumper_rear':(p['bumper_length'],p['bumper_width'],p['bumper_height']),
+                'top_lidar_mast':(2*p['top_lidar_mast_radius'],2*p['top_lidar_mast_radius'],p['top_lidar_clearance']),
+                'top_lidar_housing':(2*p['top_lidar_radius'],2*p['top_lidar_radius'],p['top_lidar_height'])}
     report = {}
     for stem, dimensions in expected.items():
         path = Path(root)/'meshes/visual'/(stem+'.stl')

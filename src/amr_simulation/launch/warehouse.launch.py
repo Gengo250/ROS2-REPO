@@ -78,6 +78,11 @@ def setup(context):
         # their create/scene requests or supply the GUI with an older world.
         SetEnvironmentVariable('GZ_PARTITION', partition := os.environ.get(
             'GZ_PARTITION') or 'warehouse_'+uuid.uuid4().hex),
+        # Worker yielding follows warehouse_layout.json. human_yielding:=false exists ONLY for the
+        # intentional physical-contact acceptance test (validate_crossing_contact.py).
+        *([SetEnvironmentVariable('WAREHOUSE_HUMAN_YIELDING', 'disabled'),
+           LogInfo(msg='TEST MODE: worker yielding disabled for intentional contact validation')]
+          if LaunchConfiguration('human_yielding', default='true').perform(context) == 'false' else []),
         SetEnvironmentVariable('GZ_SIM_SYSTEM_PLUGIN_PATH', os.pathsep.join(filter(None, [
             str(Path(get_package_prefix('amr_simulation'))/'lib'),
             os.environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')]))),
@@ -101,5 +106,6 @@ def generate_launch_description():
         DeclareLaunchArgument('gui_renderer', default_value='ogre'),
         DeclareLaunchArgument('rviz', default_value='false'),
         DeclareLaunchArgument('mapping_only', default_value='false', choices=['true', 'false']),
+        DeclareLaunchArgument('human_yielding', default_value='true', choices=['true', 'false']),
         OpaqueFunction(function=setup),
     ])

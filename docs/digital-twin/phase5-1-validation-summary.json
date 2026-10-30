@@ -1,0 +1,180 @@
+{
+  "verdict": "PHASE 5.1: VALIDATED with documented limitations (root cause of SLAM failure found and fixed; full-warehouse map approved; zero worker contacts; north/south cross aisles partially validated; gazebo-reset fault case pre-existing failure)",
+  "date": "2026-10-30",
+  "phase": "5.1",
+  "branch": "feature/phase5-1-remediation",
+  "baseline_commit": "3bdc33a",
+  "evidence_directory": "docs/digital-twin/evidence-phase5-1 (ignored)",
+  "root_cause": {
+    "lidar_rendering": {
+      "defective_renderer": "zink Vulkan 1.4 (NVIDIA GeForce GTX 1650 (NVK TU117) (MESA_NVK))",
+      "fixed_renderer": "NV167 (NOUVEAU_USE_ZINK=0)",
+      "front_missing_fraction": {
+        "zink": [
+          0.424,
+          0.499
+        ],
+        "fixed": [
+          0.0,
+          0.0
+        ]
+      },
+      "top_missing_fraction": {
+        "zink": [
+          0.525,
+          0.681
+        ],
+        "fixed": [
+          0.003,
+          0.011
+        ]
+      }
+    },
+    "slam_diagnostic_71m": {
+      "diag-baseline": {
+        "final_m": 0.285,
+        "max_m": 1.916
+      },
+      "diag-baseline-fixed-render": {
+        "final_m": 0.02,
+        "max_m": 0.097
+      },
+      "diag-fixed-render-phase5-params": {
+        "final_m": 0.025,
+        "max_m": 0.106
+      },
+      "diag-fixed-render-production": {
+        "final_m": 0.025,
+        "max_m": 0.123
+      }
+    }
+  },
+  "slam_params_changes_vs_phase5": {
+    "loop_search_maximum_distance": [
+      3.0,
+      1.5
+    ],
+    "loop_search_space_dimension": [
+      8.0,
+      3.0
+    ]
+  },
+  "odometry_wheel_separation_m": 0.5258,
+  "approved_map": {
+    "candidate": "candidate-v11",
+    "approved_on": "2026-10-30",
+    "registration_id": "788d6c32e623626e",
+    "transform": {
+      "x": 11.065,
+      "y": -0.03,
+      "yaw": -0.006
+    },
+    "registration_median_m": 0.0647,
+    "inlier_fraction_0_20": 0.8407,
+    "worst_tile_median_m": 0.1705,
+    "loop_return_m": 0.0033,
+    "loop_return_rad": 0.0015,
+    "graph_version": "31fba3aa050bd251",
+    "graph": {
+      "validated_nodes": 27,
+      "validated_connections": 29,
+      "validated_stations": [
+        "charging_station",
+        "dropoff_station_01",
+        "dropoff_station_02",
+        "pickup_station_01",
+        "pickup_station_02",
+        "staging_area"
+      ],
+      "reachable_station_pairs": 30,
+      "independent_validated_cycles": 3
+    },
+    "replaces": {
+      "registration_id": "87e82b11cf133151",
+      "validated_nodes": 4,
+      "validated_connections": 3,
+      "validated_stations": 0,
+      "cycles": 0
+    }
+  },
+  "navigation": {
+    "candidate_runs": [
+      "candidate-v11-nav-stations (2/3: timeout at RTF 0.36, fixed)",
+      "candidate-v11-nav-stations-2 (6/6, live and pre-blocked alternatives)"
+    ],
+    "approved_map_verification": "approved-map-v11-route-verification (2/2, browser passed)"
+  },
+  "safety": {
+    "sensor_coverage_top_scan_detection_rate": {
+      "front": 1.0,
+      "rear": 1.0,
+      "left": 1.0,
+      "right": 1.0
+    },
+    "nav2_costmap_marking_rate": {
+      "front": 0.985,
+      "left": 0.999,
+      "right": 0.999,
+      "rear": 0.997
+    },
+    "person_crossing_runs": {
+      "delay_s": [
+        0,
+        12,
+        30
+      ],
+      "routes_completed": 9,
+      "contacts": 0,
+      "min_envelope_distance_m": [
+        0.48,
+        0.46,
+        0.43
+      ]
+    },
+    "total_contacts": 0,
+    "runs": 5,
+    "routes": 20,
+    "yield_test": "passed",
+    "contact_test_yielding_disabled": "passed",
+    "deadlock_reversal": "not exercised"
+  },
+  "regression": {
+    "phase4_fault_suite": {
+      "passed": [
+        "cancel",
+        "outside-map",
+        "occupied-goal",
+        "timeout",
+        "pause",
+        "localization-loss",
+        "controller-inactive",
+        "clock-bridge-loss"
+      ],
+      "failed_pre_existing": [
+        "gazebo-reset"
+      ]
+    },
+    "phase2_mosaico": "passed",
+    "gateway_pytest": 48,
+    "amr_navigation_pytest": 28,
+    "amr_route_planner_pytest": 26,
+    "frontend_vitest": 16
+  },
+  "performance": {
+    "rtf_full_stack": [
+      0.34,
+      0.37
+    ],
+    "scan_hz": 15.15,
+    "top_scan_hz": 10.0,
+    "viewer_fps_median": 7.4,
+    "cpu_percent_one_core_median": {
+      "gazebo": 167,
+      "route_executor_and_guard": 95,
+      "nav2": 58,
+      "gateway": 56,
+      "bridge": 19,
+      "amcl": 6
+    }
+  }
+}

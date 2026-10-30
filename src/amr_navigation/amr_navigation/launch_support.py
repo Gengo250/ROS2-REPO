@@ -5,13 +5,14 @@ from launch_ros.actions import Node
 
 def share(): return Path(get_package_share_directory('amr_navigation'))
 
-def localization_actions(map_path):
+def localization_actions(map_path, scan_topic=''):
     if not Path(map_path).is_file():
         raise RuntimeError('Saved occupancy map missing: '+str(map_path)+'. Complete a real SLAM survey first.')
     return [
         Node(package='nav2_map_server',executable='map_server',name='map_server',output='screen',
              parameters=[{'use_sim_time':True,'yaml_filename':str(map_path)}]),
+        # AMCL must use the same scanner that built the map (empty: amcl_params.yaml).
         Node(package='nav2_amcl',executable='amcl',name='amcl',output='screen',
-             parameters=[str(share()/'config/amcl_params.yaml')]),
+             parameters=[str(share()/'config/amcl_params.yaml')]+([{'scan_topic':scan_topic}] if scan_topic else [])),
         Node(package='nav2_lifecycle_manager',executable='lifecycle_manager',name='lifecycle_manager_localization',output='screen',
              parameters=[{'use_sim_time':True,'autostart':True,'node_names':['map_server','amcl'],'bond_timeout':4.0}])]

@@ -119,9 +119,12 @@ local_costmap:
       transform_tolerance: 0.3
       always_send_full_costmap: true
       track_unknown_space: true
+      # One obstacle layer per scanner: the elevated 360-degree scanner must not
+      # ray-trace away low obstacles that only the front scanner observes.
       plugins:
       - static_layer
       - obstacle_layer
+      - top_obstacle_layer
       - inflation_layer
       static_layer:
         plugin: nav2_costmap_2d::StaticLayer
@@ -140,6 +143,23 @@ local_costmap:
           obstacle_min_range: 0.08
           obstacle_max_range: 8.0
           raytrace_min_range: 0.08
+          raytrace_max_range: 10.0
+          inf_is_valid: true
+          observation_persistence: 0.0
+          expected_update_rate: 0.3
+      top_obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        enabled: true
+        observation_sources: top_scan
+        top_scan:
+          topic: /top_scan
+          data_type: LaserScan
+          marking: true
+          clearing: true
+          max_obstacle_height: 2.0
+          obstacle_min_range: 0.12
+          obstacle_max_range: 8.0
+          raytrace_min_range: 0.12
           raytrace_max_range: 10.0
           inf_is_valid: true
           observation_persistence: 0.0
@@ -165,9 +185,12 @@ global_costmap:
       transform_tolerance: 0.3
       always_send_full_costmap: true
       track_unknown_space: true
+      # One obstacle layer per scanner: the elevated 360-degree scanner must not
+      # ray-trace away low obstacles that only the front scanner observes.
       plugins:
       - static_layer
       - obstacle_layer
+      - top_obstacle_layer
       - inflation_layer
       static_layer:
         plugin: nav2_costmap_2d::StaticLayer
@@ -186,6 +209,23 @@ global_costmap:
           obstacle_min_range: 0.08
           obstacle_max_range: 8.0
           raytrace_min_range: 0.08
+          raytrace_max_range: 10.0
+          inf_is_valid: true
+          observation_persistence: 0.0
+          expected_update_rate: 0.3
+      top_obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        enabled: true
+        observation_sources: top_scan
+        top_scan:
+          topic: /top_scan
+          data_type: LaserScan
+          marking: true
+          clearing: true
+          max_obstacle_height: 2.0
+          obstacle_min_range: 0.12
+          obstacle_max_range: 8.0
+          raytrace_min_range: 0.12
           raytrace_max_range: 10.0
           inf_is_valid: true
           observation_persistence: 0.0

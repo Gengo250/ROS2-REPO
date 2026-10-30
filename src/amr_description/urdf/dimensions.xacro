@@ -17,6 +17,7 @@
   <xacro:property name="wheel_radius" value="0.12"/>
   <xacro:property name="wheel_width" value="0.055"/>
   <xacro:property name="track_width" value="0.58"/>
+  <xacro:property name="odometry_wheel_separation" value="0.5258"/>
   <xacro:property name="wheel_arch_gap" value="0.009"/>
   <xacro:property name="wheel_bevel" value="0.003"/>
   <xacro:property name="caster_radius" value="0.032"/>
@@ -64,6 +65,17 @@
   <xacro:property name="lidar_min_range" value="0.08"/>
   <xacro:property name="lidar_max_range" value="20"/>
   <xacro:property name="lidar_resolution" value="0.01"/>
+  <xacro:property name="top_lidar_rear_inset" value="0.06"/>
+  <xacro:property name="top_lidar_mast_radius" value="0.018"/>
+  <xacro:property name="top_lidar_clearance" value="0.08"/>
+  <xacro:property name="top_lidar_radius" value="0.04"/>
+  <xacro:property name="top_lidar_height" value="0.05"/>
+  <xacro:property name="top_lidar_mass" value="0.4"/>
+  <xacro:property name="top_lidar_mast_mass" value="0.25"/>
+  <xacro:property name="top_lidar_samples" value="720"/>
+  <xacro:property name="top_lidar_rate" value="10"/>
+  <xacro:property name="top_lidar_min_range" value="0.12"/>
+  <xacro:property name="top_lidar_max_range" value="20"/>
   <xacro:property name="imu_rate" value="100"/>
   <xacro:property name="camera_rate" value="15"/>
   <xacro:property name="camera_image_width" value="640"/>
@@ -103,6 +115,11 @@
   <xacro:property name="camera_x" value="0.458"/>
   <xacro:property name="camera_z" value="0.264"/>
   <xacro:property name="lidar_half_fov" value="1.57079632679"/>
+  <xacro:property name="top_lidar_x" value="-0.38"/>
+  <xacro:property name="top_mast_z" value="0.384"/>
+  <xacro:property name="top_lidar_z" value="0.449"/>
+  <xacro:property name="top_laser_z" value="0.48"/>
+  <xacro:property name="top_lidar_angle_step" value="0.00872664625997"/>
   <xacro:property name="camera_fov" value="1.308996939"/>
   <xacro:property name="core_length" value="0.868"/>
   <xacro:property name="core_x" value="-0.041"/>

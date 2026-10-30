@@ -64,6 +64,11 @@ def setup(context):
         SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH',os.pathsep.join(filter(None,[
             str(share.parent),LaunchConfiguration('resource_path').perform(context),
             os.environ.get('GZ_SIM_RESOURCE_PATH','')]))),
+        # Mesa's default zink-on-NVK GL path renders only the front cube face of the
+        # ogre2 gpu_lidar: beams beyond +/-45 deg return +inf or phantom ranges
+        # (PHASE_5_1_REMEDIATION.md, LiDAR rendering defect). The nouveau GL driver
+        # renders every face; other drivers ignore this variable. An explicit value wins.
+        SetEnvironmentVariable('NOUVEAU_USE_ZINK',os.environ.get('NOUVEAU_USE_ZINK','0')),
         server,
         Node(package='robot_state_publisher',executable='robot_state_publisher',output='screen',
              parameters=[{'robot_description':description,'use_sim_time':True}]),

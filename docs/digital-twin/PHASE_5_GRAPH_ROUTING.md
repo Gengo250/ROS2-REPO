@@ -233,3 +233,31 @@ once, polls the status at 1 Hz, and draws the route through
 `mapToWorld(registration, …)`. It refuses to draw (and states why) when the
 registration is unverified or the route's graph, map or registration version differs
 from the displayed graph. Robot motion still comes only from the Gazebo pose pipeline.
+
+## Phase 5.1 changes (appended)
+
+The design above is unchanged. Phase 5.1 (`PHASE_5_1_REMEDIATION.md`) adds:
+
+- **Candidate maps.** `Paths.candidate(dir)` evaluates a candidate map package
+  (`warehouse.yaml`, `map_registration.json`, `warehouse_graph.json`) without touching
+  the approved artifacts. `execute_route --candidate`, `route_integration.py
+  --candidate` and `observe_obstacles.py --candidate` use it. `evaluate_map.py` reports
+  known-free area, global and 4 m-tile residuals, loop return, and graph coverage
+  (validated nodes, connections, stations, reachable station pairs, independent
+  cycles).
+- **Single registration source.** `coordinate_registration.active()` replaces every
+  hard-coded `+11 m` offset in the evaluation tools.
+- **Deadline.** `execute_route --timeout` counts simulation seconds; `--wall-guard`
+  (3000 s) bounds a stalled simulator.
+- **Surveys.** Plans live in `config/survey_coverage.json` and
+  `config/survey_diagnostics.json`.
+  - Run: `extend_map_survey.py --fresh --record --bag --plan …`.
+  - Offline SLAM comparison on the recorded bag: `replay_survey.py`.
+
+```bash
+# Evaluate a candidate without touching the approved map
+ros2 run amr_route_planner calibrate_registration --source-tree --map C/warehouse.yaml --output C/map_registration.json
+ros2 run amr_route_planner build_graph --source-tree --map C/warehouse.yaml --registration C/map_registration.json --output C/warehouse_graph.json --report-dir C/graph
+python3 src/amr_route_planner/scripts/evaluate_map.py --source-tree --map C/warehouse.yaml --registration C/map_registration.json --graph C/warehouse_graph.json --recording SURVEY/drift-recording.json --output C/evaluation.json
+python3 src/amr_route_planner/scripts/route_integration.py --candidate C --scenario normal --initial 0 0 0 --step "--to dropoff_station_02" --output OUT
+```

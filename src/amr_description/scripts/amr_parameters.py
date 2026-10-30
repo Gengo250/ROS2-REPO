@@ -37,6 +37,13 @@ def load_parameters(root=ROOT):
     p['camera_x'] = (p['chassis_length'] - p['camera_length']) / 2
     p['camera_z'] = p['chassis_top'] - p['camera_top_margin'] - p['camera_height'] / 2
     p['lidar_half_fov'] = math.radians(p['lidar_fov_degrees']) / 2
+    # Elevated 360-degree scanner: a mast at the platform rear edge lifts the scan plane
+    # above every robot part, so full horizontal coverage has no self-occlusion.
+    p['top_lidar_x'] = -p['platform_length'] / 2 + p['top_lidar_rear_inset']
+    p['top_mast_z'] = p['overall_height'] + p['top_lidar_clearance'] / 2
+    p['top_lidar_z'] = p['overall_height'] + p['top_lidar_clearance'] + p['top_lidar_height'] / 2
+    p['top_laser_z'] = p['top_lidar_z'] + p['top_lidar_height'] / 2 + p['lidar_scan_gap']
+    p['top_lidar_angle_step'] = 2 * math.pi / p['top_lidar_samples']
     p['camera_fov'] = math.radians(p['camera_fov_degrees'])
     p['core_length'] = p['bay_back_x'] + p['chassis_length'] / 2
     p['core_x'] = -p['sensor_bay_depth'] / 2
@@ -57,6 +64,12 @@ def load_parameters(root=ROOT):
         'casters must reach chassis': 2*p['caster_radius'] > p['ground_clearance'],
         'low COM inside chassis': p['ground_clearance'] < p['chassis_com_height'] < p['chassis_top'],
         'front lidar FOV must avoid rear chassis': p['lidar_fov_degrees'] <= 180,
+        'top lidar mast on platform': abs(p['top_lidar_x']) + max(p['top_lidar_mast_radius'], p['top_lidar_radius'])
+                                      < p['platform_length'] / 2 and p['top_lidar_mast_radius'] < p['top_lidar_radius'],
+        'top lidar scan plane above robot': p['top_laser_z'] > p['overall_height'] + p['top_lidar_clearance'],
+        'top lidar integer samples': float(p['top_lidar_samples']).is_integer(),
+        'odometry separation within the wheel contact width': p['track_width'] - p['wheel_width'] <= p['odometry_wheel_separation']
+                                                               <= p['track_width'] + p['wheel_width'],
     }
     for label, ok in checks.items():
         if not ok:
@@ -84,7 +97,9 @@ def write_ros_parameters(root=ROOT):
             'diff_drive_controller': {'type': 'diff_drive_controller/DiffDriveController'}}},
         'diff_drive_controller': {'ros__parameters': {
             'left_wheel_names': ['left_wheel_joint'], 'right_wheel_names': ['right_wheel_joint'],
-            'wheel_separation': p['track_width'], 'wheel_radius': p['wheel_radius'],
+            # Measured effective contact separation (simulated wheels bear on their inner
+            # rims); the geometric track_width still places the wheels.
+            'wheel_separation': p['odometry_wheel_separation'], 'wheel_radius': p['wheel_radius'],
             'base_frame_id': 'base_link', 'odom_frame_id': 'odom', 'enable_odom_tf': True,
             'position_feedback': True, 'open_loop': False, 'publish_rate': 50.0,
             'cmd_vel_timeout': p['command_timeout'],

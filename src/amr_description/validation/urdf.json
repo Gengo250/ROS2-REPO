@@ -12,6 +12,9 @@
       "rear_caster_link",
       "lidar_link",
       "laser_frame",
+      "top_lidar_mast",
+      "top_lidar_link",
+      "top_laser_frame",
       "imu_link",
       "camera_link",
       "camera_optical_frame",
@@ -77,6 +80,24 @@
         "type": "fixed",
         "parent": "lidar_link",
         "child": "laser_frame"
+      },
+      {
+        "name": "top_lidar_mast_joint",
+        "type": "fixed",
+        "parent": "platform_link",
+        "child": "top_lidar_mast"
+      },
+      {
+        "name": "top_lidar_joint",
+        "type": "fixed",
+        "parent": "top_lidar_mast",
+        "child": "top_lidar_link"
+      },
+      {
+        "name": "top_laser_frame_joint",
+        "type": "fixed",
+        "parent": "top_lidar_link",
+        "child": "top_laser_frame"
       },
       {
         "name": "imu_joint",
@@ -159,6 +180,21 @@
         0.0,
         0.213
       ],
+      "top_lidar_mast": [
+        -0.38,
+        0.0,
+        0.384
+      ],
+      "top_lidar_link": [
+        -0.38,
+        0.0,
+        0.449
+      ],
+      "top_laser_frame": [
+        -0.38,
+        0.0,
+        0.48
+      ],
       "imu_link": [
         0.0,
         0.0,
@@ -180,8 +216,8 @@
         0.264
       ]
     },
-    "mass_kg": 84.44999999999997,
-    "check_urdf": "robot name is: warehouse_amr\n---------- Successfully Parsed XML ---------------\nroot Link: base_link has 2 child(ren)\n    child(1):  chassis_link\n        child(1):  bumper_front_link\n        child(2):  bumper_rear_link\n        child(3):  camera_link\n            child(1):  camera_depth_frame\n            child(2):  camera_optical_frame\n        child(4):  front_caster_link\n        child(5):  imu_link\n        child(6):  left_wheel_link\n        child(7):  lidar_link\n            child(1):  laser_frame\n        child(8):  rear_caster_link\n        child(9):  right_wheel_link\n    child(2):  platform_link\n"
+    "mass_kg": 85.09999999999998,
+    "check_urdf": "robot name is: warehouse_amr\n---------- Successfully Parsed XML ---------------\nroot Link: base_link has 2 child(ren)\n    child(1):  chassis_link\n        child(1):  bumper_front_link\n        child(2):  bumper_rear_link\n        child(3):  camera_link\n            child(1):  camera_depth_frame\n            child(2):  camera_optical_frame\n        child(4):  front_caster_link\n        child(5):  imu_link\n        child(6):  left_wheel_link\n        child(7):  lidar_link\n            child(1):  laser_frame\n        child(8):  rear_caster_link\n        child(9):  right_wheel_link\n    child(2):  platform_link\n        child(1):  top_lidar_mast\n            child(1):  top_lidar_link\n                child(1):  top_laser_frame\n"
   },
   "simulation": {
     "links": [
@@ -196,6 +232,9 @@
       "rear_caster_link",
       "lidar_link",
       "laser_frame",
+      "top_lidar_mast",
+      "top_lidar_link",
+      "top_laser_frame",
       "imu_link",
       "camera_link",
       "camera_optical_frame",
@@ -261,6 +300,24 @@
         "type": "fixed",
         "parent": "lidar_link",
         "child": "laser_frame"
+      },
+      {
+        "name": "top_lidar_mast_joint",
+        "type": "fixed",
+        "parent": "platform_link",
+        "child": "top_lidar_mast"
+      },
+      {
+        "name": "top_lidar_joint",
+        "type": "fixed",
+        "parent": "top_lidar_mast",
+        "child": "top_lidar_link"
+      },
+      {
+        "name": "top_laser_frame_joint",
+        "type": "fixed",
+        "parent": "top_lidar_link",
+        "child": "top_laser_frame"
       },
       {
         "name": "imu_joint",
@@ -343,6 +400,21 @@
         0.0,
         0.213
       ],
+      "top_lidar_mast": [
+        -0.38,
+        0.0,
+        0.384
+      ],
+      "top_lidar_link": [
+        -0.38,
+        0.0,
+        0.449
+      ],
+      "top_laser_frame": [
+        -0.38,
+        0.0,
+        0.48
+      ],
       "imu_link": [
         0.0,
         0.0,
@@ -364,8 +436,8 @@
         0.264
       ]
     },
-    "mass_kg": 84.44999999999997,
-    "check_urdf": "robot name is: warehouse_amr\n---------- Successfully Parsed XML ---------------\nroot Link: base_link has 2 child(ren)\n    child(1):  chassis_link\n        child(1):  bumper_front_link\n        child(2):  bumper_rear_link\n        child(3):  camera_link\n            child(1):  camera_depth_frame\n            child(2):  camera_optical_frame\n        child(4):  front_caster_link\n        child(5):  imu_link\n        child(6):  left_wheel_link\n        child(7):  lidar_link\n            child(1):  laser_frame\n        child(8):  rear_caster_link\n        child(9):  right_wheel_link\n    child(2):  platform_link\n",
-    "sdf_conversion_stderr": "\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"rgbd_camera\"]/gz_frame_id:/tmp/amr_urdf_it6kgyz4/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"imu\"]/gz_frame_id:/tmp/amr_urdf_it6kgyz4/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"front_lidar\"]/gz_frame_id:/tmp/amr_urdf_it6kgyz4/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n"
+    "mass_kg": 85.09999999999998,
+    "check_urdf": "robot name is: warehouse_amr\n---------- Successfully Parsed XML ---------------\nroot Link: base_link has 2 child(ren)\n    child(1):  chassis_link\n        child(1):  bumper_front_link\n        child(2):  bumper_rear_link\n        child(3):  camera_link\n            child(1):  camera_depth_frame\n            child(2):  camera_optical_frame\n        child(4):  front_caster_link\n        child(5):  imu_link\n        child(6):  left_wheel_link\n        child(7):  lidar_link\n            child(1):  laser_frame\n        child(8):  rear_caster_link\n        child(9):  right_wheel_link\n    child(2):  platform_link\n        child(1):  top_lidar_mast\n            child(1):  top_lidar_link\n                child(1):  top_laser_frame\n",
+    "sdf_conversion_stderr": "\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"rgbd_camera\"]/gz_frame_id:/tmp/amr_urdf_vvzrtbed/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"imu\"]/gz_frame_id:/tmp/amr_urdf_vvzrtbed/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"front_lidar\"]/gz_frame_id:/tmp/amr_urdf_vvzrtbed/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n\u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"warehouse_amr\"]/link[@name=\"base_link\"]/sensor[@name=\"top_lidar\"]/gz_frame_id:/tmp/amr_urdf_vvzrtbed/amr.urdf:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n"
   }
 }

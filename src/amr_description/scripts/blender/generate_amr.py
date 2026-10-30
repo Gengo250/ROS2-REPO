@@ -262,6 +262,18 @@ def create_lidar_housing(p, g, m):
     obj['ros_link'] = 'lidar_link'
 
 
+def create_top_lidar(p, g, m):
+    mast = cylinder('AMR_Top_Lidar_Mast',p['top_lidar_mast_radius'],p['top_lidar_clearance'],'Z',
+                    (p['top_lidar_x'],0,p['top_mast_z']),g['SENSORS'],m['platform'],p)
+    mast['export_stem'] = 'top_lidar_mast'
+    mast['ros_link'] = 'top_lidar_mast'
+    housing = cylinder('AMR_Top_Lidar_Housing',p['top_lidar_radius'],p['top_lidar_height'],'Z',
+                       (p['top_lidar_x'],0,p['top_lidar_z']),g['SENSORS'],m['sensor'],p)
+    bevel(housing,p['wheel_bevel']/2,p)
+    housing['export_stem'] = 'top_lidar_housing'
+    housing['ros_link'] = 'top_lidar_link'
+
+
 def create_camera_housing(p, g, m):
     obj = box('AMR_Camera_Housing',(p['camera_length'],p['camera_width'],p['camera_height']),
               (p['camera_x'],0,p['camera_z']),g['SENSORS'],m['sensor'])
@@ -382,6 +394,7 @@ def main(root=ROOT, renders=True):
     create_drive_wheel(p,groups,materials)
     create_casters(p,groups,materials)
     create_lidar_housing(p,groups,materials)
+    create_top_lidar(p,groups,materials)
     create_camera_housing(p,groups,materials)
     create_debug(p,groups,materials)
     bpy.context.view_layer.update()

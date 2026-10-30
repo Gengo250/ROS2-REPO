@@ -7,7 +7,9 @@ const evidence = process.env.ROUTE_EVIDENCE_DIR;
 test.use({ video: evidence ? { mode: 'on', size: { width: 1280, height: 720 } } : 'off' });
 test('shows the planned route and real AMR movement in the existing viewer', async ({ page }) => {
   test.skip(!evidence, 'Requires the real owned route integration run');
-  test.setTimeout(1700000);
+  // Observe until the harness writes navigation.done, within a wall-clock window it sizes per run.
+  const seconds = Number(process.env.ROUTE_OBSERVE_SECONDS || 300);
+  test.setTimeout((seconds+300)*1000);
   await mkdir(evidence!, { recursive: true });
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto('/'); const host = page.locator('#warehouse');
@@ -17,8 +19,8 @@ test('shows the planned route and real AMR movement in the existing viewer', asy
   await writeFile(resolve(evidence!, 'browser.ready'), 'ready');
   const samples: any[] = []; const shots = new Set<string>();
   try {
-    const seconds = Number(process.env.ROUTE_OBSERVE_SECONDS || 300);
-    for (let i = 0; i < seconds; i++) {
+    const deadline = Date.now()+seconds*1000;
+    for (let i = 0; Date.now() < deadline; i++) {
       const s: any = await host.evaluate(e => ({ wall: Date.now(), route: JSON.parse(e.dataset.route || '{}'), roots: JSON.parse(e.dataset.transforms || '{}'), metrics: JSON.parse(e.dataset.metrics || '{}') }));
       s.panel = await page.locator('#route-status').innerText();
       samples.push(s);

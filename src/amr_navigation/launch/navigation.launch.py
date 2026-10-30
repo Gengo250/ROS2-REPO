@@ -9,7 +9,7 @@ from amr_navigation.launch_support import share, localization_actions
 def start(context):
     exclusive_mode()
     config=str(share()/'config/nav2_params.yaml')
-    nodes=localization_actions(LaunchConfiguration('map').perform(context))
+    nodes=localization_actions(LaunchConfiguration('map').perform(context),LaunchConfiguration('amcl_scan_topic').perform(context))
     for package,executable in [('nav2_controller','controller_server'),('nav2_planner','planner_server'),
                               ('nav2_behaviors','behavior_server'),('nav2_bt_navigator','bt_navigator')]:
         params=[config]
@@ -30,6 +30,7 @@ def start(context):
 
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('map',default_value=str(share()/'maps/warehouse.yaml')),
+        DeclareLaunchArgument('amcl_scan_topic',default_value='',description='Override AMCL scan topic (must match the map sensor)'),
         DeclareLaunchArgument('initialize',default_value='false',choices=['true','false']),
         DeclareLaunchArgument('initial_x',default_value='0'),DeclareLaunchArgument('initial_y',default_value='0'),
         DeclareLaunchArgument('initial_yaw',default_value='0'),DeclareLaunchArgument('rviz',default_value='false'),

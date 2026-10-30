@@ -177,14 +177,21 @@ def test_executor_status_satisfies_the_gateway_contract():
 
 
 def test_direct_connector_requires_a_map_check(artifact):
-    world = (-11.0, 0.0, 0.0)   # active spawn: outside every validated lane on the approved map
+    world = (-11.0, 0.0, 0.0)   # active spawn
     validated = {n['id'] for n in artifact['nodes'] if n['status'] == 'validated'}
     closed = {e['id'] for e in artifact['edges'] if e['status'] != 'validated'} | {n['id'] for n in artifact['nodes'] if n['status'] != 'validated'}
+    # Put the robot in no available lane on any map: the Phase 4 map left the spawn's lanes
+    # unvalidated; the Phase 5.1 map validates them, so they are closed explicitly here.
+    spawn = 'amr_01_spawn'
+    closed |= {spawn} | {e['id'] for e in artifact['edges'] if spawn in (e['source'], e['target'])}
     if 'main_cross_aisle__west_service_aisle' not in validated:
         pytest.skip('west-service junction not validated on this map')
     with pytest.raises(RoutingError):
         attach_start(Graph.from_dict(artifact), artifact, world, closed, .5, connector_ok=lambda p: False, connector_max=3.)
     graph = Graph.from_dict(artifact)
     start, connector = attach_start(graph, artifact, world, closed, .5, connector_ok=lambda p: True, connector_max=3.)
-    assert connector == {'kind': 'direct', 'node': 'main_cross_aisle__west_service_aisle', 'offset_m': pytest.approx(2.3)}
-    assert [e.target for e in graph.outgoing(start)] == ['main_cross_aisle__west_service_aisle']
+    # The nearest validated, available node (west-service junction on the Phase 4 map, receiving on 5.1).
+    offset, node = min((math.dist(world[:2], n['position']), n['id']) for n in artifact['nodes']
+                       if n['id'] in validated and n['id'] not in closed)
+    assert connector == {'kind': 'direct', 'node': node, 'offset_m': pytest.approx(offset)}
+    assert [e.target for e in graph.outgoing(start)] == [node]

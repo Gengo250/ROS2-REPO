@@ -347,6 +347,15 @@ class Executor:
                 found[edge.connection] = sections
         return found
 
+    def expired(self, deadline):
+        """Reason the route deadline (simulation time) or the wall-clock guard has passed, else None."""
+        sim_deadline, wall_deadline = deadline
+        if self.node.get_clock().now().nanoseconds/1e9 > sim_deadline:
+            return f'Route timeout of {self.args.timeout} s (simulation time)'
+        if time.monotonic() > wall_deadline:
+            return f'Route wall-clock guard of {self.args.wall_guard} s (simulator stalled or too slow)'
+        return None
+
     def execute(self, artifact, route, graph, deadline):
         """Dispatch one route. Returns ('done'|'replan'|'stop', status, failure, detail, evidence)."""
         handle = self.wait(self.client.send_goal_async(self.goal(route), feedback_callback=self.on_feedback), 15)
@@ -365,9 +374,10 @@ class Executor:
             if self.cancel_requested:
                 self.cancel(handle)
                 return 'stop', 'CANCELED', 'canceled', self.cancel_requested, None
-            if time.monotonic() > deadline:
+            expired = self.expired(deadline)
+            if expired:
                 self.cancel(handle)
-                return 'stop', 'FAILED', 'timeout', f'Route wall timeout of {self.args.timeout} s', None
+                return 'stop', 'FAILED', 'timeout', expired, None
             new = set(self.restrictions().blocked_connections)-known_blocks
             if new & set(route['connections']):
                 self.cancel(handle)
@@ -418,7 +428,9 @@ class Executor:
         a = self.args
         self.set('PLANNING', detail='Loading graph, registration and map')
         try:
-            artifact, self.transform, self.settings = load_context(Paths())
+            paths = Paths.candidate(a.candidate) if a.candidate else Paths()
+            artifact, self.transform, self.settings = load_context(paths)
+            self.paths = paths
         except (GraphStaleError, registration.RegistrationError, OSError, ValueError) as exc:
             self.set('FAILED', failure='graph_or_registration_invalid', detail=str(exc))
             return EXIT['incompatible']
@@ -447,7 +459,10 @@ class Executor:
             if math.dist(pose[:2], node['map_position']) > self.settings['executor']['attach_radius_m']:
                 self.set('FAILED', failure='invalid_request', detail=f'Robot is not at origin {a.origin}')
                 return EXIT['invalid_request']
-        deadline = time.monotonic()+a.timeout
+        # The route budget is simulation time: robot motion and waiting happen in sim time, so the
+        # outcome must not depend on the host's real-time factor. A wall-clock guard still bounds a
+        # stalled or extremely slow simulator.
+        deadline = (self.node.get_clock().now().nanoseconds/1e9+a.timeout, time.monotonic()+a.wall_guard)
         route_id = uuid.uuid4().hex[:12]
         self.state['route_id'] = route_id
         tried = set()
@@ -574,10 +589,12 @@ def main():
     p.add_argument('--algorithm', choices=['astar', 'dijkstra'], default='astar')
     p.add_argument('--scenario', help='Active warehouse scenario (activates its temporary blocked zones)')
     p.add_argument('--block', action='append', default=[], metavar='CONNECTION')
-    p.add_argument('--timeout', type=float, default=600., help='Wall-clock route deadline, seconds')
+    p.add_argument('--timeout', type=float, default=600., help='Route deadline, simulation seconds')
+    p.add_argument('--wall-guard', type=float, default=3000., help='Wall-clock bound for a stalled simulator, seconds')
     p.add_argument('--ready-timeout', type=float, default=60.)
     p.add_argument('--cancel-after', type=float, help='Request cancellation after wall seconds (test hook)')
     p.add_argument('--action', default='/navigate_through_poses')
+    p.add_argument('--candidate', type=Path, help='Candidate map package directory (evaluation before approval)')
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args(rclpy.utilities.remove_ros_args()[1:])
     if not 1 <= a.timeout <= 3600 or not 1 <= a.ready_timeout <= 600:

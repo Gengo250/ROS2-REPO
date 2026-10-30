@@ -35,9 +35,12 @@ test('real scene API, four scenarios, original GLB, cameras and resize', async (
       average_fps:samples.reduce((sum,s)=>sum+s.fps,0)/samples.length,memory,
       robot_size:JSON.parse((await canvas.getAttribute('data-robot-size'))!),
       geometry_sha256:await canvas.getAttribute('data-hash')};
+    // Height includes the Phase 5.1 elevated 360-degree scanner (housing top 0.474 m).
     expect((metrics[scenario] as {robot_size:number[]}).robot_size).toEqual([
-      expect.closeTo(.951,3),expect.closeTo(.7,3),expect.closeTo(.344,3)]);
-    expect((metrics[scenario] as {geometries:number}).geometries).toBeLessThanOrEqual(52);
+      expect.closeTo(.951,3),expect.closeTo(.7,3),expect.closeTo(.474,3)]);
+    // Leak budget: Phase 3 scene 50 + Phase 5 route overlay 4 + Phase 5.1 top-scanner mast and
+    // housing 2 (GLB primitives 10 -> 12) = 56, plus the original 2 of headroom.
+    expect((metrics[scenario] as {geometries:number}).geometries).toBeLessThanOrEqual(58);
   }
   await page.locator('#scene-select').selectOption('normal');
   await expect(canvas).toHaveAttribute('data-loaded','true');
