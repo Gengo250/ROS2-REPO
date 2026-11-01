@@ -81,3 +81,28 @@ def test_rack_envelopes_block_scanners_and_bodies(scene):
     aisle = rectangle(-55, 36.0, .2, .2, 0)
     near = [p for p in scene.slice_polygons(0.213) if np.abs(p.mean(0)-(-55, 36.)).max() < 12]
     assert not (rasterize(near, (-56, 35), .05, shape) & rasterize([aisle], (-56, 35), .05, shape)).any()
+
+
+def test_industrial_camera_lenses_are_free_of_structure(scene):
+    # The first-person view renders from the lens: it must not sit inside a wall, column or rack,
+    # and the first metre along its optical axis must be clear.
+    i = scene.section('building')['interior']
+    for cam in scene.section('cameras'):
+        x, y, z = cam['position']
+        assert i['x_min'] < x < i['x_max'] and i['y_min'] < y < i['y_max'], cam['id']
+        c, s, cp, sp = np.cos(cam['yaw']), np.sin(cam['yaw']), np.cos(cam['pitch']), np.sin(cam['pitch'])
+        for t in np.arange(0., 1.01, .1):
+            px, py, pz = x+cp*c*t, y+cp*s*t, z-sp*t
+            hit = [p for p in scene.slice_polygons(pz) if contains(p, px, py)]
+            assert not hit, (cam['id'], round(t, 1))
+
+
+def contains(polygon, x, y):
+    """Even-odd point-in-polygon test."""
+    inside, j = False, len(polygon)-1
+    for k in range(len(polygon)):
+        (xi, yi), (xj, yj) = polygon[k], polygon[j]
+        if (yi > y) != (yj > y) and x < (xj-xi)*(y-yi)/(yj-yi)+xi:
+            inside = not inside
+        j = k
+    return inside

@@ -3,7 +3,9 @@ import { Plane, Raycaster, Vector2, Vector3 } from 'three';
 import { DynamicBatch, InstancedRenderer } from './render/InstancedRenderer';
 import { OrbitCamera } from './OrbitCamera';
 import { buildStatic, fetchScene, LAYER_GROUPS, type CampusScene, type Zone } from './scene';
-import { CameraCoverage, cameraAxes, coverage } from './CameraCoverage';
+import { fitViewport, industrialOptics, industrialPose, lookPose, onboardOptics, onboardPose, type MountedCamera, type Optics, type Pose, type Rect } from './cameraPoses';
+import { ViewController, type ViewKind, type ViewTarget } from './ViewController';
+import type { RenderView } from './render/InstancedRenderer';
 import { Minimap, type MiniMark } from './Minimap';
 import { LiveWorld, type RenderedEntity } from './live/LiveWorld';
 import { LiveScene } from './live/LiveScene';
@@ -24,16 +26,21 @@ const canvas = $<HTMLCanvasElement>('#scene');
 const renderer = new InstancedRenderer(canvas);
 const camera = new OrbitCamera(canvas, () => { following = false; });
 const batch = new DynamicBatch();
-const cctv = new CameraCoverage();
-renderer.overlay.add(cctv.group);
+const view = new ViewController();
 const minimap = new Minimap($<HTMLCanvasElement>('#minimap'));
-const show: Record<string, boolean> = { roof: false, enclosure: false, racks: true, vehicles: true, people: true, routes: true, labels: true, fields: true, cctv: true };
+const show: Record<string, boolean> = { roof: false, enclosure: false, racks: true, vehicles: true, people: true, routes: true, labels: true, fields: true };
 let night = 0, scene: CampusScene, live: LiveWorld | null = null, liveScene: LiveScene | null = null, demo: Demo | null = null;
 let tool: string | null = null, lastTool = 'cone', hover: { x: number; z: number; ok: boolean } | null = null;
 let selectedId: string | null = null, following = false, active = true, speed = 1;
 const counters = { stops: 0, yields: 0, detours: 0, hits: 0 };
 const log: { time: string; msg: string }[] = [];
-let coverages: [number, number][][] = [];
+/** Onboard RGB-D camera of the AMR model (URDF export); null if the file could not be read. */
+let onboardMount: MountedCamera | null = null;
+let lastOnboard: { pose: Pose; optics: Optics } | null = null, onboardBase: { x: number; y: number; z: number; yaw: number } | null = null;
+/** Area between the panels where first-person views are framed, and the last rendered view. */
+let stage: Rect = { x: 0, y: 0, width: 1, height: 1 }, rendered: RenderView | null = null;
+let selectedCamera: string | null = null, targetViewport: Rect | null = null, hudHtml = '';
+const STATE_LABEL: Record<string, string> = { moving: 'Em movimento', stopped: 'Parado', blocked: 'Bloqueado' };
 
 function toast(message: string) { const e = $('#toast'); e.textContent = message; e.classList.add('show'); clearTimeout((toast as unknown as { t?: number }).t); (toast as unknown as { t?: number }).t = window.setTimeout(() => e.classList.remove('show'), 2600); }
 function logEvent(msg: string) { log.unshift({ time: clockText().slice(0, 5), msg }); log.length = Math.min(log.length, 6); }
@@ -73,7 +80,7 @@ function buildPanels() {
 }
 function setView(name: string) {
   const v = scene.views[name]; if (!v) return;
-  following = false; camera.setView(v); cctv.select(null);
+  following = false; camera.setView(v); enterView('overview', null);
   document.querySelectorAll<HTMLElement>('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === name));
   toast('Câmera: ' + v.label);
 }
@@ -83,12 +90,47 @@ function selectZone(z: Zone) {
   camera.focus(z.pos[0], z.pos[1]); toast('Setor selecionado: ' + z.name);
 }
 function selectCamera(id: string) {
-  const cam = scene.cameras.find(c => c.id === id)!; cctv.select(id);
-  const { forward } = cameraAxes(cam);
-  const eye = rosToGl(...cam.position), target = rosToGl(cam.position[0] + forward[0]! * 10, cam.position[1] + forward[1]! * 10, cam.position[2] + forward[2]! * 10);
-  $('#selection').innerHTML = `<h3>CÂMERA INDUSTRIAL <span class="small-pill">GEOMÉTRICA</span></h3><div class="selected-title">${cam.label}</div><div class="selected-meta">Posição (${fmt(cam.position[0])}; ${fmt(cam.position[1])}) m · altura ${fmt(cam.position[2])} m<br>Orientação ${fmt(cam.yaw * 180 / Math.PI, 0)}° · inclinação ${fmt(cam.pitch * 180 / Math.PI, 0)}°<br>Abertura ${fmt(cam.horizontal_fov * 180 / Math.PI, 0)}° × ${fmt(cam.vertical_fov * 180 / Math.PI, 0)}° · alcance ${cam.range} m<br>Resolução prevista ${cam.resolution[0]}×${cam.resolution[1]} · tópico futuro <code>${cam.future_topic}</code><br><span style="color:#ffc978">● Sem stream de imagem nem detecção (cobertura geométrica)</span></div><button class="followbtn" id="povBtn">Ver pela câmera</button>`;
-  $('#povBtn').onclick = () => { camera.pov = { eye, target, fov: cam.vertical_fov * 180 / Math.PI, id: cam.id }; following = false; toast('Ponto de vista: ' + cam.label); };
-  camera.focus(cam.position[0], cam.position[1], 60);
+  const cam = scene.cameras.find(c => c.id === id)!;
+  selectedId = null; selectedCamera = id;
+  document.querySelectorAll<HTMLElement>('[data-cctv]').forEach(b => b.classList.toggle('active', b.dataset.cctv === id));
+  $('#selection').innerHTML = `<h3>CÂMERA INDUSTRIAL <span class="small-pill">INSTALADA</span></h3><div class="selected-title">${cam.label}</div><div class="selected-meta">Lente em (${fmt(cam.position[0])}; ${fmt(cam.position[1])}) m · altura ${fmt(cam.position[2])} m<br>Orientação ${fmt(cam.yaw * 180 / Math.PI, 0)}° · inclinação ${fmt(cam.pitch * 180 / Math.PI, 0)}°<br>Abertura ${fmt(cam.horizontal_fov * 180 / Math.PI, 0)}° × ${fmt(cam.vertical_fov * 180 / Math.PI, 0)}° · resolução prevista ${cam.resolution[0]}×${cam.resolution[1]}<br>Tópico futuro <code>${cam.future_topic}</code><br><span style="color:#ffc978">● Sem stream de imagem nem detecção: a visão é uma renderização 3D da posição da lente</span></div><button class="followbtn" id="viewCameraBtn">Visualizar câmera <span class="key">C</span></button>`;
+  $('#viewCameraBtn').onclick = () => enterView('industrial', id);
+  // Already looking through a camera: switch straight to the chosen one.
+  if (view.kind === 'industrial') enterView('industrial', id); else camera.focus(cam.position[0], cam.position[1], 60);
+}
+
+// ------------------------------------------------------------------ view modes
+/** Switch the main view (overview, an industrial camera, a robot's onboard camera). */
+function enterView(kind: ViewKind, id: string | null) {
+  if (kind === 'onboard' && !onboardMount) { toast('Modelo da câmera embarcada indisponível (robots/amr.cameras.json)'); return; }
+  if (kind !== 'overview') following = false;
+  view.enter(kind, id, performance.now() / 1000);
+  camera.override = kind === 'overview' ? null : (dx, dy) => view.drag(dx, dy);
+  canvas.classList.toggle('fp', kind !== 'overview'); canvas.classList.remove('look');
+  if (kind === 'industrial') { const cam = scene.cameras.find(c => c.id === id)!; toast('Câmera industrial: ' + cam.label); }
+  if (kind === 'onboard') toast(`Câmera embarcada: ${id}`);
+  updateHud(true);
+}
+function nextCamera() {
+  const ids = scene.cameras.map(c => c.id), current = view.kind === 'industrial' ? ids.indexOf(view.id!) : -1;
+  selectCamera(ids[(current + 1) % ids.length]!);
+  if (view.kind !== 'industrial') enterView('industrial', ids[(current + 1) % ids.length]!);
+}
+/** AMRs of the current mode (backend entities in LIVE, the prototype fleet in DEMO). */
+function amrIds(): string[] { return mode === 'live' ? lastEntities.filter(e => e.type === 'amr').map(e => e.id) : demo!.robots.map(r => r.id as string); }
+function viewAmr(action: string, id: string) {
+  if (action === 'onboard') { selectedId = id; enterView('onboard', id); return; }
+  enterView('overview', null); selectedId = id;
+  const e = mode === 'live' ? lastEntities.find(x => x.id === id) : null, r = mode === 'demo' ? demo!.robots.find(x => x.id === id) : null;
+  const at = e ? [e.x, e.y] : r ? [r.pose.x, -r.pose.z] : null;
+  if (action === 'follow') { following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + id); }
+  else { following = false; if (at) camera.focus(at[0]!, at[1]!, 24); toast('Visão externa: ' + id); }
+}
+/** Visualization buttons of an AMR panel; the active one reflects the current view. */
+function viewModes(id: string) {
+  const active = view.kind === 'onboard' && view.id === id ? 'onboard' : following && selectedId === id && view.kind === 'overview' ? 'follow' : 'external';
+  const button = (key: string, label: string) => `<button data-viewmode="${key}" data-robot="${id}" class="${active === key ? 'active' : ''}">${label}</button>`;
+  return `<div class="viewmodes"><div class="vmlabel">VISUALIZAÇÃO</div>${button('external', 'Visão externa')}${button('onboard', 'Câmera embarcada')}${button('follow', 'Acompanhar AMR')}</div>`;
 }
 
 // ------------------------------------------------------------------ selection panel
@@ -97,16 +139,18 @@ function entityPanel(e: RenderedEntity) {
   const kind = e.type === 'amr' ? 'ROBÔ MÓVEL · NAV2' : e.type === 'forklift' ? 'EMPILHADEIRA' : 'FUNCIONÁRIO';
   const field = { free: ['#4fe3c1', 'livre'], warning: ['#ffbf45', 'alerta'], protective: ['#ff5145', 'proteção'] }[e.field_state];
   let meta = `${e.type === 'human' ? scene.agents.roles[scene.agents.workers.find(w => w.id === e.id)?.role ?? '']?.name ?? '' : kind}<br>`;
-  meta += `<span style="color:#73e9ce">● ${e.stale ? 'Último estado conhecido' : e.state}${e.activity ? ' · ' + (scene.agents.acts[e.activity]?.label ?? e.activity) : ''}${e.reason ? ' · ' + e.reason : ''}</span><br>`;
+  meta += `<span style="color:#73e9ce">● ${e.stale ? 'Último estado conhecido' : STATE_LABEL[e.state] ?? e.state}${e.activity ? ' · ' + (scene.agents.acts[e.activity]?.label ?? e.activity) : ''}${e.reason ? ' · ' + e.reason : ''}</span><br>`;
   meta += `Velocidade ${fmt(Math.abs(e.speed))} m/s · posição (${fmt(e.x)}; ${fmt(e.y)}) m`;
   if (e.type !== 'human') meta += `<br>Campo de proteção <span style="color:${field[0]}">${field[1]}</span> · ${fmt(e.field_length)} m`;
   if (robot) meta += `<br>Interlock: ${robot.interlock ?? 'sem diagnóstico'}${robot.mission ? `<br>Missão ${robot.mission.destination}: ${robot.mission.status}` : ''}`;
-  $('#selection').innerHTML = `<h3>${kind} <span class="small-pill">${e.stale ? 'DESATUALIZADO' : 'AO VIVO'}</span></h3><div class="selected-title">${e.id}</div><div class="selected-meta">${meta}</div><button class="followbtn" id="followBtn">${following ? 'Parar de acompanhar' : 'Acompanhar com a câmera'}</button>`;
+  const controls = e.type === 'amr' ? viewModes(e.id) : `<button class="followbtn" id="followBtn">${following ? 'Parar de acompanhar' : 'Acompanhar com a câmera'}</button>`;
+  $('#selection').innerHTML = `<h3>${kind} <span class="small-pill">${e.stale ? 'DESATUALIZADO' : 'AO VIVO'}</span></h3><div class="selected-title">${e.id}</div><div class="selected-meta">${meta}</div>${controls}`;
 }
 function demoPanel(r: { id: string } & Record<string, unknown>, isWorker: boolean) {
   const meta = isWorker ? `${(r.R as { name: string }).name}<br><span style="color:#73e9ce">● ${demo!.workerStatus(r)}</span><br>Velocidade ${fmt(r.v as number)} m/s<br>Passos nesta sessão ${Math.floor(r.steps as number)}`
     : `${(r.S as { name: string }).name}<br><span style="color:${['#4fe3c1', '#ffbf45', '#ff5145'][r.field as number]}">● ${demo!.vehStatus(r)}</span><br>Velocidade ${fmt(r.v as number)} de ${fmt(r.speed as number)} m/s<br>Campo de proteção ${fmt(r.prot as number)} m<br>Percorrido ${Math.round(r.odo as number)} m`;
-  $('#selection').innerHTML = `<h3>${isWorker ? 'FUNCIONÁRIO' : 'VEÍCULO'} <span class="small-pill">DEMO</span></h3><div class="selected-title">${r.id}</div><div class="selected-meta">${meta}</div><button class="followbtn" id="followBtn">${following ? 'Parar de acompanhar' : 'Acompanhar com a câmera'}</button>`;
+  const controls = !isWorker && r.kind === 'amr' ? viewModes(r.id) : `<button class="followbtn" id="followBtn">${following ? 'Parar de acompanhar' : 'Acompanhar com a câmera'}</button>`;
+  $('#selection').innerHTML = `<h3>${isWorker ? 'FUNCIONÁRIO' : 'VEÍCULO'} <span class="small-pill">DEMO</span></h3><div class="selected-title">${r.id}</div><div class="selected-meta">${meta}</div>${controls}`;
 }
 
 // ------------------------------------------------------------------ LIVE wiring
@@ -197,15 +241,19 @@ function startDemo() {
 
 // ------------------------------------------------------------------ picking and tools
 const raycaster = new Raycaster(), floor = new Plane(new Vector3(0, 1, 0), 0), mouse = new Vector2(), hit = new Vector3();
+/** Viewport of the last rendered frame (CSS px, canvas coordinates): the whole canvas, or the
+ * camera's framed area in first-person views. Picking and labels map through it. */
+function viewportRect(): Rect { return rendered?.viewport ?? { x: 0, y: 0, width: canvas.clientWidth, height: canvas.clientHeight }; }
 function floorPoint(cx: number, cy: number) {
-  const r = canvas.getBoundingClientRect();
-  mouse.set((cx - r.left) / r.width * 2 - 1, -((cy - r.top) / r.height) * 2 + 1);
+  const r = canvas.getBoundingClientRect(), v = viewportRect(), px = cx - r.left - v.x, py = cy - r.top - v.y;
+  if (px < 0 || py < 0 || px > v.width || py > v.height) return null;
+  mouse.set(px / v.width * 2 - 1, -(py / v.height) * 2 + 1);
   raycaster.setFromCamera(mouse, renderer.camera);
   return raycaster.ray.intersectPlane(floor, hit) ? { x: hit.x, z: hit.z } : null;
 }
 function screen(x: number, y: number, z: number) {
-  const v = new Vector3(x, y, z).project(renderer.camera);
-  return v.z > 1 ? null : [(v.x + 1) / 2 * canvas.clientWidth, (1 - v.y) / 2 * canvas.clientHeight];
+  const p = new Vector3(x, y, z).project(renderer.camera), v = viewportRect();
+  return p.z > 1 ? null : [v.x + (p.x + 1) / 2 * v.width, v.y + (1 - p.y) / 2 * v.height];
 }
 function setTool(type: string | null) {
   tool = tool === type ? null : type; hover = null;
@@ -236,7 +284,10 @@ canvas.addEventListener('pointerup', e => {
   else { for (const w of demo!.workers) candidates.push({ id: w.id, at: [w.x, w.y0 + 1.1, w.z], radius: 26 }); for (const v of [...demo!.robots, ...demo!.forklifts]) candidates.push({ id: v.id, at: [v.pose.x, 1, v.pose.z], radius: 34 }); }
   let best: string | null = null, bestD = Infinity;
   for (const c of candidates) { const p = screen(c.at[0]!, c.at[1]!, c.at[2]!); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < c.radius && d < bestD) { bestD = d; best = c.id; } }
+  // In a first-person view a click only selects (the view stays on the chosen camera).
+  if (best && view.firstPerson) { selectedId = best; toast('Selecionado ' + best); return; }
   if (best) { selectedId = best; following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + best); return; }
+  if (view.firstPerson) return;
   let zone: Zone | null = null, zd = 48;
   for (const { z } of labelNodes) { const p = screen(...rosToGl(z.pos[0], z.pos[1], z.pos[2])); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < zd) { zd = d; zone = z; } }
   if (zone) selectZone(zone);
@@ -256,12 +307,25 @@ function bindControls() {
   document.querySelectorAll<HTMLInputElement>('input[data-layer]').forEach(el => el.onchange = () => {
     const layer = el.dataset.layer!; show[layer] = el.checked;
     for (const name of LAYER_GROUPS[layer] ?? []) renderer.setLayerVisible(name, el.checked);
-    if (layer === 'cctv') cctv.group.visible = el.checked;
     if (demo) demo.opts.people = show.people!, demo.opts.vehicles = show.vehicles!;
     toast((el.checked ? 'Camada exibida: ' : 'Camada oculta: ') + el.parentElement!.firstChild!.textContent!.trim());
   });
   $<HTMLInputElement>('[data-night]').onchange = e => { night = (e.target as HTMLInputElement).checked ? 1 : 0; toast(night ? 'Iluminação noturna ativada' : 'Iluminação diurna ativada'); };
-  $('#selection').onclick = e => { if ((e.target as HTMLElement).id === 'followBtn') following = !following; };
+  $('#selection').onclick = e => {
+    const target = e.target as HTMLElement, choice = target.closest<HTMLElement>('[data-viewmode]');
+    if (target.id === 'followBtn') following = !following;
+    if (choice) viewAmr(choice.dataset.viewmode!, choice.dataset.robot!);
+  };
+  $('#viewHud').onclick = e => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-hud]'); if (!b) return;
+    const action = b.dataset.hud!;
+    if (action === 'overview') enterView('overview', null);
+    else if (action === 'next') nextCamera();
+    else if (action === 'look') { view.setLook(!view.look.enabled); canvas.classList.toggle('look', view.look.enabled); toast(view.look.enabled ? 'Olhar ao redor: arraste no cenário (a orientação do sensor não muda)' : 'Vista alinhada ao sensor'); }
+    else if (view.kind === 'onboard') viewAmr(action, view.id!);
+    updateHud(true);
+  };
+  if (mode === 'live') $('#missionOnboard').onclick = () => { const id = live?.latest?.robots[0]?.id; if (id) viewAmr('onboard', id); };
   $('#followNext').onclick = () => cycleWorker();
   $('#screenshot').onclick = () => { const a = document.createElement('a'); a.download = 'atlas-digital-twin.png'; a.href = canvas.toDataURL('image/png'); a.click(); toast('Captura salva'); };
   for (const b of document.querySelectorAll<HTMLButtonElement>('[data-mode]')) {
@@ -275,7 +339,9 @@ function bindControls() {
     if (/Digit[1-9]/.test(e.code)) { const v = views[Number(e.code.slice(-1)) - 1]; if (v) setView(v); }
     if (e.code === 'KeyF') cycleWorker();
     if (e.code === 'KeyO') setTool(tool || lastTool);
-    if (e.code === 'Escape') { if (tool) setTool(tool); else setView(views[0]!); }
+    if (e.code === 'KeyC') nextCamera();
+    if (e.code === 'KeyV') { const id = amrIds().includes(selectedId ?? '') ? selectedId! : amrIds()[0]; if (id) viewAmr('onboard', id); }
+    if (e.code === 'Escape') { if (tool) setTool(tool); else if (view.firstPerson) enterView('overview', null); else setView(views[0]!); }
   });
 }
 function cycleWorker() {
@@ -293,7 +359,37 @@ const frameTimes: number[] = [];
 let instancesStatic = 0;
 function resize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
-  if (canvas.width !== Math.round(w * ratio) || canvas.height !== Math.round(h * ratio)) renderer.resize(w, h, ratio);
+  if (canvas.width !== Math.round(w * ratio) || canvas.height !== Math.round(h * ratio)) { renderer.resize(w, h, ratio); stage = stageRect(); }
+}
+/** Area of the canvas left free by the panels: first-person views are framed inside it. */
+function stageRect(): Rect {
+  const W = canvas.clientWidth, H = canvas.clientHeight, gap = 14;
+  const top = $('.topbar').getBoundingClientRect().bottom + gap, left = $('.leftpanel').getBoundingClientRect(), right = $('.rightpanel').getBoundingClientRect();
+  const x0 = left.width ? left.right + gap : gap, x1 = right.width ? right.left - gap : W - gap;
+  const bottom = H - $('.ribbon').getBoundingClientRect().height - 21 - gap;
+  return { x: x0, y: top, width: Math.max(80, x1 - x0), height: Math.max(60, bottom - top) };
+}
+/** Desired camera of this frame from the current mode. Onboard poses come from the same
+ * interpolated backend state that is drawn (or the DEMO's own state); a robot that vanished
+ * keeps its last pose. */
+function viewTarget(): ViewTarget {
+  if (view.kind === 'industrial') {
+    const cam = scene.cameras.find(c => c.id === view.id)!, optics = industrialOptics(cam);
+    return { pose: industrialPose(cam), optics, viewport: fitViewport(stage, optics.aspect) };
+  }
+  if (view.kind === 'onboard' && onboardMount) {
+    let base: { x: number; y: number; z: number; yaw: number } | null = null, mount = onboardMount;
+    if (mode === 'live') { const e = lastEntities.find(x => x.id === view.id && x.type === 'amr'); if (e) base = { x: e.x, y: e.y, z: e.z, yaw: e.yaw }; }
+    else {
+      // DEMO vehicles are the prototype's (1.64 m), not the URDF robot: same optics, orientation and
+      // lens height, lens at the vehicle's nominal front.
+      const r = demo?.robots.find(x => x.id === view.id);
+      if (r) { base = { x: r.pose.x, y: -r.pose.z, z: 0, yaw: r.pose.yaw }; mount = { ...onboardMount, position: [r.S.cx + r.S.L / 2, 0, onboardMount.position[2]!] }; }
+    }
+    if (base) { onboardBase = base; lastOnboard = { pose: onboardPose(base, mount), optics: onboardOptics(mount) }; }
+    if (lastOnboard) return { ...lastOnboard, viewport: fitViewport(stage, lastOnboard.optics.aspect) };
+  }
+  return { pose: lookPose(camera.eye, camera.state.target), optics: { fov: 47, aspect: canvas.clientWidth / Math.max(canvas.clientHeight, 1), near: .2, far: 700 }, viewport: null };
 }
 function followTarget(): number[] | null {
   if (!following || !selectedId) return null;
@@ -323,23 +419,25 @@ function render(now: number) {
     path = (robot?.path ?? []) as [number, number][];
     const goal = robot?.mission && ['pending', 'active'].includes(robot.mission.status) ? robot.mission.goal : null;
     liveScene.draw(batch, lastEntities, s?.obstacles ?? [], path, goal, { people: show.people!, vehicles: show.vehicles!, fields: show.fields!,
-      routes: show.routes!, selected: selectedId, eye: camera.eye, time: now / 1000 });
+      routes: show.routes!, selected: selectedId, eye: camera.eye, time: now / 1000, onboard: view.kind === 'onboard' ? view.id : null });
     dim = live.connection !== 'connected' || s?.simulation.availability !== 'online' ? .55 : 0;
   } else if (demo) {
     demo.draw(batch, { people: show.people, vehicles: show.vehicles, fields: show.fields, selected: demo.workers.find(w => w.id === selectedId) ?? null,
-      eye: camera.eye, tool, hover });
+      eye: camera.eye, tool, hover, onboard: view.kind === 'onboard' ? view.id : null });
   }
-  if (show.cctv) for (const c of scene.cameras) {
-    if (camera.pov?.id === c.id) continue;  // looking through this camera: do not draw its housing
-    const [x, y, z] = rosToGl(...c.position), selectedCamera = cctv.selected === c.id;
-    boxDyn(batch, x, y, z, .34, .2, .22, selectedCamera ? '#ffd07e' : '#c79bff', c.yaw, .5);
-    boxDyn(batch, x + Math.cos(c.yaw) * .2, y - .05, z - Math.sin(c.yaw) * .2, .08, .14, .14, '#1b2129', c.yaw, 0);
+  // Installed industrial cameras (physical models): the lens is at the scene position, the housing
+  // behind it. The camera being looked through is not drawn.
+  for (const c of scene.cameras) {
+    if (view.kind === 'industrial' && view.id === c.id) continue;
+    const [x, y, z] = rosToGl(...c.position), dx = Math.cos(c.yaw), dz = -Math.sin(c.yaw);
+    boxDyn(batch, x - dx * .25, y, z - dz * .25, .34, .2, .22, c.id === selectedCamera ? '#ffd07e' : '#c79bff', c.yaw, .5);
+    boxDyn(batch, x - dx * .04, y - .02, z - dz * .04, .08, .14, .14, '#1b2129', c.yaw, 0);
   }
   if (mode === 'live' && tool && hover) drawPlacement(batch, hover, scene.obstacle_catalogue[tool]!.length, scene.obstacle_catalogue[tool]!.width);
   renderer.uploadDynamic(batch);
-  const pov = camera.pov;
-  if (pov) { renderer.camera.fov = pov.fov; renderer.camera.updateProjectionMatrix(); renderer.render(pov.eye, pov.target, sky, night, dim); }
-  else { if (renderer.camera.fov !== 47) { renderer.camera.fov = 47; renderer.camera.updateProjectionMatrix(); } renderer.render(camera.eye, camera.state.target, sky, night, dim); }
+  const target = viewTarget(); targetViewport = target.viewport;
+  rendered = view.frame(target, now / 1000, { x: 0, y: 0, width: canvas.clientWidth, height: canvas.clientHeight });
+  renderer.render(rendered, sky, night, dim);
   // Adaptive resolution: lower the pixel ratio while the delivered rate stays well below the
   // cap; raise it again once the cap is held. Never below 0.75.
   frameEma += ((frameTimes.at(-1) ?? frameEma) - frameEma) * .05;
@@ -357,7 +455,7 @@ function render(now: number) {
 function updateLabels() {
   for (const { z, el } of labelNodes) {
     const p = screen(...rosToGl(z.pos[0], z.pos[1], z.pos[2]));
-    if (p && show.labels && camera.state.distance < 310 && p[0]! > 0 && p[0]! < canvas.clientWidth && p[1]! > 70 && p[1]! < canvas.clientHeight) {
+    if (p && show.labels && !view.firstPerson && camera.state.distance < 310 && p[0]! > 0 && p[0]! < canvas.clientWidth && p[1]! > 70 && p[1]! < canvas.clientHeight) {
       el.style.display = 'block'; el.style.left = p[0] + 'px'; el.style.top = p[1] + 'px';
     } else el.style.display = 'none';
   }
@@ -373,11 +471,45 @@ function updateMinimap(path: [number, number][]) {
     for (const w of demo.workers) marks.push({ x: w.x, y: -w.z, kind: 'worker', sel: w.id === selectedId });
     for (const o of demo.loose) marks.push({ x: o.x, y: -o.z, kind: 'obj' });
   }
-  for (const c of scene.cameras) marks.push({ x: c.position[0], y: c.position[1], kind: 'camera' });
-  minimap.draw(marks, path, show.cctv ? coverages : []);
+  for (const c of scene.cameras) marks.push({ x: c.position[0], y: c.position[1], kind: 'camera', sel: view.kind === 'industrial' && view.id === c.id });
+  minimap.draw(marks, path);
+}
+/** Discreet identifier of the first-person view, anchored to the camera's framed viewport. */
+function updateHud(force = false) {
+  const hud = $('#viewHud');
+  if (!view.firstPerson) { hud.hidden = true; hudHtml = ''; return; }
+  const look = `<button data-hud="look" class="${view.look.enabled ? 'active' : ''}">${view.look.enabled ? 'Alinhar ao sensor' : 'Olhar ao redor'}</button>`;
+  let html: string;
+  if (view.kind === 'industrial') {
+    const c = scene.cameras.find(x => x.id === view.id)!;
+    html = `<div class="hudtitle">CÂMERA INDUSTRIAL <span class="small-pill">PRIMEIRA PESSOA 3D</span></div><div class="hudname">${c.label}</div>`
+      + `<div class="hudmeta">Lente a ${fmt(c.position[2])} m · inclinação ${fmt(c.pitch * 180 / Math.PI, 0)}° · ${fmt(c.horizontal_fov * 180 / Math.PI, 0)}° × ${fmt(c.vertical_fov * 180 / Math.PI, 0)}° · renderização 3D, não é imagem de câmera</div>`
+      + `<div class="hudbtns"><button data-hud="overview">Voltar à visão geral <span class="key">ESC</span></button><button data-hud="next">Próxima câmera <span class="key">C</span></button>${look}</div>`;
+  } else {
+    const id = view.id!, m = onboardMount!;
+    let status = '', stale = false;
+    if (mode === 'live') {
+      const e = lastEntities.find(x => x.id === id), mission = live?.latest?.robots.find(r => r.id === id)?.mission;
+      stale = !e || e.stale;
+      const navigating = mission && ['pending', 'active'].includes(mission.status);
+      status = e ? `${navigating ? 'Navegando' : STATE_LABEL[e.state] ?? e.state} · ${fmt(Math.abs(e.speed), 2)} m/s${mission ? ` · destino ${mission.destination} (${mission.status})` : ''}` : 'Robô ausente do estado do backend';
+    } else {
+      const r = demo!.robots.find(x => x.id === id);
+      status = r ? `${demo!.vehStatus(r)} · ${fmt(r.v, 2)} m/s · AMR demonstrativo: lente na frente do veículo do protótipo` : '';
+    }
+    html = `<div class="hudtitle">CÂMERA EMBARCADA <span class="small-pill">PRIMEIRA PESSOA 3D</span></div><div class="hudname">${id} · ${m.id}</div>`
+      + `<div class="hudmeta">${status}<br><code>${m.frame_id}</code> (URDF) · ${fmt(m.horizontal_fov * 180 / Math.PI, 0)}° · ${m.resolution[0]}×${m.resolution[1]} · renderização 3D, não é a imagem RGB-D</div>`
+      + (stale ? '<div class="hudwarn">DADOS DESATUALIZADOS · última pose recebida do backend</div>' : '')
+      + `<div class="hudbtns"><button data-hud="external">Visão externa</button><button data-hud="follow">Acompanhar AMR</button>${look}<button data-hud="overview">Visão geral <span class="key">ESC</span></button></div>`;
+  }
+  const v = targetViewport ?? stage;
+  hud.style.left = `${v.x + 12}px`; hud.style.top = `${v.y + 12}px`;
+  if (force || html !== hudHtml) { hud.innerHTML = html; hudHtml = html; }
+  hud.hidden = false;
 }
 function updatePanels() {
   $('#clock').textContent = clockText();
+  updateHud();
   if (mode === 'live') liveStatus();
   const t = mode === 'demo' && demo ? demo.traffic : counters;
   $('#cntStops').textContent = String(t.stops); $('#cntYield').textContent = String(t.yields); $('#cntDetour').textContent = String(t.detours); $('#cntHits').textContent = String(t.hits);
@@ -395,7 +527,11 @@ function publishMetrics() {
     static_instances: instancesStatic, dynamic_instances: batch.total, connection: live?.connection ?? null, ws_hz: live?.receivedHz ?? null,
     ws_latency_ms: live?.latencyMs ?? null, sim_status: live?.latest?.simulation.status ?? null, rtf: live?.latest?.simulation.real_time_factor ?? null,
     entities: mode === 'live' ? lastEntities.length : (demo ? demo.workers.length + demo.robots.length + demo.forklifts.length : 0),
-    obstacles: mode === 'live' ? live?.latest?.obstacles.length ?? 0 : demo?.loose.length ?? 0, js_heap_mb: (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize ? (performance as unknown as { memory: { usedJSHeapSize: number } }).memory.usedJSHeapSize / 1e6 : null };
+    obstacles: mode === 'live' ? live?.latest?.obstacles.length ?? 0 : demo?.loose.length ?? 0, view: view.kind, view_id: view.id,
+    viewport: rendered?.viewport ?? null, camera_position: rendered?.position.map(v => +v.toFixed(4)) ?? null,
+    // Robot pose the onboard camera was placed from in this same frame (validation of the mount).
+    onboard_base: view.kind === 'onboard' ? onboardBase : null, render_sim_time: live?.renderTime ?? null,
+    camera_forward: rendered ? new Vector3(0, 0, -1).applyQuaternion(renderer.camera.quaternion).toArray().map(v => +v.toFixed(7)) : null, js_heap_mb: (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize ? (performance as unknown as { memory: { usedJSHeapSize: number } }).memory.usedJSHeapSize / 1e6 : null };
   document.body.dataset.metrics = JSON.stringify(metrics);
   $('#perf').innerHTML = `Desempenho: <b>${fps.toFixed(0)} FPS</b> (limite ${FPS_CAP}) · quadro p95 <b>${p95.toFixed(1)} ms</b><br>${info.render.calls} chamadas · ${(info.render.triangles / 1000).toFixed(0)}k triângulos · resolução ${ratio.toFixed(2)}×` +
     (mode === 'live' ? `<br>WebSocket <b>${(live?.receivedHz ?? 0).toFixed(1)} Hz</b> · latência <b>${live?.latencyMs === null || live?.latencyMs === undefined ? '—' : live.latencyMs.toFixed(0) + ' ms'}</b>` : '<br>Simulação do navegador: passo fixo 60 Hz');
@@ -408,9 +544,11 @@ async function boot() {
     $('#sceneTitle').textContent = scene.metadata.title;
     instancesStatic = buildStatic(renderer, scene);
     for (const [layer, names] of Object.entries(LAYER_GROUPS)) for (const name of names) renderer.setLayerVisible(name, show[layer] ?? true);
-    cctv.build(scene.cameras); coverages = scene.cameras.map(c => coverage(c));
+    // Onboard camera mount exported from the URDF (export_robot_cameras.py); optional.
+    onboardMount = await fetch('/robots/amr.cameras.json').then(r => r.ok ? r.json() : null).then(d => d?.cameras?.[0] ?? null).catch(() => null);
     minimap.setScene(scene);
     buildPanels(); bindControls();
+    stage = stageRect(); window.addEventListener('resize', () => { stage = stageRect(); });
     camera.setView(scene.views.overview!); camera.state.yaw = camera.desired.yaw; camera.state.pitch = camera.desired.pitch;
     camera.state.distance = camera.desired.distance; camera.state.target = [...camera.desired.target];
     if (mode === 'live') startLive(); else startDemo();

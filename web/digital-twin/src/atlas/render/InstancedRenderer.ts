@@ -104,6 +104,13 @@ export class InstancedLayer {
   dispose() { this.geometry.dispose(); }
 }
 
+/** What the one camera shows this frame: pose in WebGL axes, optics (vertical FOV in degrees) and the
+ * viewport in CSS pixels from the top-left (null: the whole canvas, canvas aspect). */
+export interface RenderView {
+  position: number[]; quaternion: number[]; fov: number; aspect: number | null; near: number; far: number;
+  viewport: { x: number; y: number; width: number; height: number } | null;
+}
+
 export class InstancedRenderer {
   readonly renderer: WebGLRenderer;
   readonly scene = new Scene();
@@ -114,6 +121,7 @@ export class InstancedRenderer {
   readonly layers = new Map<string, InstancedLayer[]>();
   readonly dynamic: Record<Shape, InstancedLayer>;
   private readonly pv = new Matrix4();
+  private size = [1, 1];
   constructor(readonly canvas: HTMLCanvasElement) {
     this.renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
     this.material = new RawShaderMaterial({
@@ -139,23 +147,33 @@ export class InstancedRenderer {
   setLayerVisible(name: string, visible: boolean) { for (const layer of this.layers.get(name) ?? []) layer.mesh.visible = visible; }
   clearStatic() { for (const name of [...this.layers.keys()]) this.setStaticLayer(name, {}); this.layers.clear(); }
   uploadDynamic(batch: DynamicBatch) { for (const shape of SHAPES) this.dynamic[shape].upload(batch[shape]); }
-  render(eye: number[], target: number[], sky: number[], night: number, dim: number) {
-    this.camera.position.set(eye[0]!, eye[1]!, eye[2]!);
-    this.camera.lookAt(target[0]!, target[1]!, target[2]!);
-    this.camera.updateMatrixWorld();
-    this.pv.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse);
+  render(view: RenderView, sky: number[], night: number, dim: number) {
+    const cam = this.camera, [w, h] = this.size as [number, number], v = view.viewport;
+    const aspect = view.aspect ?? (v ? v.width / Math.max(v.height, 1) : w / Math.max(h, 1));
+    if (cam.fov !== view.fov || cam.aspect !== aspect || cam.near !== view.near || cam.far !== view.far) {
+      cam.fov = view.fov; cam.aspect = aspect; cam.near = view.near; cam.far = view.far; cam.updateProjectionMatrix();
+    }
+    cam.position.set(view.position[0]!, view.position[1]!, view.position[2]!);
+    cam.quaternion.set(view.quaternion[0]!, view.quaternion[1]!, view.quaternion[2]!, view.quaternion[3]!);
+    cam.updateMatrixWorld();
+    this.pv.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
     const u = this.material.uniforms;
-    (u.uEye!.value as Vector3).set(eye[0]!, eye[1]!, eye[2]!);
+    (u.uEye!.value as Vector3).set(view.position[0]!, view.position[1]!, view.position[2]!);
     (u.uFogColor!.value as Vector3).set(sky[0]!, sky[1]!, sky[2]!);
     u.uNight!.value = night; u.uDim!.value = dim;
-    this.renderer.setClearColor((sky[0]! * 255) << 16 | (sky[1]! * 255) << 8 | (sky[2]! * 255), 1);
-    this.renderer.render(this.scene, this.camera);
+    const r = this.renderer;
+    if (v) {
+      // Sensor framing: dark bars around a viewport with the camera's own aspect ratio.
+      r.setScissorTest(false); r.setViewport(0, 0, w, h); r.setClearColor(0x04080e, 1); r.clear();
+      r.setViewport(v.x, h - v.y - v.height, v.width, v.height); r.setScissor(v.x, h - v.y - v.height, v.width, v.height); r.setScissorTest(true);
+    } else { r.setScissorTest(false); r.setViewport(0, 0, w, h); }
+    r.setClearColor((sky[0]! * 255) << 16 | (sky[1]! * 255) << 8 | (sky[2]! * 255), 1);
+    r.render(this.scene, cam);
   }
   resize(width: number, height: number, ratio: number) {
+    this.size = [width, height];
     this.renderer.setPixelRatio(ratio);
     this.renderer.setSize(width, height, false);
-    this.camera.aspect = width / Math.max(height, 1);
-    this.camera.updateProjectionMatrix();
   }
   dispose() {
     for (const list of this.layers.values()) list.forEach(l => l.dispose());

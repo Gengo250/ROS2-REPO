@@ -10,8 +10,9 @@ export class OrbitCamera {
   desired: CameraState = { yaw: .77, pitch: .75, distance: 204, target: [0, 0, 3] };
   eye = [0, 0, 0];
   follow: (() => number[] | null) | null = null;
-  /** Explicit eye/target override (industrial camera point of view); cleared by any interaction. */
-  pov: { eye: number[]; target: number[]; fov: number; id?: string } | null = null;
+  /** First-person views own the pointer: drags go here (explicit look-around) and the wheel is
+   * ignored, so mouse interaction never leaves the selected camera by accident. */
+  override: ((dx: number, dy: number) => void) | null = null;
   private dragging = false; private mode: 'orbit' | 'pan' = 'orbit'; private last: number[] | null = null;
   clickStart: number[] | null = null;
 
@@ -26,23 +27,24 @@ export class OrbitCamera {
     element.addEventListener('pointermove', e => {
       if (!this.dragging || !this.last) return;
       const dx = e.clientX - this.last[0]!, dy = e.clientY - this.last[1]!;
-      if (Math.abs(dx) + Math.abs(dy) > 0) { this.pov = null; this.onInteract(); }
       this.last = [e.clientX, e.clientY];
+      if (this.override) { this.override(dx, dy); return; }
+      if (Math.abs(dx) + Math.abs(dy) > 0) this.onInteract();
       const d = this.desired;
       if (this.mode === 'orbit') { d.yaw -= dx * .0045; d.pitch = Math.min(1.46, Math.max(.12, d.pitch + dy * .004)); }
       else { this.follow = null; const k = d.distance * .0023, ca = Math.cos(d.yaw), sa = Math.sin(d.yaw); d.target[0] = d.target[0]! + (dx * ca + dy * sa) * k; d.target[2] = d.target[2]! + (dy * ca - dx * sa) * k; }
     });
-    element.addEventListener('wheel', e => { e.preventDefault(); this.pov = null; this.desired.distance = Math.min(390, Math.max(3, this.desired.distance * Math.exp(e.deltaY * .0012))); }, { passive: false });
+    element.addEventListener('wheel', e => { e.preventDefault(); if (this.override) return; this.desired.distance = Math.min(390, Math.max(3, this.desired.distance * Math.exp(e.deltaY * .0012))); }, { passive: false });
     let pinch = 0;
     element.addEventListener('touchstart', e => { if (e.touches.length === 2) pinch = Math.hypot(e.touches[0]!.clientX - e.touches[1]!.clientX, e.touches[0]!.clientY - e.touches[1]!.clientY); }, { passive: true });
-    element.addEventListener('touchmove', e => { if (e.touches.length === 2) { const d = Math.hypot(e.touches[0]!.clientX - e.touches[1]!.clientX, e.touches[0]!.clientY - e.touches[1]!.clientY); if (pinch) this.desired.distance = Math.min(390, Math.max(3, this.desired.distance * pinch / d)); pinch = d; } }, { passive: true });
+    element.addEventListener('touchmove', e => { if (e.touches.length === 2 && !this.override) { const d = Math.hypot(e.touches[0]!.clientX - e.touches[1]!.clientX, e.touches[0]!.clientY - e.touches[1]!.clientY); if (pinch) this.desired.distance = Math.min(390, Math.max(3, this.desired.distance * pinch / d)); pinch = d; } }, { passive: true });
   }
   setView(view: View) {
-    this.follow = null; this.pov = null;
+    this.follow = null;
     const t = rosToGl(view.target[0], view.target[1], view.target[2]);
     this.desired = { yaw: view.yaw, pitch: view.pitch, distance: view.distance, target: t };
   }
-  focus(x: number, y: number, distance = 75) { this.pov = null; this.desired.target = rosToGl(x, y, 0); this.desired.distance = distance; }
+  focus(x: number, y: number, distance = 75) { this.desired.target = rosToGl(x, y, 0); this.desired.distance = distance; }
   update(dt: number) {
     const d = this.desired, s = this.state;
     const followed = this.follow?.();

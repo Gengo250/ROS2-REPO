@@ -24,7 +24,14 @@ test('DEMO: prototype behaviour, cameras, follow and frame rate', async ({ page 
   await shot(page, 'demo_overview');
   await page.locator('[data-view="storage"]').click(); await page.waitForTimeout(2500); await shot(page, 'demo_storage');
   await page.keyboard.press('KeyF'); await page.waitForTimeout(3500); await shot(page, 'demo_follow_worker');
+  // First person: a demo AMR's onboard camera (V), an industrial camera (C), back with Escape.
+  await page.keyboard.press('KeyV'); await page.waitForTimeout(2500); await shot(page, 'demo_onboard_camera');
+  expect((await metrics(page)).view).toBe('onboard');
+  await page.keyboard.press('KeyC'); await page.waitForTimeout(2000); await shot(page, 'demo_industrial_camera');
+  expect((await metrics(page)).view).toBe('industrial');
+  await page.keyboard.press('Escape'); await page.waitForTimeout(1500);
   const m = await metrics(page);
+  expect(m.view).toBe('overview');
   await writeFile(resolve(evidence!, 'demo_metrics.json'), JSON.stringify(m, null, 1));
   expect(m.mode).toBe('demo');
   expect(m.fps).toBeGreaterThan(30);
@@ -56,9 +63,19 @@ test('LIVE ROS: backend state, obstacle round trip, cameras and missions', async
   await writeFile(resolve(evidence!, 'live_obstacle_round_trip.json'), JSON.stringify({ before, after, toast: await page.locator('#toast').textContent() }, null, 1));
   await shot(page, 'live_obstacle_placed');
   await page.locator('[data-tool="box"]').click();
-  // Industrial camera point of view.
+  // Industrial camera in first person (no coverage geometry is drawn any more).
   await page.locator('[data-cctv="cam_06"]').click(); await page.waitForTimeout(1200);
-  await page.locator('#povBtn').click(); await page.waitForTimeout(2000); await shot(page, 'live_camera_pov_cam06');
+  await page.locator('#viewCameraBtn').click(); await page.waitForTimeout(2000); await shot(page, 'live_industrial_cam06');
+  const industrial = await metrics(page);
+  expect([industrial.view, industrial.view_id]).toEqual(['industrial', 'cam_06']);
+  // Onboard camera: the view sits on the URDF lens of the drawn AMR (same frame).
+  await page.locator('#missionOnboard').click(); await page.waitForTimeout(2500); await shot(page, 'live_onboard_camera');
+  const onboard = await metrics(page), base = onboard.onboard_base;
+  expect(onboard.view).toBe('onboard');
+  const lens = [base.x + Math.cos(base.yaw) * .477, base.z + .264, -(base.y + Math.sin(base.yaw) * .477)];
+  lens.forEach((v: number, i: number) => expect(Math.abs(v - onboard.camera_position[i])).toBeLessThan(1e-3));
+  await page.keyboard.press('Escape'); await page.waitForTimeout(1500);
+  expect((await metrics(page)).view).toBe('overview');
   await page.locator('[data-view="overview"]').click(); await page.waitForTimeout(2500);
   // Follow a worker (backend-driven animation).
   await page.keyboard.press('KeyF'); await page.waitForTimeout(4000); await shot(page, 'live_follow_worker');

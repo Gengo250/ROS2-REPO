@@ -1,0 +1,38 @@
+{
+ "schema_version": "1.0",
+ "robot": "amr",
+ "source": "amr_description/urdf/amr.urdf.xacro (gazebo:=false): base_link → camera_optical_frame composed from the fixed joints; optics from config/amr_dimensions.json; topics from config/bridge.yaml",
+ "cameras": [
+  {
+   "id": "rgbd_camera",
+   "parent_frame": "base_link",
+   "frame_id": "camera_optical_frame",
+   "convention": "REP 103 optical frame: x right, y down, z forward",
+   "position": [
+    0.477,
+    0.0,
+    0.264
+   ],
+   "quaternion_xyzw": [
+    -0.5,
+    0.5,
+    -0.5,
+    0.5
+   ],
+   "horizontal_fov": 1.308997,
+   "resolution": [
+    640,
+    480
+   ],
+   "near": 0.08,
+   "far": 10.0,
+   "rate_hz": 15.0,
+   "image_topics": {
+    "availability": "Gazebo backend with sensors:=full only; the lite engine publishes no images",
+    "rgb": "/camera/image_raw",
+    "depth": "/camera/depth/image_raw",
+    "camera_info": "/camera/camera_info"
+   }
+  }
+ ]
+}

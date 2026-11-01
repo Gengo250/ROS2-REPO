@@ -32,19 +32,20 @@ export class Minimap {
     this.background = bg;
   }
 
-  draw(marks: MiniMark[], path: [number, number][] = [], coverage: [number, number][][] = []) {
+  draw(marks: MiniMark[], path: [number, number][] = []) {
     const ctx = this.ctx, X = this.X, Y = this.Y;
     if (this.background) ctx.drawImage(this.background, 0, 0); else ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    for (const poly of coverage) {
-      ctx.fillStyle = '#c79bff1c'; ctx.beginPath(); poly.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.closePath(); ctx.fill();
-    }
     if (path.length > 1) {
       ctx.strokeStyle = '#5bf0d3'; ctx.lineWidth = 2; ctx.setLineDash([4, 3]); ctx.beginPath();
       path.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.stroke(); ctx.setLineDash([]);
     }
     for (const p of marks) {
       if (p.kind === 'obj') { ctx.fillStyle = '#ff9b5e'; ctx.fillRect(X(p.x) - 2, Y(p.y) - 2, 4, 4); continue; }
-      if (p.kind === 'camera') { ctx.fillStyle = '#c79bff'; ctx.beginPath(); ctx.moveTo(X(p.x), Y(p.y) - 4); ctx.lineTo(X(p.x) + 3.5, Y(p.y) + 3); ctx.lineTo(X(p.x) - 3.5, Y(p.y) + 3); ctx.fill(); continue; }
+      if (p.kind === 'camera') {
+        ctx.fillStyle = p.sel ? '#ffd07e' : '#c79bff'; ctx.beginPath(); ctx.moveTo(X(p.x), Y(p.y) - 4); ctx.lineTo(X(p.x) + 3.5, Y(p.y) + 3); ctx.lineTo(X(p.x) - 3.5, Y(p.y) + 3); ctx.fill();
+        if (p.sel) { ctx.strokeStyle = '#ffd07e'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 7, 0, Math.PI * 2); ctx.stroke(); }
+        continue;
+      }
       ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), p.kind === 'robot' ? 4.5 : p.kind === 'forklift' ? 4 : p.sel ? 4.5 : 2.6, 0, Math.PI * 2);
       ctx.fillStyle = p.stale ? '#7d8a97' : p.kind === 'robot' ? '#5bf0d3' : p.kind === 'forklift' ? '#ffc978' : p.sel ? '#ffffff' : '#f48e8c';
       ctx.fill(); if (p.sel && p.kind !== 'worker') { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke(); }

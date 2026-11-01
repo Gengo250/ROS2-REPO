@@ -36,6 +36,8 @@ export class LiveWorld {
   private engine = '';
   private buffers = new Map<string, Sample[]>();
   private cursor: number | null = null;
+  /** Simulation time the entities are interpolated at (null before the first samples). */
+  get renderTime() { return this.cursor; }
   private rate = 1;
   private arrivals: number[] = [];
   private lastEventSeq = 0;

@@ -176,8 +176,9 @@ export function createDemo(scene,{clock=()=> '00:00',toast=()=>{}}={}){
  return {robots,forklifts,workers,loose,traffic,opts,
   get time(){return t},
   step(dt){t+=dt;trafficStep(dt);for(const w of workers)updateWorker(w,dt,t)},
-  draw(a,{people=true,vehicles=true,fields=true,selected=null,eye=null,tool=null,hover=null}={}){
-   for(const r of robots){drawRobot(a,r,t);if(fields)drawFields(a,r)}
+  // onboard: robot seen from its own camera; its field outline would sit on the lens and is not drawn.
+  draw(a,{people=true,vehicles=true,fields=true,selected=null,eye=null,tool=null,hover=null,onboard=null}={}){
+   for(const r of robots){drawRobot(a,r,t);if(fields&&r.id!==onboard)drawFields(a,r)}
    if(vehicles)for(const r of forklifts){drawForklift(a,r,t);if(fields)drawFields(a,r)}
    if(people)for(const w of workers){const far=eye&&Math.hypot(eye[0]-w.x,eye[1]-w.y0,eye[2]-w.z)>70;far&&w!==selected?drawHumanFar(a,w):drawHuman(a,w,t,w===selected)}
    for(const ob of loose)drawLooseObject(a,ob);for(const f of flashes)drawFlash(a,f);

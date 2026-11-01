@@ -42,10 +42,11 @@ export const navigation = {
       pose: [x, -49.5, 0, 0, 0, -Math.PI/2], zone: 'EXPEDIÇÃO' })),
     { id: 'receiving_01', label: 'RECEBIMENTO', kind: 'pickup', pose: [-45, -45.5, 0, 0, 0, Math.PI], zone: 'RECEBIMENTO' },
   ],
-  // Industrial monitoring cameras: mount position, aiming point on the floor, optics.
+  // Industrial monitoring cameras: mount position (the lens), aiming point on the floor, optics.
+  // Mounts sit 0.25 m off their wall or column face (CAM-01 on the east face of pillar (-71, 51)).
   // Geometric coverage only; no image stream is simulated.
   cameras: [
-    ['cam_01', 'CAM-01 · Armazenagem N-O', [-71, 51, 9], [-45, 36]],
+    ['cam_01', 'CAM-01 · Armazenagem N-O', [-70.29, 51, 9], [-45, 36]],
     ['cam_02', 'CAM-02 · Armazenagem N-L', [36, 53.4, 9], [36, 33]],
     ['cam_03', 'CAM-03 · Produção', [-1, 53.4, 9], [-1, 33]],
     ['cam_04', 'CAM-04 · Armazenagem S-O', [-72.4, 0, 9], [-45, 2]],

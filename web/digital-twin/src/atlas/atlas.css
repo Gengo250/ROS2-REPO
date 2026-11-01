@@ -14,3 +14,11 @@
 .note{font-size:9.5px;color:#7f93a9;line-height:1.5;margin-top:8px}
 /* Right column scrolls instead of letting panels shrink under each other (long camera details). */
 .rightpanel>*{flex-shrink:0}
+/* First-person views: discreet HUD on the framed camera viewport, view-mode buttons, cursors. */
+.viewhud{position:absolute;z-index:6;max-width:370px;background:rgba(9,18,30,.82);border:1px solid var(--line);border-radius:10px;padding:9px 11px;backdrop-filter:blur(14px);box-shadow:0 12px 34px #0006;color:#dbe7f3}.viewhud[hidden]{display:none}
+.viewhud .hudtitle{font:700 10px 'Space Grotesk';letter-spacing:1.6px;color:var(--mint);display:flex;align-items:center;gap:8px}.viewhud .hudname{font:700 13px 'Space Grotesk';margin:5px 0 2px}.viewhud .hudmeta{font-size:10px;line-height:1.5;color:#a3b2c5}.viewhud .hudmeta code{font-size:10px;color:#c9d6e3}
+.viewhud .hudwarn{margin-top:8px;font:700 10px 'DM Sans';letter-spacing:.8px;color:#ffd9a3;border:1px solid #ffc97866;background:#6b4d1d33;border-radius:6px;padding:5px 8px}.viewhud .hudbtns{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.viewhud button,.viewmodes button{border:1px solid #65eed744;background:#65eed714;color:#9df6df;border-radius:7px;padding:5px 8px;font:600 10px 'DM Sans',system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px}.viewhud button:hover,.viewmodes button:hover{background:#65eed726;color:#fff}
+.viewhud button.active,.viewmodes button.active{background:#194a4a;border-color:#368a7a;color:#baffeb}.viewhud button:focus-visible,.viewmodes button:focus-visible{outline:2px solid #65eed7;outline-offset:2px}.viewhud .key{border:1px solid #ffffff23;background:#ffffff08;border-radius:4px;padding:0 4px;font-size:9px;color:#96aac0}
+.viewmodes{margin-top:12px;display:grid;gap:6px}.viewmodes .vmlabel{font:700 10px 'Space Grotesk';letter-spacing:1.4px;color:var(--muted)}
+canvas#scene.fp,canvas#scene.fp:active{cursor:default}canvas#scene.fp.look{cursor:grab}canvas#scene.fp.look:active{cursor:grabbing}

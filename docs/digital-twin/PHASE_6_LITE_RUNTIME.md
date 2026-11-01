@@ -73,7 +73,15 @@ flowchart TB
 ## Commands
 
 Prepare each terminal: `cd ~/ros2_ws && source /opt/ros/jazzy/setup.bash && source .venv/bin/activate && source install/setup.bash`.
-Build: `colcon build --symlink-install --packages-select atlas_scene amr_lite_interfaces amr_lite_sim amr_navigation amr_description amr_simulation digital_twin_gateway`.
+Build **with `.venv` active** (its own `colcon`, see [DEVELOPMENT.md](DEVELOPMENT.md)); `/usr/bin/colcon` rewrites the
+console scripts to the system Python, which has no FastAPI/uvicorn, and the Gateway then dies at start
+("No module named uvicorn"):
+
+```bash
+cd ~/ros2_ws && source /opt/ros/jazzy/setup.bash && source .venv/bin/activate
+colcon build --symlink-install --packages-select atlas_scene amr_lite_interfaces amr_lite_sim amr_navigation amr_description amr_simulation digital_twin_gateway
+head -1 install/digital_twin_gateway/lib/digital_twin_gateway/gateway   # expected: #!/home/<user>/ros2_ws/.venv/bin/python
+```
 
 ```bash
 # LIVE twin: lite engine + workers/forklifts + Gateway + AMCL + Nav2 + guard (no Gazebo process)
@@ -85,6 +93,8 @@ ros2 launch amr_lite_sim lite_twin.launch.py
 ros2 launch amr_lite_sim lite_mapping.launch.py survey:=true real_time_factor:=3.0
 bash src/amr_navigation/scripts/save_map.sh /absolute/path/campus_candidate      # while SLAM runs
 python3 src/amr_lite_sim/scripts/register_campus_map.py --map /absolute/path/campus_candidate.yaml --output reg.json
+# After changing the robot model: re-export the onboard camera mount used by the browser (--check verifies)
+python3 src/amr_lite_sim/scripts/export_robot_cameras.py
 # Frontend (Node >= 22: export PATH=$PWD/.tools/node_modules/.bin:$PATH)
 cd web/digital-twin && npm run dev     # http://127.0.0.1:5173 (LIVE ROS), ?mode=demo, /diagnostics.html
 # Missions and obstacles from a terminal (same endpoints as the UI)
@@ -251,14 +261,78 @@ reconnect with backoff and resynchronise from the next snapshot.
 - One render loop that only interpolates (simulation time, 120 ms behind, never extrapolated or
   rewound) and draws; phase-keeping 60 FPS cap; adaptive pixel ratio; dynamic instances written into
   preallocated typed arrays; distant workers drawn with 5 instances instead of ~60 (LOD); labels every
-  3 frames, minimap every 9, panels every 12. 22–40 draw calls, ~10.7 k static + ~250–720 dynamic instances.
+  3 frames, minimap every 9, panels every 12. 16–22 draw calls, ~10.7 k static + ~250–720 dynamic instances.
 - DEMO runs the prototype's traffic on a fixed 60 Hz timer (independent of frame rate; the prototype
   slowed below 14 FPS). LIVE runs no simulation and dims everything when data is stale or offline.
-- Industrial cameras: frustum and floor coverage (geometric, no occlusion), selection panel, "view
-  from camera"; no image stream or detection is simulated.
-- Tests: `npm test` (16 unit), `npm run build` (types, schema drift, bundle),
+- Camera views (below): first person from every industrial camera and from each AMR's onboard
+  RGB-D camera; the camera coverage drawings (floor polygons, outlines, frustum rays, minimap
+  coverage, their layer toggle) were removed. No image stream or detection is simulated.
+- Tests: `npm test` (21 unit), `npm run build` (types, schema drift, bundle),
   `TWIN_ATLAS_EVIDENCE_DIR=... npx playwright test test/atlas.browser.ts --headed` (DEMO and LIVE).
-  Screenshots: `evidence-phase6/frontend/`.
+  Screenshots: `evidence-phase6/frontend/`, `evidence-phase6/first_person/`.
+
+### First-person camera views
+
+One Three.js camera and one render loop, placed per frame by `ViewController.ts` from
+`cameraPoses.ts` (ROS → WebGL through `coords.ts` only):
+
+| Mode | Camera pose | Optics |
+|---|---|---|
+| Overview | orbit camera (unchanged) | 47° vertical, canvas aspect |
+| Follow an entity | orbit camera following it (unchanged) | idem |
+| Industrial camera | lens at the scene's mount position, scene yaw and depression | scene horizontal × vertical aperture (85° × 52°), framed with the camera's own aspect between the panels |
+| Onboard camera (AMR) | robot pose ⊕ URDF `base_link → camera_optical_frame` (0.477 m ahead, 0.264 m up; REP 103 optical axes) | 75° horizontal, 640×480 square pixels → 59.9° vertical, 4:3 framing |
+
+- The onboard mount is not restated in the browser: `amr_lite_sim/scripts/export_robot_cameras.py`
+  composes the URDF's fixed joints (xacro, full roll/pitch/yaw) into
+  `web/digital-twin/public/robots/amr.cameras.json`; `--check` and `test_robot_cameras.py` fail if it
+  drifts from the URDF, and check the optical convention.
+- LIVE: the onboard pose is the same interpolated backend state that is drawn (simulation time,
+  never extrapolated); a stale or vanished robot keeps the last pose and the HUD says the data are
+  outdated. DEMO: the prototype's vehicles (1.64 m) are not the URDF robot, so the lens is at the
+  demo vehicle's nominal front with the URDF height, orientation and optics.
+- Switching blends position, orientation, FOV and framing over 0.6 s, then holds the lens exactly.
+  In first-person views dragging and the wheel never leave the view; "Olhar ao redor" is an explicit,
+  reversible gaze offset that does not change the sensor's orientation. Keys: C (next camera),
+  V (onboard camera of the selected or first AMR), Esc (overview). Clicks still select entities and
+  place objects through the framed viewport.
+- From a robot's own lens its protective-field outline would sit on the image, so that one robot's
+  outline is not drawn while looking through its camera (the field itself is unchanged and drawn in
+  every other view); the Nav2 path is drawn on the floor instead of 0.17 m up.
+- CAM-01 was mounted at the centre of pillar (−71, 51); its lens is now on the pillar's east face
+  (−70.29, 51, 9), same target. `test_industrial_camera_lenses_are_free_of_structure` checks that
+  no lens sits inside a solid and that the first metre of each optical axis is clear. Building
+  geometry (and its hash) is unchanged; the map registration was re-recorded for the new scene hash.
+
+Validation in a headed Chromium (Intel GPU) against the running lite stack
+(`evidence-phase6/first_person/`, `fp_validation.json`):
+
+| Check | Result |
+|---|---|
+| All 8 industrial cameras in first person, no coverage geometry | 8/8; next-camera cycles; drag and wheel keep the view and orientation; look-around turned 48° at the same lens position and realigned exactly |
+| Onboard camera during a Nav2 mission (dock_05, 0 recoveries, succeeded), turns over the whole yaw range | 284 samples, 261 moving; camera vs URDF lens of the drawn robot (same frame): max 0.07 mm, heading max 3.6 × 10⁻⁶ ° |
+| Drawn robot vs backend state | 284/284 within the drive limits × the interpolation delay; 1.9 cm when stopped |
+| Box placed by clicking the floor inside the onboard view | accepted by the backend; Nav2 replanned around it (screenshots `fp_onboard_obstacle_*`) |
+| Gateway stopped while looking through the onboard camera | "GATEWAY DESCONECTADO", HUD "DADOS DESATUALIZADOS", camera frozen at the last pose |
+| DEMO: onboard (V), industrial (C), Esc | works; onboard view follows the moving demo AMR at 60 FPS |
+| Page errors | 0 |
+
+Frame rate and GPU, same probe before and after (LIVE, 1600×900, Intel UHD; `perf_before.json`,
+`perf_after.json`):
+
+| View | FPS | frame p95 | draw calls | triangles | Intel GPU busy |
+|---|---|---|---|---|---|
+| Overview, before → after | 60.0 → 60.0 | 20.9 → 20.9 ms | 40 → 16 | 161 k → 160 k | 95 → 96 % |
+| Industrial CAM-06, before ("view from camera") → after | 60.0 → 60.0 | 20.9 → 20.9 ms | 38 → 16 | 181 k → 179 k | 98 → 96 % |
+| Onboard camera AMR-01 (new) | 60.0 | 20.9 ms | 16 | 181 k | 96 % |
+
+The 24 coverage meshes (3 per camera) were the draw-call difference. The views are renderings, not
+sensor images: the RGB-D streams exist only with the Gazebo backend and `sensors:=full`
+(`/camera/image_raw`, `/camera/depth/image_raw`, `/camera/camera_info`, frames
+`camera_optical_frame` / `camera_depth_frame`; listed in `amr.cameras.json`). Integrating them later
+would mean a Gateway subscription forwarding compressed frames to a separate "imagem do sensor"
+panel; the first-person view does not depend on them. The industrial cameras' `future_topic` names
+are placeholders (no publisher).
 
 ## Soak
 
@@ -296,8 +370,8 @@ Screenshot after 50 min: `soak/browser.png`.
 
 ## Tests run for this phase
 
-`atlas_scene` 7, `amr_lite_sim` 18, `digital_twin_gateway` 53, `amr_navigation` 31,
-`amr_route_planner` 26, `amr_simulation` generation 21, `validate_urdf.py` PASS, frontend unit 16,
+`atlas_scene` 8, `amr_lite_sim` 20, `digital_twin_gateway` 53, `amr_navigation` 31,
+`amr_route_planner` 26, `amr_simulation` generation 21, `validate_urdf.py` PASS, frontend unit 21,
 browser DEMO + LIVE 2. Not re-run: the Gazebo warehouse launch/acceptance suites (Gazebo-only,
 unchanged code paths except the defaulted `sensors`/`bridge_config` launch arguments).
 
@@ -306,7 +380,11 @@ unchanged code paths except the defaulted `sensors`/`bridge_config` launch argum
 - Lite physics is kinematic: no wheel slip, tipping or pushing; contacts are geometric stops. Gazebo's
   odometry shows 13 % lower yaw rate in combined arcs; physical studies belong in `gazebo_validation`.
 - Lite LiDAR is ideal 2D: no divergence, reflectivity or motion distortion (noise optional).
-- No RGB-D or industrial-camera images in lite mode; camera coverage is geometric.
+- No RGB-D or industrial-camera images in lite mode: first-person views are 3D renderings from the
+  lens poses (far plane 260 m, not the RGB-D 10 m clip), with no lens distortion or exposure.
+- Seen from the AMR lens (0.26 m high), the scene's raised, emissive lane markings ("Rotas e
+  trajetórias" layer) look like broad bands when the robot crosses them; the layer can be hidden.
+  The building geometry was not changed.
 - Campus SLAM uses odometry poses (scan matching measurably worse here); not representative of a real
   robot's SLAM in this layout.
 - Workers and forklifts are scripted. People always step aside to their right; a worker who cannot
