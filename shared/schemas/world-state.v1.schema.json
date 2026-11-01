@@ -1,0 +1,731 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/world-state.v1.schema.json",
+  "$defs": {
+    "Connection": {
+      "additionalProperties": false,
+      "properties": {
+        "gateway": {
+          "const": "online",
+          "title": "Gateway",
+          "type": "string"
+        },
+        "ros": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Ros",
+          "type": "string"
+        },
+        "simulation": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Simulation",
+          "type": "string"
+        },
+        "navigation": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Navigation",
+          "type": "string"
+        },
+        "registration": {
+          "enum": [
+            "verified",
+            "missing"
+          ],
+          "title": "Registration",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gateway",
+        "ros",
+        "simulation",
+        "navigation",
+        "registration"
+      ],
+      "title": "Connection",
+      "type": "object"
+    },
+    "Mission": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "robot_id": {
+          "maxLength": 64,
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "destination": {
+          "maxLength": 64,
+          "title": "Destination",
+          "type": "string"
+        },
+        "strategy": {
+          "const": "direct",
+          "title": "Strategy",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "active",
+            "succeeded",
+            "failed",
+            "canceled",
+            "rejected"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Detail"
+        },
+        "goal": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Goal",
+          "type": "array"
+        },
+        "distance_remaining_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Distance Remaining M"
+        },
+        "recoveries": {
+          "minimum": 0,
+          "title": "Recoveries",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "robot_id",
+        "destination",
+        "strategy",
+        "status",
+        "detail",
+        "goal",
+        "distance_remaining_m",
+        "recoveries",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "Mission",
+      "type": "object"
+    },
+    "RobotNavigation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "interlock": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Interlock"
+        },
+        "interlock_ready": {
+          "title": "Interlock Ready",
+          "type": "boolean"
+        },
+        "interlock_availability": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Interlock Availability",
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 256,
+          "title": "Path",
+          "type": "array"
+        },
+        "path_age_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Path Age Seconds"
+        },
+        "path_frame": {
+          "const": "world",
+          "title": "Path Frame",
+          "type": "string"
+        },
+        "path_omitted_reason": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Path Omitted Reason"
+        },
+        "mission": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Mission"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "interlock",
+        "interlock_ready",
+        "interlock_availability",
+        "path",
+        "path_age_seconds",
+        "path_frame",
+        "path_omitted_reason",
+        "mission"
+      ],
+      "title": "RobotNavigation",
+      "type": "object"
+    },
+    "Simulation": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "enum": [
+            "lite",
+            "gazebo",
+            "none"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "running",
+            "paused",
+            "stalled",
+            "offline"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "availability": {
+          "enum": [
+            "unknown",
+            "offline",
+            "stale",
+            "online"
+          ],
+          "title": "Availability",
+          "type": "string"
+        },
+        "engine_session_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Engine Session Id"
+        },
+        "sim_time": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sim Time"
+        },
+        "real_time_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Real Time Factor"
+        },
+        "target_real_time_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Target Real Time Factor"
+        },
+        "overruns": {
+          "minimum": 0,
+          "title": "Overruns",
+          "type": "integer"
+        },
+        "scene_sha256": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Scene Sha256"
+        },
+        "age_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Age Seconds"
+        }
+      },
+      "required": [
+        "backend",
+        "status",
+        "availability",
+        "engine_session_id",
+        "sim_time",
+        "real_time_factor",
+        "target_real_time_factor",
+        "overruns",
+        "scene_sha256",
+        "age_seconds"
+      ],
+      "title": "Simulation",
+      "type": "object"
+    },
+    "WorldEntity": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "amr",
+            "human",
+            "forklift"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "z": {
+          "title": "Z",
+          "type": "number"
+        },
+        "yaw": {
+          "title": "Yaw",
+          "type": "number"
+        },
+        "vx": {
+          "title": "Vx",
+          "type": "number"
+        },
+        "vy": {
+          "title": "Vy",
+          "type": "number"
+        },
+        "wz": {
+          "title": "Wz",
+          "type": "number"
+        },
+        "speed": {
+          "title": "Speed",
+          "type": "number"
+        },
+        "state": {
+          "maxLength": 64,
+          "title": "State",
+          "type": "string"
+        },
+        "activity": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Activity"
+        },
+        "activity_progress": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Activity Progress",
+          "type": "number"
+        },
+        "carrying": {
+          "title": "Carrying",
+          "type": "boolean"
+        },
+        "look": {
+          "title": "Look",
+          "type": "number"
+        },
+        "field_state": {
+          "enum": [
+            "free",
+            "warning",
+            "protective"
+          ],
+          "title": "Field State",
+          "type": "string"
+        },
+        "field_length": {
+          "minimum": 0,
+          "title": "Field Length",
+          "type": "number"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "x",
+        "y",
+        "z",
+        "yaw",
+        "vx",
+        "vy",
+        "wz",
+        "speed",
+        "state",
+        "activity",
+        "activity_progress",
+        "carrying",
+        "look",
+        "field_state",
+        "field_length",
+        "reason"
+      ],
+      "title": "WorldEntity",
+      "type": "object"
+    },
+    "WorldEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "seq": {
+          "minimum": 1,
+          "title": "Seq",
+          "type": "integer"
+        },
+        "sim_time": {
+          "title": "Sim Time",
+          "type": "number"
+        },
+        "kind": {
+          "maxLength": 64,
+          "title": "Kind",
+          "type": "string"
+        },
+        "entity": {
+          "maxLength": 64,
+          "title": "Entity",
+          "type": "string"
+        },
+        "other": {
+          "maxLength": 64,
+          "title": "Other",
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 256,
+          "title": "Detail",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": [
+        "seq",
+        "sim_time",
+        "kind",
+        "entity",
+        "other",
+        "detail",
+        "x",
+        "y"
+      ],
+      "title": "WorldEvent",
+      "type": "object"
+    },
+    "WorldObstacle": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "cone",
+            "box",
+            "pallet"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "origin": {
+          "const": "user",
+          "title": "Origin",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "yaw": {
+          "title": "Yaw",
+          "type": "number"
+        },
+        "length": {
+          "exclusiveMinimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "origin",
+        "x",
+        "y",
+        "yaw",
+        "length",
+        "width",
+        "height"
+      ],
+      "title": "WorldObstacle",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "world_state",
+      "default": "world_state",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "session_id": {
+      "maxLength": 64,
+      "title": "Session Id",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+    },
+    "server_wall_time": {
+      "title": "Server Wall Time",
+      "type": "number"
+    },
+    "simulation": {
+      "$ref": "#/$defs/Simulation"
+    },
+    "connection": {
+      "$ref": "#/$defs/Connection"
+    },
+    "entities": {
+      "items": {
+        "$ref": "#/$defs/WorldEntity"
+      },
+      "maxItems": 256,
+      "title": "Entities",
+      "type": "array"
+    },
+    "robots": {
+      "items": {
+        "$ref": "#/$defs/RobotNavigation"
+      },
+      "maxItems": 16,
+      "title": "Robots",
+      "type": "array"
+    },
+    "obstacles": {
+      "items": {
+        "$ref": "#/$defs/WorldObstacle"
+      },
+      "maxItems": 256,
+      "title": "Obstacles",
+      "type": "array"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/WorldEvent"
+      },
+      "maxItems": 50,
+      "title": "Events",
+      "type": "array"
+    }
+  },
+  "required": [
+    "session_id",
+    "sequence",
+    "timestamp",
+    "server_wall_time",
+    "simulation",
+    "connection",
+    "entities",
+    "robots",
+    "obstacles",
+    "events"
+  ],
+  "title": "WorldState",
+  "type": "object"
+}

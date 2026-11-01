@@ -9,7 +9,7 @@ test('real ROS odometry reaches the browser and follows controlled motion', asyn
   test.skip(!evidence, 'Run the real integration harness to start Gazebo and the Gateway.');
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/');
+  await page.goto('/diagnostics.html');
   await expect(page.locator('#gateway')).toHaveText('Connected', { timeout: 90000 });
   await expect(page.locator('#ros')).toHaveText('Online');
   await expect(page.locator('#gazebo')).toHaveText('Running', { timeout: 90000 });
@@ -42,7 +42,7 @@ test('real ROS odometry reaches the browser and follows controlled motion', asyn
 test('frontend starts and remains usable with no backend', async ({ page }) => {
   await page.route('http://127.0.0.1:8000/**', route => route.abort());
   await page.routeWebSocket('ws://127.0.0.1:8000/**', socket => socket.close());
-  await page.goto('/');
+  await page.goto('/diagnostics.html');
   await expect(page.getByRole('heading', { name: 'Digital Twin', exact: true })).toBeVisible();
   await expect(page.locator('#gateway')).toHaveText(/Disconnected|Connecting/);
   await expect(page.locator('#count')).toHaveText('0');

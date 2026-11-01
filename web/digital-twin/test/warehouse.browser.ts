@@ -11,7 +11,7 @@ test('real scene API, four scenarios, original GLB, cameras and resize', async (
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   await page.setViewportSize({width:1440,height:1100});
-  await page.goto('/');
+  await page.goto('/diagnostics.html');
   const canvas = page.locator('#warehouse');
   const metrics: Record<string, unknown> = {};
   for (const scenario of ['normal','person_crossing','obstacle_in_aisle','corridor_blocked']) {
@@ -88,7 +88,7 @@ test('real scene API, four scenarios, original GLB, cameras and resize', async (
 test('asset failure stays explicit and preserves diagnostics', async ({page}) => {
   test.skip(!evidence, 'Requires real scene API');
   await page.route('**/warehouse_amr.glb',r=>r.fulfill({status:404,body:''}));
-  await page.goto('/');
+  await page.goto('/diagnostics.html');
   await expect(page.locator('#scene-status')).toContainText('AMR GLB unavailable',{timeout:30000});
   await expect(page.locator('#gateway')).toHaveText('Connected');
 });

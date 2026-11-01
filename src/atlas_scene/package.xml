@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>atlas_scene</name>
+  <version>0.1.0</version>
+  <description>ATLAS campus scene: the single compiled geometry shared by the lite engine, the Gateway and the browser.</description>
+  <maintainer email="gengo@example.com">gengo</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <test_depend>python3-pytest</test_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

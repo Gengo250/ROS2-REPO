@@ -4,6 +4,9 @@ The only /cmd_vel writer during Nav2 operation. Passes Nav2 commands only while
 both scanners (front /scan and 360-degree /top_scan), odom, clock and localization
 TF are fresh. Uses a wall-clock timer so a
 paused simulator cannot freeze the guard. Original drive limits remain in force.
+
+Parameter ``simulation_backend``: ``gazebo`` (default; requires GZ_PARTITION and pauses
+through ``gz service``) or ``lite`` (pauses through the lite engine's /lite_sim/set_paused).
 """
 import math
 import os
@@ -13,12 +16,13 @@ import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.clock import Clock,ClockType
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import qos_profile_sensor_data,QoSProfile,DurabilityPolicy,ReliabilityPolicy
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TwistStamped,PoseWithCovarianceStamped
 from diagnostic_msgs.msg import DiagnosticArray,DiagnosticStatus,KeyValue
 from tf2_ros import Buffer,TransformListener
+from std_srvs.srv import SetBool
 
 
 def command_is_finite(command):
@@ -28,16 +32,21 @@ def command_is_finite(command):
 
 class CommandGuard(Node):
     def __init__(self):
-        if not os.environ.get('GZ_PARTITION'):
-            raise RuntimeError('Set GZ_PARTITION to the existing warehouse partition before starting navigation')
         super().__init__('navigation_command_guard',parameter_overrides=[Parameter('use_sim_time',value=True)])
+        self.backend=self.declare_parameter('simulation_backend','gazebo').value
+        if self.backend not in ('gazebo','lite'):raise RuntimeError('simulation_backend must be gazebo or lite')
+        if self.backend=='gazebo' and not os.environ.get('GZ_PARTITION'):
+            raise RuntimeError('Set GZ_PARTITION to the existing warehouse partition before starting navigation')
+        self.pause_client=self.create_client(SetBool,'/lite_sim/set_paused') if self.backend=='lite' else None
         self.buffer=Buffer(node=self);self.listener=TransformListener(self.buffer,self)
         self.received={};self.stamps={};self.command=None;self.covariance=None
         self.last_clock=None;self.clock_changed=0.;self.last_motion=0.;self.emergency_latched=False;self.pause_process=None;self.pause_acknowledged=False;self.next_pause_retry=0.;self.reason='Waiting for sensors and localization';self.last_report=0.
         self.create_subscription(LaserScan,'/scan',lambda m:self.sensor('scan',m),qos_profile_sensor_data)
         self.create_subscription(LaserScan,'/top_scan',lambda m:self.sensor('top_scan',m),qos_profile_sensor_data)
         self.create_subscription(Odometry,'/odom',lambda m:self.sensor('odom',m),qos_profile_sensor_data)
-        self.create_subscription(PoseWithCovarianceStamped,'/amcl_pose',self.localized,10)
+        # AMCL latches its pose and republishes only after motion: a volatile subscription that
+        # matches after the first estimate would never see one, and the robot could never move.
+        self.create_subscription(PoseWithCovarianceStamped,'/amcl_pose',self.localized,QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL,reliability=ReliabilityPolicy.RELIABLE))
         self.create_subscription(TwistStamped,'/nav_cmd_vel',self.velocity,10)
         self.publisher=self.create_publisher(TwistStamped,'/cmd_vel',10)
         self.diagnostics=self.create_publisher(DiagnosticArray,'/navigation/diagnostics',10)
@@ -45,7 +54,14 @@ class CommandGuard(Node):
     def sensor(self,key,msg):
         self.received[key]=time.monotonic();self.stamps[key]=msg.header.stamp.sec+msg.header.stamp.nanosec/1e9
         frames={'scan':'laser_frame','top_scan':'top_laser_frame'}
-        if key in frames and (msg.header.frame_id!=frames[key] or not any(math.isfinite(r) and msg.range_min<=r<=msg.range_max for r in msg.ranges)):
+        if key not in frames:return
+        # Both scanners: right frame and well-formed ranges (NaN never valid). The 360-degree
+        # scanner must also show at least one return: that is the blind-sensor check. The front
+        # scanner may legitimately see nothing (open floor beyond its range ahead), so an all
+        # +inf scan from it is a valid observation (Phase 6: open campus halls).
+        well_formed=len(msg.ranges)>0 and not any(math.isnan(r) for r in msg.ranges)
+        returns=any(math.isfinite(r) and msg.range_min<=r<=msg.range_max for r in msg.ranges)
+        if msg.header.frame_id!=frames[key] or not well_formed or (key=='top_scan' and not returns):
             self.received.pop(key,None)
     def localized(self,msg):
         self.covariance=msg.pose.covariance
@@ -101,6 +117,7 @@ class CommandGuard(Node):
             self.last_report=wall;self.reason=reason
     def emergency_pause(self,wall):
         if self.pause_acknowledged:return
+        if getattr(self,'backend','gazebo')=='lite':return self.emergency_pause_lite(wall)
         if self.pause_process is not None:
             code=self.pause_process.poll()
             if code is None:return
@@ -123,6 +140,22 @@ class CommandGuard(Node):
         self.pause_process=subprocess.Popen(['gz','service','-s','/world/warehouse/control',
             '--reqtype','gz.msgs.WorldControl','--reptype','gz.msgs.Boolean',
             '--timeout','1000','--req','pause: true'],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+
+    def emergency_pause_lite(self,wall):
+        # Same contract as Gazebo: require the engine's acknowledgement, retry every 2 s,
+        # never resume automatically.
+        if self.pause_process is not None:
+            if not self.pause_process.done():return
+            result=self.pause_process.result();self.pause_process=None
+            if result is not None and result.success:
+                self.pause_acknowledged=True;self.get_logger().error('Lite engine confirmed emergency pause');return
+            self.get_logger().error('Emergency pause not acknowledged by the lite engine')
+        if wall<self.next_pause_retry:return
+        self.next_pause_retry=wall+2.
+        if not self.pause_client.service_is_ready():
+            self.get_logger().error('Cannot pause safely: /lite_sim/set_paused unavailable');return
+        self.get_logger().error('Pausing the lite engine after simulation clock loss')
+        self.pause_process=self.pause_client.call_async(SetBool.Request(data=True))
 
     def stop(self):
         msg=TwistStamped();msg.header.stamp=self.get_clock().now().to_msg();msg.header.frame_id='base_link';self.publisher.publish(msg)

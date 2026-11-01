@@ -30,5 +30,6 @@
   <test_depend>python3-psutil</test_depend>
   <test_depend>xvfb</test_depend>
   <test_depend>x11-utils</test_depend>
+  <exec_depend>atlas_scene</exec_depend>
   <export><build_type>ament_cmake</build_type></export>
 </package>

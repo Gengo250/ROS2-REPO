@@ -13,14 +13,20 @@ class Timer:
 
 
 class Runtime:
-    def __init__(self, manager, settings):
-        self.manager = manager
+    commands = None
+
+    def __init__(self, manager, settings, world=None):
+        self.manager, self.world = manager, world
         self.stopped = False
     def start(self):
         self.manager.set_ros_initialized(True)
+        if self.world is not None:
+            self.world.set_ros_initialized(True)
     def stop(self):
         self.stopped = True
         self.manager.set_ros_initialized(False)
+        if self.world is not None:
+            self.world.set_ros_initialized(False)
 
 
 @pytest.fixture

@@ -12,7 +12,7 @@ test('shows the planned route and real AMR movement in the existing viewer', asy
   test.setTimeout((seconds+300)*1000);
   await mkdir(evidence!, { recursive: true });
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
-  await page.goto('/'); const host = page.locator('#warehouse');
+  await page.goto('/diagnostics.html'); const host = page.locator('#warehouse');
   await expect(host).toHaveAttribute('data-loaded', 'true', { timeout: 60000 });
   await expect.poll(async () => Object.keys(JSON.parse(await host.getAttribute('data-transforms') || '{}')).length).toBe(4);
   await page.getByRole('button', { name: 'Top-down', exact: true }).click();

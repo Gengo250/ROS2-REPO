@@ -12,8 +12,11 @@ import xacro
 
 def setup(context):
     share = Path(get_package_share_directory('amr_description'))
+    sensors = LaunchConfiguration('sensors').perform(context)
+    if sensors not in ('full', 'lidar'):
+        raise ValueError('sensors must be full or lidar')
     description = xacro.process_file(str(share/'urdf/amr.urdf.xacro'),mappings={
-        'gazebo':'true','controllers_file':str(share/'config/controllers.yaml')}).toxml()
+        'gazebo':'true','controllers_file':str(share/'config/controllers.yaml'),'sensors':sensors}).toxml()
     gui = LaunchConfiguration('gui').perform(context).lower() == 'true'
     # Keep the validated EGL sensor renderer independent of the optional GUI display.
     world = LaunchConfiguration('world').perform(context)
@@ -73,7 +76,8 @@ def setup(context):
         Node(package='robot_state_publisher',executable='robot_state_publisher',output='screen',
              parameters=[{'robot_description':description,'use_sim_time':True}]),
         Node(package='ros_gz_bridge',executable='parameter_bridge',output='screen',
-             parameters=[{'config_file':str(share/'config/bridge.yaml'),'use_sim_time':True}]),
+             parameters=[{'config_file':LaunchConfiguration('bridge_config').perform(context) or str(share/'config/bridge.yaml'),
+                          'use_sim_time':True}]),
         RegisterEventHandler(OnProcessExit(target_action=ready,on_exit=after_ready)),
         RegisterEventHandler(OnProcessExit(target_action=spawn,on_exit=after_spawn)),
         RegisterEventHandler(OnProcessExit(target_action=controllers,on_exit=after_controllers)),
@@ -98,4 +102,6 @@ def generate_launch_description():
         DeclareLaunchArgument('spawn_yaw',default_value='0'),
         DeclareLaunchArgument('resource_path',default_value=''),
         DeclareLaunchArgument('gui_config',default_value=str(share/'config/gazebo_gui.config')),
+        DeclareLaunchArgument('sensors',default_value='full',description='full or lidar (no RGB-D camera)'),
+        DeclareLaunchArgument('bridge_config',default_value='',description='Empty: config/bridge.yaml'),
         OpaqueFunction(function=setup)])

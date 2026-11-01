@@ -28,6 +28,7 @@
         <imu><orientation_reference_frame><localization>ENU</localization></orientation_reference_frame></imu>
       </sensor>
     </gazebo>
+    <xacro:if value="${'$(arg sensors)' == 'full'}">
     <gazebo reference="camera_link">
       <sensor name="rgbd_camera" type="rgbd_camera">
         <!-- Gazebo cameras look along +X; message coordinates use the optical frame. -->
@@ -42,5 +43,6 @@
         </camera>
       </sensor>
     </gazebo>
+    </xacro:if>
   </xacro:macro>
 </robot>

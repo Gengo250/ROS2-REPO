@@ -1,7 +1,12 @@
-# Digital Twin web diagnostics
+# Digital Twin web
+
+`/` is the ATLAS twin (Phase 6): **LIVE ROS** renders the backend world-state v1 of the lite engine
+(`ros2 launch amr_lite_sim lite_navigation.launch.py`); `?mode=demo` runs the ATLAS prototype's
+browser-side demo. Rendering uses Three.js with the ATLAS instanced shaders. See
+[Phase 6 runtime](../../docs/digital-twin/PHASE_6_LITE_RUNTIME.md). `/diagnostics.html` is the
+Phase 5 diagnostics page described below, unchanged.
 
 Lightweight TypeScript + Vite application using the native browser WebSocket API.
-Three.js is installed for Phase 2; no renderer or warehouse scene is created here.
 
 Use Node >=22.12, then `npm ci`, `npm run dev` and open http://127.0.0.1:5173.
 See [.env.example](.env.example) for endpoints. The page works with no backend and

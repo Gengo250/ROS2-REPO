@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from digital_twin_gateway.scene.models import WarehouseScene
 from digital_twin_gateway.state.models import ConnectionStatus, RouteGraph, RouteStatus, TwinState, TwinStateV2
+from digital_twin_gateway.world.models import CommandResult, WorldState
 
 
 def schema(model, name):
@@ -19,7 +20,8 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3] / 'shared/schemas'
     for model, name in ((TwinState, 'twin-state'), (TwinStateV2, 'twin-state-v2'), (ConnectionStatus, 'connection-status'), (WarehouseScene, 'warehouse-scene'),
-                        (RouteGraph, 'route-graph.v1'), (RouteStatus, 'route-status.v1')):
+                        (RouteGraph, 'route-graph.v1'), (RouteStatus, 'route-status.v1'),
+                        (WorldState, 'world-state.v1'), (CommandResult, 'command-result.v1')):
         path = root / f'{name}.schema.json'
         text = json.dumps(schema(model, name), indent=2) + '\n'
         if args.check:

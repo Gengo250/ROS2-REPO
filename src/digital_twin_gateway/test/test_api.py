@@ -112,8 +112,8 @@ async def test_slow_send_times_out_without_blocking_other_client():
 def test_startup_failure_releases_runtime():
     instances = []
     class FailingRuntime(Runtime):
-        def __init__(self, manager, settings):
-            super().__init__(manager, settings)
+        def __init__(self, manager, settings, world=None):
+            super().__init__(manager, settings, world)
             instances.append(self)
         def start(self):
             raise RuntimeError('initialization failed')

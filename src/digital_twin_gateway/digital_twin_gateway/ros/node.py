@@ -10,10 +10,11 @@ from .subscriptions import subscribe
 
 
 class RosRuntime:
-    def __init__(self, manager, settings):
-        self.manager, self.settings = manager, settings
+    def __init__(self, manager, settings, world=None):
+        self.manager, self.settings, self.world = manager, settings, world
         self.context = Context()
         self.node = self.executor = self.thread = None
+        self.commands = None
 
     def start(self):
         try:
@@ -21,6 +22,14 @@ class RosRuntime:
             rclpy.init(context=self.context, signal_handler_options=SignalHandlerOptions.NO)
             self.node = Node('digital_twin_gateway', context=self.context)
             self.subscriptions = subscribe(self.node, self.manager, self.settings)
+            if self.world is not None:
+                from .world import Commands, subscribe_world
+                self.subscriptions += subscribe_world(self.node, self.world, self.settings)
+                try:
+                    self.commands = Commands(self.node, self.world, self.settings, self.world.stations)
+                except ImportError:
+                    logging.warning('Lite interfaces or Nav2 messages missing: commands disabled')
+                self.world.set_ros_initialized(True)
             self.executor = SingleThreadedExecutor(context=self.context)
             self.executor.add_node(self.node)
             self.manager.set_ros_initialized(True)
@@ -39,6 +48,8 @@ class RosRuntime:
             logging.exception('ROS executor failed')
         finally:
             self.manager.set_ros_initialized(False)
+            if self.world is not None:
+                self.world.set_ros_initialized(False)
 
     def stop(self):
         if self.executor:
@@ -53,3 +64,5 @@ class RosRuntime:
         if self.context.ok():
             self.context.try_shutdown()
         self.manager.set_ros_initialized(False)
+        if self.world is not None:
+            self.world.set_ros_initialized(False)

@@ -1,0 +1,5 @@
+string id        # empty: remove every user obstacle
+---
+bool accepted
+string reason
+uint32 removed

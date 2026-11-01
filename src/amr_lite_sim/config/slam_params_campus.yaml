@@ -1,0 +1,79 @@
+# ATLAS campus mapping on lite sensors (Phase 6). Derived from amr_navigation/config/slam_params.yaml.
+# Measured with exact lite odometry and geometrically exact scans (check_scan_geometry.py: points
+# within one 2 cm cell of the scene) - evidence in docs/digital-twin/evidence-phase6/lite_survey_*:
+#   survey v2, Phase 5.1 params:               false loop closure after 22 m (8.7 m jump), 25 m peak error
+#   survey v4, loop closing off + tuned set:   no jump > 1.8 m, but 27 m peak / 0.43 rad drift over 1160 m
+#   short plan (150-170 m), front /scan:       3.3-3.7 m drift whatever the odometry penalties
+#   short plan, 360-degree /top_scan:          1.9 m / 0.05 rad drift, all of it while driving along
+#                                              the long aisles lined by identical rack ends
+#   short plan, /top_scan, scan matching off:  0.000 m / 0.000 rad
+# Scan matching degrades exact odometry in this mirrored, repetitive campus, so each scan is
+# registered at its odometric pose (use_scan_matching false; loop closing off). SLAM Toolbox still
+# builds the occupancy grid from the lite scans. A robot with real (noisy) odometry would need
+# scan matching and more distinctive features; see PHASE_6_LITE_RUNTIME.md, "Campus SLAM".
+# Also: /top_scan (360 degrees, sees every prototype solid) through free_space_relay as /top_scan_mapping with
+# max_laser_range 19 m: Karto drops +inf readings, so open floor beyond range stayed unknown (survey v6: north rack
+# aisles 91% unknown); relayed no-return beams now clear free space up to 19 m. map_update_interval 5 s (150 x 115 m grid).
+slam_toolbox:
+  ros__parameters:
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /top_scan_mapping
+    use_map_saver: true
+    mode: mapping
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.02
+    map_update_interval: 5.0
+    resolution: 0.05
+    restamp_tf: false
+    min_laser_range: 0.12
+    max_laser_range: 19.0
+    minimum_time_interval: 0.05
+    transform_timeout: 0.3
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000
+    enable_interactive_mode: false
+    use_scan_matching: false
+    use_scan_barycenter: false
+    minimum_travel_distance: 0.08
+    minimum_travel_heading: 0.087
+    check_min_dist_and_heading_precisely: true
+    scan_buffer_size: 30
+    scan_buffer_maximum_scan_distance: 10.0
+    link_match_minimum_response_fine: 0.1
+    link_scan_maximum_distance: 1.5
+    # Phase 5.1 (measured with correct LiDAR rendering, PHASE_5_1_REMEDIATION.md): the aisles are
+    # identical and 4.2 m apart; a 3 m candidate distance in an 8 m window closed loops onto the wrong
+    # aisle (survey-v10: 1.5-0.8 m steps, 5.2 m peak error). Replaying the same survey bag with 1.5 m /
+    # 3 m gave a 0.54 m peak, no false closure, and a candidate map that passes registration.
+    loop_search_maximum_distance: 1.5
+    do_loop_closing: false
+    loop_match_minimum_chain_size: 10
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_minimum_response_fine: 0.45
+    correlation_search_space_dimension: 0.3
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.03
+    loop_search_space_dimension: 3.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
+    distance_variance_penalty: 0.02
+    angle_variance_penalty: 0.3
+    fine_search_angle_offset: 0.00436332313
+    coarse_search_angle_offset: 0.349
+    coarse_angle_resolution: 0.00872664626
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true
+    min_pass_through: 2
+    occupancy_threshold: 0.1
+    use_sim_time: true

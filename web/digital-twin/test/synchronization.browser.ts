@@ -17,7 +17,7 @@ test('actual AMR world pose drives the loaded GLB', async ({page}) => {
   test.skip(!evidence, 'Requires owned live Gazebo validation');
   await mkdir(evidence!, {recursive:true});
   const errors: string[]=[]; page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('/');
+  await page.goto('/diagnostics.html');
   const host=page.locator('#warehouse');
   await expect(host).toHaveAttribute('data-loaded','true',{timeout:30000});
   await expect(page.locator('#scene-status')).toContainText('Gazebo ground truth');
@@ -51,7 +51,7 @@ test('real workers, visual gait, pause, reset and socket recovery', async ({page
   page.on('websocket',socket=>socket.on('framereceived',event=>{
     const s=JSON.parse(String(event.payload)); if(s.protocol_version==='2.0') { frames.push({...s,browser_received_at:Date.now()}); if(frames.length>1000) frames.shift(); }
   }));
-  await page.goto('/'); const host=page.locator('#warehouse');
+  await page.goto('/diagnostics.html'); const host=page.locator('#warehouse');
   await expect(host).toHaveAttribute('data-loaded','true',{timeout:30000});
   await expect.poll(async()=>Object.keys(JSON.parse(await host.getAttribute('data-transforms')||'{}')).length).toBe(4);
   const samples:any[]=[];
@@ -123,7 +123,7 @@ test('real workers, visual gait, pause, reset and socket recovery', async ({page
 
 test('browser recovers when the actual simulator is stopped and restarted', async ({page}) => {
   test.skip(!evidence || !process.env.TWIN_SYNC_RESTART, 'Requires the owning restart harness');
-  await page.goto('/');
+  await page.goto('/diagnostics.html');
   const host=page.locator('#warehouse');
   await expect(host).toHaveAttribute('data-loaded','true',{timeout:30000});
   const state=async()=> (await page.request.get('http://127.0.0.1:8000/api/v2/state')).json();

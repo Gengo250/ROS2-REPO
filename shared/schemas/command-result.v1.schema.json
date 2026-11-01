@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digital-twin.local/schemas/command-result.v1.schema.json",
+  "$defs": {
+    "Mission": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "robot_id": {
+          "maxLength": 64,
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "destination": {
+          "maxLength": 64,
+          "title": "Destination",
+          "type": "string"
+        },
+        "strategy": {
+          "const": "direct",
+          "title": "Strategy",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "active",
+            "succeeded",
+            "failed",
+            "canceled",
+            "rejected"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Detail"
+        },
+        "goal": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Goal",
+          "type": "array"
+        },
+        "distance_remaining_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Distance Remaining M"
+        },
+        "recoveries": {
+          "minimum": 0,
+          "title": "Recoveries",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "robot_id",
+        "destination",
+        "strategy",
+        "status",
+        "detail",
+        "goal",
+        "distance_remaining_m",
+        "recoveries",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "Mission",
+      "type": "object"
+    },
+    "WorldObstacle": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "cone",
+            "box",
+            "pallet"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "origin": {
+          "const": "user",
+          "title": "Origin",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "yaw": {
+          "title": "Yaw",
+          "type": "number"
+        },
+        "length": {
+          "exclusiveMinimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "origin",
+        "x",
+        "y",
+        "yaw",
+        "length",
+        "width",
+        "height"
+      ],
+      "title": "WorldObstacle",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "message_type": {
+      "const": "command_result",
+      "default": "command_result",
+      "title": "Message Type",
+      "type": "string"
+    },
+    "accepted": {
+      "title": "Accepted",
+      "type": "boolean"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reason"
+    },
+    "obstacle": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/WorldObstacle"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "removed": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Removed"
+    },
+    "mission": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Mission"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "accepted",
+    "reason"
+  ],
+  "title": "CommandResult",
+  "type": "object"
+}

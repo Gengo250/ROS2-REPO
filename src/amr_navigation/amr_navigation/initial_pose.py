@@ -27,13 +27,16 @@ def main():
         m=maps[-1];x,y=grid_coordinates(m,a.x,a.y)
         if not (0<=x<m.info.width and 0<=y<m.info.height) or m.data[y*m.info.width+x]<0 or m.data[y*m.info.width+x]>=65:
             raise ValueError('Initial pose must lie in a known free map cell')
-        msg=PoseWithCovarianceStamped();msg.header.frame_id='map';msg.header.stamp=n.get_clock().now().to_msg()
+        msg=PoseWithCovarianceStamped();msg.header.frame_id='map'
         msg.pose.pose.position.x=a.x;msg.pose.pose.position.y=a.y;msg.pose.pose.orientation.z=math.sin(a.yaw/2);msg.pose.pose.orientation.w=math.cos(a.yaw/2)
         msg.pose.covariance[0]=.16;msg.pose.covariance[7]=.16;msg.pose.covariance[35]=.04
-        pub.publish(msg)
-        deadline=time.monotonic()+a.timeout
+        # AMCL subscribes when configured but ignores /initialpose until active (large maps take
+        # seconds in between), so repeat the same estimate until AMCL answers with a pose.
+        deadline=time.monotonic()+a.timeout;next_publish=0.
         while not estimates or not b.can_transform('map','base_link',rclpy.time.Time()):
             if time.monotonic()>deadline:raise TimeoutError('AMCL did not produce a pose and connected map TF')
+            if not estimates and time.monotonic()>=next_publish:
+                msg.header.stamp=n.get_clock().now().to_msg();pub.publish(msg);next_publish=time.monotonic()+2.
             rclpy.spin_once(n,timeout_sec=.1)
         print('AMCL accepted the explicit initial estimate and produced map → base_link TF. Validate convergence before driving.')
     finally:n.destroy_node();rclpy.shutdown()

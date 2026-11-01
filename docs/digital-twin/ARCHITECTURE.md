@@ -148,6 +148,16 @@ existing Nav2 planner/controller and the command guard remain the only path to
 [Phase 5 graph routing](PHASE_5_GRAPH_ROUTING.md) and
 [Phase 5 validation](PHASE_5_VALIDATION.md).
 
+## Phase 6 lite runtime (default mode)
+
+The Digital Twin now runs without Gazebo: `amr_lite_sim` (kinematic engine, 2D ray-cast LiDARs,
+ATLAS workers and forklifts, user obstacles) produces `/clock`, odometry, TF and scans for the
+unchanged Nav2/AMCL/SLAM stack; the Gateway adds world-state v1 and validated commands; the browser
+renders the ATLAS campus (LIVE ROS or DEMO). One compiled scene (`atlas_scene`) feeds all three.
+Gazebo remains an optional, headless `gazebo_validation` mode. See
+[Phase 6 diagnostic](PHASE_6_DIAGNOSTIC.md), [plan](PHASE_6_LITE_PLAN.md) and
+[runtime](PHASE_6_LITE_RUNTIME.md).
+
 ## Official references consulted
 
 - [rclpy Jazzy executor implementation](https://github.com/ros2/rclpy/blob/jazzy/rclpy/rclpy/executors.py)

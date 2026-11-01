@@ -12,7 +12,8 @@ function typeSchema(value) {
 // [schema file, generated type module]; route contracts are independently versioned.
 for (const [name, typeName] of [['twin-state', 'twin-state'], ['twin-state-v2', 'twin-state-v2'],
   ['connection-status', 'connection-status'], ['warehouse-scene', 'warehouse-scene'],
-  ['route-graph.v1', 'route-graph'], ['route-status.v1', 'route-status']]) {
+  ['route-graph.v1', 'route-graph'], ['route-status.v1', 'route-status'],
+  ['world-state.v1', 'world-state'], ['command-result.v1', 'command-result']]) {
   const schema = JSON.parse(await readFile(new URL(`../../../shared/schemas/${name}.schema.json`, import.meta.url)));
   const result = await compile(typeSchema(schema), schema.title, {
     bannerComment: '/* Generated from shared/schemas. Run npm run generate:types. */',

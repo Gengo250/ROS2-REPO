@@ -59,6 +59,24 @@ def test_clock_failure_latches_zero_and_requests_simulation_pause(monkeypatch):
         guard.destroy_node();rclpy.shutdown()
 
 
+def test_pose_latched_before_the_guard_starts_is_received(monkeypatch):
+    import rclpy
+    from geometry_msgs.msg import PoseWithCovarianceStamped
+    from rclpy.qos import QoSProfile,DurabilityPolicy,ReliabilityPolicy
+    monkeypatch.setenv("GZ_PARTITION", "navigation_unit_test")
+    rclpy.init()
+    amcl=rclpy.create_node('amcl_latch_test')
+    pub=amcl.create_publisher(PoseWithCovarianceStamped,'/amcl_pose',QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL,reliability=ReliabilityPolicy.RELIABLE))
+    pose=PoseWithCovarianceStamped();pose.pose.covariance[0]=.2;pub.publish(pose)   # AMCL's single estimate at start
+    guard=CommandGuard()
+    try:
+        end=time.monotonic()+5.
+        while guard.covariance is None and time.monotonic()<end:
+            rclpy.spin_once(guard,timeout_sec=.1);rclpy.spin_once(amcl,timeout_sec=0.)
+        assert guard.covariance is not None and guard.covariance[0]==.2
+    finally:
+        guard.destroy_node();amcl.destroy_node();rclpy.shutdown()
+
 def test_gazebo_timeout_exit_zero_is_not_a_pause_acknowledgement():
     errors=[]
     guard=SimpleNamespace(pause_acknowledged=False,
@@ -68,6 +86,27 @@ def test_gazebo_timeout_exit_zero_is_not_a_pause_acknowledgement():
     assert not guard.pause_acknowledged and guard.pause_process is None and errors
     guard.pause_process=SimpleNamespace(poll=lambda:0,communicate=lambda:('data: true\n',None))
     CommandGuard.emergency_pause(guard,11.)
+    assert guard.pause_acknowledged
+
+
+def test_lite_pause_requires_engine_acknowledgement():
+    errors,calls=[],[]
+    class Future:
+        def __init__(self,result):self.value=result
+        def done(self):return True
+        def result(self):return self.value
+    client=SimpleNamespace(service_is_ready=lambda:True,call_async=lambda request:calls.append(request.data) or Future(SimpleNamespace(success=False)))
+    guard=SimpleNamespace(backend='lite',pause_acknowledged=False,pause_process=None,next_pause_retry=0.,pause_client=client,
+        get_logger=lambda:SimpleNamespace(error=errors.append))
+    guard.emergency_pause_lite=lambda wall:CommandGuard.emergency_pause_lite(guard,wall)
+    CommandGuard.emergency_pause(guard,10.)
+    assert calls==[True] and guard.pause_process is not None
+    CommandGuard.emergency_pause(guard,10.5)
+    assert not guard.pause_acknowledged and guard.pause_process is None
+    CommandGuard.emergency_pause(guard,11.)
+    assert calls==[True]
+    guard.pause_process=Future(SimpleNamespace(success=True))
+    CommandGuard.emergency_pause(guard,12.5)
     assert guard.pause_acknowledged
 
 
@@ -82,6 +121,16 @@ def test_wrong_frame_or_empty_360_scan_is_not_fresh():
     m=LaserScan();m.header.frame_id='top_laser_frame';m.range_min,m.range_max=.12,20.;m.ranges=[3.]
     CommandGuard.sensor(g,'top_scan',m)
     assert 'top_scan' in g.received
+
+
+def test_front_scan_open_space_is_fresh_but_nan_or_wrong_frame_is_not():
+    from sensor_msgs.msg import LaserScan
+    for frame,ranges,fresh in [('laser_frame',[float('inf')]*5,True),('laser_frame',[float('nan'),1.],False),
+                               ('top_laser_frame',[1.],False),('laser_frame',[],False)]:
+        g=SimpleNamespace(received={},stamps={})
+        m=LaserScan();m.header.frame_id=frame;m.range_min,m.range_max=.08,20.;m.ranges=ranges
+        CommandGuard.sensor(g,'scan',m)
+        assert ('scan' in g.received)==fresh,(frame,ranges)
 
 def test_audit_detects_blind_sectors():
     from amr_navigation.audit import blind_arc

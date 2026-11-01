@@ -2,6 +2,8 @@
 <robot name="warehouse_amr" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:arg name="gazebo" default="false"/>
   <xacro:arg name="debug_imu" default="false"/>
+  <!-- full: LiDARs, IMU and RGB-D camera; lidar: LiDARs and IMU only (gazebo_validation mode) -->
+  <xacro:arg name="sensors" default="full"/>
   <xacro:arg name="controllers_file" default="$(find amr_description)/config/controllers.yaml"/>
   <xacro:include filename="dimensions.xacro"/>
   <xacro:include filename="inertials.xacro"/>

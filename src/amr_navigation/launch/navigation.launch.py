@@ -17,7 +17,8 @@ def start(context):
                                                      'default_nav_through_poses_bt_xml':str(share()/'config/navigate_through_poses.xml')})
         nodes.append(Node(package=package,executable=executable,name=executable,output='screen',parameters=params,
                           remappings=[('cmd_vel','nav_cmd_vel')] if executable in ['controller_server','behavior_server'] else []))
-    nodes += [Node(package='amr_navigation',executable='command_guard',output='screen',parameters=[{'use_sim_time':True}],on_exit=Shutdown(reason='Navigation command interlock exited')),
+    nodes += [Node(package='amr_navigation',executable='command_guard',output='screen',parameters=[{'use_sim_time':True,
+                   'simulation_backend':LaunchConfiguration('simulation_backend').perform(context)}],on_exit=Shutdown(reason='Navigation command interlock exited')),
               Node(package='nav2_lifecycle_manager',executable='lifecycle_manager',name='lifecycle_manager_navigation',output='screen',
                    parameters=[{'use_sim_time':True,'autostart':True,'bond_timeout':4.0,
                                 'node_names':['controller_server','planner_server','behavior_server','bt_navigator']}])]
@@ -31,6 +32,7 @@ def start(context):
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('map',default_value=str(share()/'maps/warehouse.yaml')),
         DeclareLaunchArgument('amcl_scan_topic',default_value='',description='Override AMCL scan topic (must match the map sensor)'),
+        DeclareLaunchArgument('simulation_backend',default_value='gazebo',choices=['gazebo','lite'],description='Emergency pause target of the command guard'),
         DeclareLaunchArgument('initialize',default_value='false',choices=['true','false']),
         DeclareLaunchArgument('initial_x',default_value='0'),DeclareLaunchArgument('initial_y',default_value='0'),
         DeclareLaunchArgument('initial_yaw',default_value='0'),DeclareLaunchArgument('rviz',default_value='false'),

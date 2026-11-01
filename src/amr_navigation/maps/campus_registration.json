@@ -1,0 +1,48 @@
+{
+ "id": "89768ddd2c7518fe",
+ "parent_frame": "world",
+ "child_frame": "map",
+ "convention": "map = R(yaw)*world + (x, y)",
+ "transform": {
+  "x": -1.2246467991473532e-16,
+  "y": 2.0,
+  "yaw": -1.5707963267948966
+ },
+ "method": "inverse of spawn pose amr_01_spawn (SLAM map anchored at the first scan), verified against the scene geometry at the scanner plane",
+ "scan_plane_height_m": 0.48,
+ "verified": true,
+ "checks": {
+  "median_m": true,
+  "inlier_fraction_0_10": true,
+  "free_in_solid_fraction": true,
+  "coverage_fraction": true,
+  "enclosure_fraction_min": true
+ },
+ "limits": {
+  "median_m": 0.05,
+  "inlier_fraction_0_10": 0.95,
+  "free_in_solid_fraction": 0.005,
+  "coverage_fraction": 0.8,
+  "enclosure_fraction_min": 0.8
+ },
+ "residuals": {
+  "occupied_cells": 75126,
+  "median_m": 0.02,
+  "p90_m": 0.04,
+  "inlier_fraction_0_10": 1.0,
+  "free_cells": 4627880,
+  "free_in_solid_fraction": 0.0,
+  "coverage_fraction": 0.9919226994791274,
+  "boundary_samples_known": 26494,
+  "enclosure_fraction": {
+   "north": 0.9879725085910653,
+   "south": 1.0,
+   "west": 1.0,
+   "east": 0.9557109557109557
+  },
+  "enclosure_fraction_min": 0.9557109557109557
+ },
+ "map_sha256": "d4eaa30cdebbed7bf61d07ea4002020af87d150f550b5a3f71d800f514be28c4",
+ "scene_sha256": "3019739c08de0998521ad80179b2f4d3b8bfe0b02614497e9be497fdcb64b69b",
+ "created_at": "2026-11-01T06:10:26.623231+00:00"
+}

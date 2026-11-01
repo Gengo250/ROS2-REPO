@@ -39,6 +39,14 @@ class Settings(BaseModel):
     tf_static_topic: Topic = '/tf_static'
     route_status_topic: Topic = '/route_planner/status'
     route_graph_path: str | None = None
+    # world-state v1 (lite engine, LIVE frontend)
+    world_publication_hz: float = Field(default=20, ge=1, le=60)
+    world_scene_path: str | None = None
+    world_registration_path: str | None = None
+    lite_world_topic: Topic = '/lite_sim/world_state'
+    lite_events_topic: Topic = '/lite_sim/events'
+    plan_topic: Topic = '/plan'
+    command_timeout: float = Field(default=5, gt=0, le=30)
 
     @model_validator(mode='after')
     def validate_config(self):

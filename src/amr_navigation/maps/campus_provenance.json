@@ -1,0 +1,55 @@
+{
+ "source": "SLAM Toolbox 2.8.5 on lite-engine scans: /top_scan (360 degrees) relayed as /top_scan_mapping (no-return beams clear free space up to 19 m), exact lite wheel odometry, range noise sigma 0.01 m on the scans during the survey (exact ranges land on the faces of SLAM's grid bounds and the walls on the two maximum faces were dropped in v7), scan matching and loop closing disabled (amr_lite_sim/config/slam_params_campus.yaml); no geometry-derived occupancy",
+ "coverage": "campus survey amr_lite_sim/config/campus_survey.json: 58 waypoints, 1700 m incl. every middle-block rack aisle, RTF 3, fresh SLAM from amr_01_spawn",
+ "initial_world_pose": [
+  2.0,
+  0.0,
+  1.5707963267948966
+ ],
+ "resolution_m": 0.05,
+ "survey_evidence": "docs/digital-twin/evidence-phase6/lite_survey_v9",
+ "slam_vs_ground_truth": {
+  "final_position_error_m": 7.7021722333370235e-16,
+  "final_yaw_error_rad": 0.0,
+  "max_position_error_m": 0.02895167358049608,
+  "p90_position_error_m": 4.3418648119448016e-09,
+  "max_abs_yaw_error_rad": 0.04898182382062788,
+  "max_step_jump_m": 0.008425136909264134
+ },
+ "registration": {
+  "id": "89768ddd2c7518fe",
+  "verified": true,
+  "residuals": {
+   "occupied_cells": 75126,
+   "median_m": 0.02,
+   "p90_m": 0.04,
+   "inlier_fraction_0_10": 1.0,
+   "free_cells": 4627880,
+   "free_in_solid_fraction": 0.0,
+   "coverage_fraction": 0.9919226994791274,
+   "boundary_samples_known": 26494,
+   "enclosure_fraction": {
+    "north": 0.9879725085910653,
+    "south": 1.0,
+    "west": 1.0,
+    "east": 0.9557109557109557
+   },
+   "enclosure_fraction_min": 0.9557109557109557
+  }
+ },
+ "files_sha256": {
+  "campus.yaml": "97331001ea29266d77d0249667d413b3f6a6318b71feba031a2bba07b76d9333",
+  "campus.pgm": "d4eaa30cdebbed7bf61d07ea4002020af87d150f550b5a3f71d800f514be28c4",
+  "slam_params_campus.yaml": "16f70c468ac7208534b50282482bb9287bd3f52253892fe117dee17b92b9748f"
+ },
+ "superseded_candidates": {
+  "lite_survey_v1_clock_bug": "engine stamp rounding bug (fixed before v2)",
+  "lite_survey_v2": "Phase 5.1 SLAM parameters: false loop closure after 22 m, 25 m peak error",
+  "lite_survey_v3_aborted_post_only": "aborted: sensing model changed (prototype solids made visible)",
+  "lite_survey_v4": "loop closing off + tuned matcher: 27 m / 0.43 rad drift",
+  "lite_survey_v5": "odometry poses: verified, but middle rack aisles unknown (beyond range from cross aisles)",
+  "lite_survey_v6": "all aisles traversed: verified, but north rack aisles unknown (Karto ignores +inf readings)",
+  "lite_survey_v7": "verified by the earlier check, withdrawn after the soak: north and west walls missing (exact ranges on the maximum grid faces); AMCL diverged in the north corridor",
+  "lite_survey_v8": "range noise added; all walls mapped, but surveyed under concurrent CPU load: ~13 % of scans skipped, dock_07 on an unknown cell"
+ }
+}
