@@ -1,7 +1,7 @@
 import './atlas.css';
 import { Plane, Raycaster, Vector2, Vector3 } from 'three';
 import { DynamicBatch, InstancedRenderer } from './render/InstancedRenderer';
-import { OrbitCamera } from './OrbitCamera';
+import { OrbitCamera, type CameraState } from './OrbitCamera';
 import { buildStatic, fetchScene, LAYER_GROUPS, WALL_MODES, wallVisibility, type CampusScene, type WallMode, type Zone } from './scene';
 import { fitViewport, industrialOptics, industrialPose, lookPose, onboardOptics, onboardPose, type MountedCamera, type Optics, type Pose, type Rect } from './cameraPoses';
 import { ViewController, type ViewKind, type ViewTarget } from './ViewController';
@@ -43,6 +43,10 @@ let lastOnboard: { pose: Pose; optics: Optics } | null = null, onboardBase: { x:
 /** Area between the panels where first-person views are framed, and the last rendered view. */
 let stage: Rect = { x: 0, y: 0, width: 1, height: 1 }, rendered: RenderView | null = null;
 let selectedCamera: string | null = null, targetViewport: Rect | null = null, hudHtml = '';
+/** Inspection panel as authored in index.html, shown again when a camera selection ends. */
+const SELECTION_IDLE = $('#selection').innerHTML;
+/** Overview the last first-person view was entered from; "back to overview" (Esc) returns to it. */
+let overviewBefore: { orbit: CameraState; following: boolean } | null = null;
 const STATE_LABEL: Record<string, string> = { moving: 'Em movimento', stopped: 'Parado', blocked: 'Bloqueado' };
 
 function toast(message: string) { const e = $('#toast'); e.textContent = message; e.classList.add('show'); clearTimeout((toast as unknown as { t?: number }).t); (toast as unknown as { t?: number }).t = window.setTimeout(() => e.classList.remove('show'), 2600); }
@@ -83,12 +87,12 @@ function buildPanels() {
 }
 function setView(name: string) {
   const v = scene.views[name]; if (!v) return;
-  following = false; camera.setView(v); enterView('overview', null);
+  following = false; camera.setView(v); enterView('overview', null); clearCameraSelection();
   document.querySelectorAll<HTMLElement>('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === name));
   toast('Câmera: ' + v.label);
 }
 function selectZone(z: Zone) {
-  selectedId = null; following = false;
+  clearCameraSelection(); selectedId = null; following = false;
   $('#selection').innerHTML = `<h3>INSPEÇÃO DE SETOR <span class="small-pill">SELECIONADO</span></h3><div class="selected-title">${z.name}</div><div class="selected-meta">${z.desc}<br><span style="color:#73e9ce">● ${z.status}</span><br>${z.metric}</div>`;
   camera.focus(z.pos[0], z.pos[1]); toast('Setor selecionado: ' + z.name);
 }
@@ -101,11 +105,22 @@ function selectCamera(id: string) {
   // Already looking through a camera: switch straight to the chosen one.
   if (view.kind === 'industrial') enterView('industrial', id); else camera.focus(cam.position[0], cam.position[1], 60);
 }
+/** End the industrial camera selection: inspection panel, list highlight and housing colour. */
+function clearCameraSelection() {
+  if (!selectedCamera) return;
+  selectedCamera = null;
+  document.querySelectorAll<HTMLElement>('[data-cctv]').forEach(b => b.classList.remove('active'));
+  $('#selection').innerHTML = SELECTION_IDLE;
+}
 
 // ------------------------------------------------------------------ view modes
 /** Switch the main view (overview, an industrial camera, a robot's onboard camera). */
 function enterView(kind: ViewKind, id: string | null) {
   if (kind === 'onboard' && !onboardMount) { toast('Modelo da câmera embarcada indisponível (robots/amr.cameras.json)'); return; }
+  // Leaving the overview: remember its orbit so "back to overview" returns exactly there.
+  if (!view.firstPerson && kind !== 'overview') overviewBefore = { orbit: { ...camera.desired, target: [...camera.desired.target] }, following };
+  // Leaving an industrial camera ends its selection (otherwise its panel stays on screen).
+  if (view.kind === 'industrial' && kind !== 'industrial') clearCameraSelection();
   if (kind !== 'overview') following = false;
   view.enter(kind, id, performance.now() / 1000);
   camera.override = kind === 'overview' ? null : (dx, dy) => view.drag(dx, dy);
@@ -116,8 +131,16 @@ function enterView(kind: ViewKind, id: string | null) {
 }
 function nextCamera() {
   const ids = scene.cameras.map(c => c.id), current = view.kind === 'industrial' ? ids.indexOf(view.id!) : -1;
-  selectCamera(ids[(current + 1) % ids.length]!);
-  if (view.kind !== 'industrial') enterView('industrial', ids[(current + 1) % ids.length]!);
+  const next = ids[(current + 1) % ids.length]!;
+  // Into the lens first: selecting from the overview would also move the orbit onto the camera,
+  // and Esc would then return there instead of to the overview the user left.
+  enterView('industrial', next); selectCamera(next);
+}
+/** Esc / "Visão geral": leave the first-person view for the overview it was entered from. */
+function backToOverview() {
+  const before = overviewBefore;
+  enterView('overview', null);
+  if (before) { camera.desired = before.orbit; following = before.following; }
 }
 /** AMRs of the current mode (backend entities in LIVE, the prototype fleet in DEMO). */
 function amrIds(): string[] { return mode === 'live' ? lastEntities.filter(e => e.type === 'amr').map(e => e.id) : demo!.robots.map(r => r.id as string); }
@@ -289,7 +312,7 @@ canvas.addEventListener('pointerup', e => {
   for (const c of candidates) { const p = screen(c.at[0]!, c.at[1]!, c.at[2]!); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < c.radius && d < bestD) { bestD = d; best = c.id; } }
   // In a first-person view a click only selects (the view stays on the chosen camera).
   if (best && view.firstPerson) { selectedId = best; toast('Selecionado ' + best); return; }
-  if (best) { selectedId = best; following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + best); return; }
+  if (best) { clearCameraSelection(); selectedId = best; following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + best); return; }
   if (view.firstPerson) return;
   let zone: Zone | null = null, zd = 48;
   for (const { z } of labelNodes) { const p = screen(...rosToGl(z.pos[0], z.pos[1], z.pos[2])); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < zd) { zd = d; zone = z; } }
@@ -323,7 +346,7 @@ function bindControls() {
   $('#viewHud').onclick = e => {
     const b = (e.target as HTMLElement).closest<HTMLElement>('[data-hud]'); if (!b) return;
     const action = b.dataset.hud!;
-    if (action === 'overview') enterView('overview', null);
+    if (action === 'overview') backToOverview();
     else if (action === 'next') nextCamera();
     else if (action === 'look') { view.setLook(!view.look.enabled); canvas.classList.toggle('look', view.look.enabled); toast(view.look.enabled ? 'Olhar ao redor: arraste no cenário (a orientação do sensor não muda)' : 'Vista alinhada ao sensor'); }
     else if (view.kind === 'onboard') viewAmr(action, view.id!);
@@ -345,7 +368,7 @@ function bindControls() {
     if (e.code === 'KeyO') setTool(tool || lastTool);
     if (e.code === 'KeyC') nextCamera();
     if (e.code === 'KeyV') { const id = amrIds().includes(selectedId ?? '') ? selectedId! : amrIds()[0]; if (id) viewAmr('onboard', id); }
-    if (e.code === 'Escape') { if (tool) setTool(tool); else if (view.firstPerson) enterView('overview', null); else setView(views[0]!); }
+    if (e.code === 'Escape') { if (tool) setTool(tool); else if (view.firstPerson) backToOverview(); else setView(views[0]!); }
   });
 }
 function cycleWorker() {
