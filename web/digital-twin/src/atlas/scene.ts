@@ -61,7 +61,10 @@ export function wallVisibility(shell: BuildingShell | undefined, mode: WallMode,
 }
 
 export async function fetchScene(url: string, signal?: AbortSignal): Promise<CampusScene> {
-  const response = await fetch(url, { signal });
+  // The scene hash is compared with the engine's on every world state; a heuristically cached
+  // copy (the Gateway sends Last-Modified but no Cache-Control) survives a plain reload and
+  // shows a permanent mismatch. Revalidate every time: an unchanged scene is a cheap 304.
+  const response = await fetch(url, { signal, cache: 'no-cache' });
   if (!response.ok) throw new Error(`Cena indisponível (${response.status})`);
   const scene = await response.json() as CampusScene;
   if (scene.schema_version !== '1.0' || scene.scene_id !== 'atlas_campus') throw new Error('Versão de cena incompatível');
