@@ -3,7 +3,7 @@
 // scene (converted back to the prototype's WebGL x/z axes). The caller advances step(dt) on
 // a fixed-step timer, independent of rendering. This simulation never runs in LIVE ROS mode.
 'use strict';
-import {TAU,clamp,smooth,wrapA,LT,LS,drawHuman,drawHumanFar,drawRobot,drawForklift,drawFields,drawLooseObject,drawFlash,drawPlacement,animateGait} from '../rig/atlasRig.js';
+import {TAU,clamp,smooth,wrapA,LT,LS,drawHuman,drawHumanFar,drawRobot,drawForklift,drawFields,drawLooseObject,drawFlash,drawPlacement,animateGait,segDyn} from '../rig/atlasRig.js';
 
 const VSPEC={amr:{L:1.64,W:1.3,cx:0,accel:.9,brake:1.05,emerg:2.8,aLat:.75,gap:.45,k:.7,mass:260,name:'Robô móvel autônomo'},
  lift:{L:4.55,W:1.98,cx:.8,accel:.55,brake:.85,emerg:2.3,aLat:.5,gap:.7,k:1.1,mass:3800,name:'Empilhadeira'}};
@@ -172,12 +172,18 @@ export function createDemo(scene,{clock=()=> '00:00',toast=()=>{}}={}){
   switch(r.why){case 'yield':return 'Cedendo passagem para '+r.ref.id;case 'follow':return 'Mantendo distância de '+r.ref.id;case 'veh':return 'Aguardando '+r.ref.id+' liberar a faixa';
    case 'person':return r.v<.06?'Parado: pessoa no campo de proteção':'Reduzindo: pessoa à frente';case 'obj':return r.v<.06?(r.detourFail?'Sem espaço para desviar, aguardando remoção':'Obstáculo na rota, replanejando'):'Reduzindo: objeto na rota';case 'static':return 'Aguardando caminho livre'}
   if(r.pushing)return 'Empurrando objeto (detecção desligada)';if(r.detour)return 'Contornando obstáculo';if(r.curve&&r.v<r.speed*.8)return 'Reduzindo para a curva';return 'Em rota'}
+ const ROUTE_AHEAD=26,ROUTE_STEP=1;
+ function drawRouteAhead(a,r,fromLens){const [w,y]=fromLens?[.08,.02]:[.12,.17];let p=vPoseAt(r,r.d+r.S.L/2);
+  for(let s=r.S.L/2+ROUTE_STEP;s<=ROUTE_AHEAD;s+=ROUTE_STEP){const q=vPoseAt(r,r.d+s);segDyn(a,p.x,p.z,q.x,q.z,w,y,r.color,.6);p=q}}
  function workerStatus(w){if(w.act)return w.act.ready?ACTS[w.act.type].label:'Posicionando-se para a tarefa';if(w.waiting)return 'Aguardando passagem de veículo';if(w.side>.45)return 'Desviando de obstáculo';if(w.v<.1)return 'Parado';return w.carry?'Transportando volume':'Caminhando'}
  return {robots,forklifts,workers,loose,traffic,opts,
   get time(){return t},
   step(dt){t+=dt;trafficStep(dt);for(const w of workers)updateWorker(w,dt,t)},
   // onboard: robot seen from its own camera; its field outline would sit on the lens and is not drawn.
-  draw(a,{people=true,vehicles=true,fields=true,selected=null,eye=null,tool=null,hover=null,onboard=null}={}){
+  // routes: navigation route of each AMR (kind 'amr'), the next ROUTE_AHEAD m of its own track
+  // including any detour. Forklift loops are never drawn (route ownership, not colour or name).
+  draw(a,{people=true,vehicles=true,fields=true,routes=true,selected=null,eye=null,tool=null,hover=null,onboard=null}={}){
+   if(routes)for(const r of robots)if(r.kind==='amr')drawRouteAhead(a,r,onboard===r.id);
    for(const r of robots){drawRobot(a,r,t);if(fields&&r.id!==onboard)drawFields(a,r)}
    if(vehicles)for(const r of forklifts){drawForklift(a,r,t);if(fields)drawFields(a,r)}
    if(people)for(const w of workers){const far=eye&&Math.hypot(eye[0]-w.x,eye[1]-w.y0,eye[2]-w.z)>70;far&&w!==selected?drawHumanFar(a,w):drawHuman(a,w,t,w===selected)}

@@ -9,6 +9,10 @@ SCENE = ROOT/'config/atlas_campus.scene.json'
 WEB_COPY = ROOT.parents[1]/'web/digital-twin/public/scene/atlas_campus.scene.json'
 
 
+SIDES = ('west', 'east', 'north', 'south')
+SHELL_LAYERS = ('enclosure',)+tuple(f'walls_{s}' for s in SIDES)
+
+
 @pytest.fixture(scope='module')
 def scene():
     return Scene.load(SCENE)
@@ -17,9 +21,11 @@ def scene():
 def test_prototype_geometry_is_preserved(scene):
     layers = scene.raw['layers']
     count = {layer: sum(len(v)//13 for v in shapes.values()) for layer, shapes in layers.items()}
-    # The ATLAS prototype logs "instances: 10659" at start-up; the enclosure is the LIVE addition.
-    assert sum(v for k, v in count.items() if k != 'enclosure') == 10659
+    # The ATLAS prototype logs "instances: 10659" at start-up; the building shell (enclosure and
+    # upper walls) is the LIVE addition.
+    assert sum(v for k, v in count.items() if k not in SHELL_LAYERS) == 10659
     assert count['enclosure'] == 12
+    assert [count[f'walls_{s}'] for s in SIDES] == [1, 1, 1, 9+8]   # south: 9 wall spans + 8 door lintels
     assert len(scene.raw['agents']['workers']) == 16 and len(scene.raw['agents']['forklifts']) == 3
 
 
@@ -106,3 +112,50 @@ def contains(polygon, x, y):
             inside = not inside
         j = k
     return inside
+
+
+def shell_boxes(scene, layers=SHELL_LAYERS):
+    rows = []
+    for layer in layers:
+        values = np.asarray(scene.raw['layers'][layer]['cube'], dtype=float).reshape(-1, 13)
+        assert not values[:, 10].any()            # the shell is axis-aligned
+        rows.append(values[:, :6])
+    return np.vstack(rows)
+
+
+def covered(boxes, x, y, z):
+    x0, y0, z0, length, width, height = boxes.T
+    return bool(np.any((abs(x-x0) <= length/2) & (abs(y-y0) <= width/2) & (abs(z-z0) <= height/2)))
+
+
+def test_building_shell_is_closed_except_the_dock_doors(scene):
+    shell, walls = scene.raw['building']['shell'], shell_boxes(scene)
+    doors = shell['dock_doors']
+    for z in (.1, 1., 2.9, 3.1, 5., 8., 13.9):
+        for y in np.arange(-53.97, 54., .25):                       # west and east, full length
+            assert covered(walls, -73, y, z) and covered(walls, 73, y, z), (y, z)
+        for x in np.arange(-73.27, 73.3, .25):
+            assert covered(walls, x, 54, z), (x, z)                   # north
+            door = z < doors['height'] and any(abs(x-c) < doors['width']/2 for c in doors['centres_x'])
+            assert covered(walls, x, -53.875, z) != door, (x, z)      # dock wall: open exactly at the doors
+    o = shell['outer']
+    for x, y in ((o['west']+.05, o['north']-.05), (o['east']-.05, o['north']-.05),
+                 (o['west']+.05, o['south']+.05), (o['east']-.05, o['south']+.05)):
+        assert covered(walls, x, y, 1.) and covered(walls, x, y, 10.), (x, y)   # closed corners
+
+
+def test_dock_openings_are_the_prototype_doors(scene):
+    doors = scene.raw['building']['shell']['dock_doors']
+    panels = np.asarray(scene.raw['layers']['architecture']['cube'], dtype=float).reshape(-1, 13)
+    for c in doors['centres_x']:
+        # Roll-up door panel (8 m x 4.2 m) of the prototype inside every opening of the enclosure.
+        door = panels[(abs(panels[:, 0]-c) < 1e-6) & (abs(panels[:, 1]+54) < 1e-6) & (abs(panels[:, 3]-8) < 1e-6)]
+        assert len(door) == 1 and door[0, 5] <= doors['height'] and door[0, 3] <= doors['width']
+
+
+def test_upper_walls_change_no_simulated_band(scene):
+    # Highest simulated band: forklift traffic 0.05-2.0 m; scanners at 0.21 and 0.48 m.
+    upper = shell_boxes(scene, tuple(f'walls_{s}' for s in SIDES))
+    assert (upper[:, 2]-upper[:, 5]/2).min() >= scene.raw['building']['shell']['plinth_height'] > 2.0
+    enclosure = shell_boxes(scene, ('enclosure',))
+    assert np.allclose(enclosure[:, 2]-enclosure[:, 5]/2, 0) and np.allclose(enclosure[:, 5], 3)

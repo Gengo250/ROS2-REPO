@@ -26,7 +26,9 @@ controller_server:
       stateful: true
     FollowPath:
       plugin: nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
-      desired_linear_vel: 0.45
+      # Phase 6 follow-up: 0.45 -> 0.60 m/s cruise. Drive limit 0.70 m/s and 0.5 m/s² (amr_dimensions.json),
+      # command_guard rejects > 0.70; regulation (curvature, cost, approach) and collision checking stay on.
+      desired_linear_vel: 0.60
       lookahead_dist: 0.8
       min_lookahead_dist: 0.5
       max_lookahead_dist: 1.1

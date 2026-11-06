@@ -1,35 +1,69 @@
+# Mosaico storage for the Digital Twin: PostgreSQL (catalog/metadata) + mosaicod (telemetry
+# objects in a named volume). Data survives container/daemon/database restarts and host reboots;
+# it is lost only if the named volumes are deleted (never run `down -v`).
+#
+#   cp .env.example .env   # once; set MOSAICO_DB_PASSWORD (an existing metadata volume keeps its password)
+#   docker compose up -d --wait
+#   docker compose ps      # both services "healthy"
+#   docker compose stop    # or `down` (containers only); volumes remain
+#
+# PostgreSQL is never published: only mosaicod reaches it on the private compose network.
+# mosaicod is published on MOSAICO_BIND_ADDRESS (default loopback). For a separate server
+# (e.g. Windows + Docker Desktop) add compose.remote.yaml: TLS + API keys, see PHASE_2_STORAGE.md.
 name: digital-twin-mosaico
 services:
   database:
-    image: postgres:16.15
+    image: postgres:16.15@sha256:ca0bd484cb98bf4b24eb1010e73fb3fcbd6714d240fbc1a10eea5b7dbecb641d
+    restart: unless-stopped
     environment:
       POSTGRES_DB: mosaico
       POSTGRES_USER: mosaico
-      POSTGRES_PASSWORD: ${MOSAICO_DB_PASSWORD:?Set MOSAICO_DB_PASSWORD in .env}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
     volumes:
       - metadata:/var/lib/postgresql/data
     healthcheck:
-      test: [CMD-SHELL, pg_isready -U mosaico -d mosaico]
+      test: [CMD-SHELL, pg_isready -U mosaico -d mosaico -h 127.0.0.1]
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 10s
+    stop_grace_period: 30s
   mosaicod:
     image: ghcr.io/mosaico-labs/mosaicod:0.7.0-rc-c18683a@sha256:8e1f6857cc0623afab21428dd5c724adc490f224a17ac2d459ac045bf62db3f7
-    command: [server, --config, /etc/mosaicod/config.toml, --host, 0.0.0.0, --port, '6726', --log-level, info]
+    restart: unless-stopped
+    command: [server, --config, /etc/mosaicod/config.toml, --host, 0.0.0.0, --port, '6726', --log-level, info, --log-format, plain]
     environment:
       MOSAICOD_DB_URL: postgresql://database:5432/mosaico
       MOSAICOD_DB_USER: mosaico
-      MOSAICOD_DB_PASSWORD: ${MOSAICO_DB_PASSWORD:?Set MOSAICO_DB_PASSWORD in .env}
+      MOSAICOD_DB_PASSWORD_FILE: /run/secrets/db_password
       MOSAICOD_STORE_ENDPOINT: file:///
       MOSAICOD_STORE_BUCKET: data
+    secrets: [db_password]
     ports:
-      - 127.0.0.1:6726:6726
+      - ${MOSAICO_BIND_ADDRESS:-127.0.0.1}:${MOSAICO_PORT:-6726}:6726
     volumes:
       - objects:/data
       - ./config.toml:/etc/mosaicod/config.toml:ro
+    # Distroless image (no shell, no curl). The container runs only while the server process is
+    # alive (it is PID 1); this check adds that the catalog database is reachable with the
+    # configured credentials. `mosaicod ps` exits 0 even when it lists the server as dead, so it is
+    # not a gRPC readiness probe: readiness is an SDK round trip from the client side,
+    # `python -m digital_twin_recorder.storage.history health` (PHASE_2_STORAGE.md).
+    healthcheck:
+      test: [CMD, mosaicod, ps, --config, /etc/mosaicod/config.toml]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+    # Active Arrow Flight uploads get time to drain before SIGKILL (completed sequences are durable).
+    stop_grace_period: 40s
     depends_on:
       database:
         condition: service_healthy
+secrets:
+  db_password:
+    environment: MOSAICO_DB_PASSWORD
 volumes:
   metadata:
   objects:

@@ -8,7 +8,7 @@ export interface Demo {
   opts: { people: boolean; vehicles: boolean };
   readonly time: number;
   step(dt: number): void;
-  draw(a: Batch, opts: { people?: boolean; vehicles?: boolean; fields?: boolean; selected?: Rig | null; eye?: number[] | null;
+  draw(a: Batch, opts: { people?: boolean; vehicles?: boolean; fields?: boolean; routes?: boolean; selected?: Rig | null; eye?: number[] | null;
     tool?: string | null; hover?: { x: number; z: number; ok: boolean } | null; onboard?: string | null }): void;
   setSensors(on: boolean): void;
   placementCheck(type: string, x: number, z: number): { ok: boolean; msg?: string };

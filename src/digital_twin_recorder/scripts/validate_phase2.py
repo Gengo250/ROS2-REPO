@@ -82,7 +82,7 @@ async def main():
                            stdout=log,stderr=subprocess.STDOUT,timeout=60)
     def recorder(name,duration):
         return launch(name,[str(ROOT/'.venv-recorder/bin/python'),'-m','digital_twin_recorder.ros.recorder_node',
-            '--duration',str(duration),'--output',str(output/name)])
+            '--simulation-backend','gazebo','--scenario','normal','--duration',str(duration),'--output',str(output/name)])
     try:
         # Do not attach to or shut down another developer's services.
         for port in (8000,5173,6726,55432):
@@ -162,7 +162,7 @@ async def main():
         report['recording_records_per_wall_second']=sum(t['count'] for t in source['topics'].values())/elapsed
         # Real odometry with an absent IMU must never finalize successfully.
         missing=launch('missing-imu',[str(ROOT/'.venv-recorder/bin/python'),'-m',
-            'digital_twin_recorder.ros.recorder_node','--duration','2',
+            'digital_twin_recorder.ros.recorder_node','--simulation-backend','gazebo','--duration','2',
             '--imu-topic','/phase2_missing_imu','--output',str(output/'missing-imu')])
         assert await wait_process(missing,45)!=0
         report['missing_imu']=json.loads(next((output/'missing-imu').glob('*/report.json')).read_text())

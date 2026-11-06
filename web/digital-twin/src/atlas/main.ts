@@ -2,7 +2,7 @@ import './atlas.css';
 import { Plane, Raycaster, Vector2, Vector3 } from 'three';
 import { DynamicBatch, InstancedRenderer } from './render/InstancedRenderer';
 import { OrbitCamera } from './OrbitCamera';
-import { buildStatic, fetchScene, LAYER_GROUPS, type CampusScene, type Zone } from './scene';
+import { buildStatic, fetchScene, LAYER_GROUPS, WALL_MODES, wallVisibility, type CampusScene, type WallMode, type Zone } from './scene';
 import { fitViewport, industrialOptics, industrialPose, lookPose, onboardOptics, onboardPose, type MountedCamera, type Optics, type Pose, type Rect } from './cameraPoses';
 import { ViewController, type ViewKind, type ViewTarget } from './ViewController';
 import type { RenderView } from './render/InstancedRenderer';
@@ -28,7 +28,10 @@ const camera = new OrbitCamera(canvas, () => { following = false; });
 const batch = new DynamicBatch();
 const view = new ViewController();
 const minimap = new Minimap($<HTMLCanvasElement>('#minimap'));
-const show: Record<string, boolean> = { roof: false, enclosure: false, racks: true, vehicles: true, people: true, routes: true, labels: true, fields: true };
+// routes: AMR navigation overlays only (LIVE: Nav2 plan and goal; DEMO: route ahead of each AMR).
+const show: Record<string, boolean> = { roof: false, racks: true, vehicles: true, people: true, routes: true, labels: true, fields: true };
+/** Upper building walls: presentation only (scene.ts, wallVisibility); the plinth is always drawn. */
+let walls: WallMode = 'auto', wallsShown: Record<string, boolean> = {};
 let night = 0, scene: CampusScene, live: LiveWorld | null = null, liveScene: LiveScene | null = null, demo: Demo | null = null;
 let tool: string | null = null, lastTool = 'cone', hover: { x: number; z: number; ok: boolean } | null = null;
 let selectedId: string | null = null, following = false, active = true, speed = 1;
@@ -310,6 +313,7 @@ function bindControls() {
     if (demo) demo.opts.people = show.people!, demo.opts.vehicles = show.vehicles!;
     toast((el.checked ? 'Camada exibida: ' : 'Camada oculta: ') + el.parentElement!.firstChild!.textContent!.trim());
   });
+  $('#wallModes').onclick = e => { const b = (e.target as HTMLElement).closest<HTMLElement>('[data-walls]'); if (b && WALL_MODES.includes(b.dataset.walls as WallMode)) setWalls(b.dataset.walls as WallMode); };
   $<HTMLInputElement>('[data-night]').onchange = e => { night = (e.target as HTMLInputElement).checked ? 1 : 0; toast(night ? 'Iluminação noturna ativada' : 'Iluminação diurna ativada'); };
   $('#selection').onclick = e => {
     const target = e.target as HTMLElement, choice = target.closest<HTMLElement>('[data-viewmode]');
@@ -422,7 +426,7 @@ function render(now: number) {
       routes: show.routes!, selected: selectedId, eye: camera.eye, time: now / 1000, onboard: view.kind === 'onboard' ? view.id : null });
     dim = live.connection !== 'connected' || s?.simulation.availability !== 'online' ? .55 : 0;
   } else if (demo) {
-    demo.draw(batch, { people: show.people, vehicles: show.vehicles, fields: show.fields, selected: demo.workers.find(w => w.id === selectedId) ?? null,
+    demo.draw(batch, { people: show.people, vehicles: show.vehicles, fields: show.fields, routes: show.routes, selected: demo.workers.find(w => w.id === selectedId) ?? null,
       eye: camera.eye, tool, hover, onboard: view.kind === 'onboard' ? view.id : null });
   }
   // Installed industrial cameras (physical models): the lens is at the scene position, the housing
@@ -437,6 +441,7 @@ function render(now: number) {
   renderer.uploadDynamic(batch);
   const target = viewTarget(); targetViewport = target.viewport;
   rendered = view.frame(target, now / 1000, { x: 0, y: 0, width: canvas.clientWidth, height: canvas.clientHeight });
+  applyWalls(rendered.position);
   renderer.render(rendered, sky, night, dim);
   // Adaptive resolution: lower the pixel ratio while the delivered rate stays well below the
   // cap; raise it again once the cap is held. Never below 0.75.
@@ -451,6 +456,17 @@ function render(now: number) {
   if (frame % 3 === 0) updateLabels();
   if (frame % 9 === 0) updateMinimap(path);
   if (frame % 12 === 0) updatePanels();
+}
+/** Upper walls for the camera of this frame (WebGL position: x east, z = -north). */
+function applyWalls(position: number[]) {
+  const next = wallVisibility(scene.building.shell, walls, { x: position[0]!, y: -position[2]! });
+  for (const [layer, visible] of Object.entries(next)) if (wallsShown[layer] !== visible) renderer.setLayerVisible(layer, visible);
+  wallsShown = next;
+}
+function setWalls(mode: WallMode) {
+  walls = mode;
+  document.querySelectorAll<HTMLElement>('[data-walls]').forEach(b => b.classList.toggle('active', b.dataset.walls === mode));
+  toast({ auto: 'Paredes: corte automático das faces voltadas para a câmera', full: 'Paredes: galpão fechado', cut: 'Paredes: corte na altura do fechamento físico (3 m)' }[mode]);
 }
 function updateLabels() {
   for (const { z, el } of labelNodes) {
@@ -524,7 +540,7 @@ function publishMetrics() {
   const sorted = [...frameTimes].sort((a, b) => a - b), p95 = sorted[Math.floor(sorted.length * .95)] ?? 0;
   const info = renderer.renderer.info;
   const metrics = { mode, fps, frame_ms_p95: p95, fps_cap: FPS_CAP, pixel_ratio: ratio, draw_calls: info.render.calls, triangles: info.render.triangles,
-    static_instances: instancesStatic, dynamic_instances: batch.total, connection: live?.connection ?? null, ws_hz: live?.receivedHz ?? null,
+    static_instances: instancesStatic, dynamic_instances: batch.total, walls, walls_shown: Object.keys(wallsShown).filter(k => wallsShown[k]), connection: live?.connection ?? null, ws_hz: live?.receivedHz ?? null,
     ws_latency_ms: live?.latencyMs ?? null, sim_status: live?.latest?.simulation.status ?? null, rtf: live?.latest?.simulation.real_time_factor ?? null,
     entities: mode === 'live' ? lastEntities.length : (demo ? demo.workers.length + demo.robots.length + demo.forklifts.length : 0),
     obstacles: mode === 'live' ? live?.latest?.obstacles.length ?? 0 : demo?.loose.length ?? 0, view: view.kind, view_id: view.id,

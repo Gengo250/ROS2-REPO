@@ -11,6 +11,28 @@ async function metrics(page: Page) {
   return JSON.parse((await page.locator('body').getAttribute('data-metrics')) ?? '{}');
 }
 async function shot(page: Page, name: string) { await page.screenshot({ path: resolve(evidence!, `${name}.png`) }); }
+/** Wall presentation modes: closed building, automatic cut of the walls facing the camera, cut. */
+async function wallModes(page: Page, prefix: string) {
+  const shown: Record<string, string[]> = {};
+  for (const mode of ['full', 'cut', 'auto']) {
+    await page.locator(`[data-walls="${mode}"]`).click(); await page.waitForTimeout(1500);
+    await shot(page, `${prefix}_walls_${mode}`);
+    shown[mode] = (await metrics(page)).walls_shown;
+  }
+  expect(shown.full).toHaveLength(4);
+  expect(shown.cut).toHaveLength(0);
+  expect(shown.auto).toHaveLength(2);           // overview: the two walls between camera and hall are cut
+  return shown;
+}
+/** AMR route toggle: off removes only the route overlay (dynamic instances), never moving objects. */
+async function routeToggle(page: Page, prefix: string) {
+  const toggle = page.locator('label:has(input[data-layer="routes"])');
+  const on = (await metrics(page)).dynamic_instances;
+  await toggle.click(); await page.waitForTimeout(1200); await shot(page, `${prefix}_routes_off`);
+  const off = (await metrics(page)).dynamic_instances;
+  await toggle.click(); await page.waitForTimeout(1200);
+  return { on, off };
+}
 
 test('DEMO: prototype behaviour, cameras, follow and frame rate', async ({ page }) => {
   test.skip(!evidence, 'Set TWIN_ATLAS_EVIDENCE_DIR');
@@ -22,6 +44,10 @@ test('DEMO: prototype behaviour, cameras, follow and frame rate', async ({ page 
   await expect(page.locator('body')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
   await page.waitForTimeout(6000);
   await shot(page, 'demo_overview');
+  const demoWalls = await wallModes(page, 'demo');
+  const demoRoutes = await routeToggle(page, 'demo');
+  expect(demoRoutes.off).toBeLessThan(demoRoutes.on);
+  await writeFile(resolve(evidence!, 'demo_walls_routes.json'), JSON.stringify({ walls: demoWalls, routes: demoRoutes }, null, 1));
   await page.locator('[data-view="storage"]').click(); await page.waitForTimeout(2500); await shot(page, 'demo_storage');
   await page.keyboard.press('KeyF'); await page.waitForTimeout(3500); await shot(page, 'demo_follow_worker');
   // First person: a demo AMR's onboard camera (V), an industrial camera (C), back with Escape.
@@ -49,6 +75,8 @@ test('LIVE ROS: backend state, obstacle round trip, cameras and missions', async
   await expect(page.locator('#statusText')).toHaveText('AMBIENTE ATIVO', { timeout: 20000 });
   await page.waitForTimeout(4000);
   await shot(page, 'live_overview');
+  const liveWalls = await wallModes(page, 'live');
+  await writeFile(resolve(evidence!, 'live_walls.json'), JSON.stringify(liveWalls, null, 1));
   // Close view of the AMR (spawn in the central hall).
   await page.locator('[data-view="storage"]').click(); await page.waitForTimeout(500);
   await page.evaluate(() => window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' })));

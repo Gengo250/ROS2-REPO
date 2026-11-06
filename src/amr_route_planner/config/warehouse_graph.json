@@ -2317,7 +2317,7 @@
   }
  ],
  "frame_id": "world",
- "graph_version": "31fba3aa050bd251",
+ "graph_version": "09de537d47d8038f",
  "map": {
   "height": 925,
   "origin": [
@@ -3464,12 +3464,12 @@
   "nav2_params": {
    "package": "amr_navigation",
    "path": "config/nav2_params.yaml",
-   "sha256": "fa9ebb480c0cb2c15569b54fbd208e88f4dd61c30bcd2bd000270cc8b36d29a4"
+   "sha256": "f7e9b869a526158a04a28444a6d6a8064c15ce1db025356c5e60845598846897"
   },
   "planner_config": {
    "package": "amr_route_planner",
    "path": "config/route_planner.yaml",
-   "sha256": "90773b56b64bf14df79ae30cf6ebc7151e920a797917744ecf455b6239a2f586"
+   "sha256": "1f4842e604f12b0dd507662411e93da0571cf56d4855ef649d2e5c661f4006cd"
   },
   "registration": {
    "package": "amr_route_planner",

@@ -116,6 +116,9 @@ export class InstancedRenderer {
   readonly scene = new Scene();
   readonly camera = new PerspectiveCamera(47, 1, .2, 700);
   readonly material: RawShaderMaterial;
+  /** Same shader and uniforms, depth pushed back: wall cladding whose faces coincide with the
+   * prototype's columns and frames (coplanar faces would z-fight) lets those details show. */
+  readonly recessedMaterial: RawShaderMaterial;
   readonly staticGroup = new Group();
   readonly overlay = new Group();
   readonly layers = new Map<string, InstancedLayer[]>();
@@ -129,6 +132,9 @@ export class InstancedRenderer {
       uniforms: { uProjectionView: { value: this.pv }, uEye: { value: new Vector3() }, uFogColor: { value: new Vector3() },
         uNight: { value: 0 }, uDim: { value: 0 } },
     });
+    this.recessedMaterial = this.material.clone();
+    this.recessedMaterial.uniforms = this.material.uniforms;
+    Object.assign(this.recessedMaterial, { polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 2 });
     this.camera.up.set(0, 1, 0);
     this.scene.add(this.staticGroup, this.overlay);
     this.dynamic = Object.fromEntries(SHAPES.map(shape => {
@@ -137,10 +143,10 @@ export class InstancedRenderer {
     })) as Record<Shape, InstancedLayer>;
   }
   /** Static layer from 13-float WebGL instances, grouped by name so it can be toggled. */
-  setStaticLayer(name: string, shapes: Partial<Record<Shape, Float32Array>>) {
+  setStaticLayer(name: string, shapes: Partial<Record<Shape, Float32Array>>, recessed = false) {
     for (const old of this.layers.get(name) ?? []) { this.staticGroup.remove(old.mesh); old.dispose(); }
     const list = Object.entries(shapes).filter(([, data]) => data && data.length)
-      .map(([shape, data]) => new InstancedLayer(shape as Shape, this.material, data!, false));
+      .map(([shape, data]) => new InstancedLayer(shape as Shape, recessed ? this.recessedMaterial : this.material, data!, false));
     list.forEach(layer => { layer.mesh.name = name; this.staticGroup.add(layer.mesh); });
     this.layers.set(name, list);
   }
@@ -178,6 +184,6 @@ export class InstancedRenderer {
   dispose() {
     for (const list of this.layers.values()) list.forEach(l => l.dispose());
     for (const shape of SHAPES) this.dynamic[shape].dispose();
-    this.material.dispose(); this.renderer.dispose();
+    this.material.dispose(); this.recessedMaterial.dispose(); this.renderer.dispose();
   }
 }

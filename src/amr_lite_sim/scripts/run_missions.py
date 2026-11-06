@@ -5,6 +5,9 @@ For each destination: POST /api/v1/missions, then poll /api/v1/world until the m
 recording wall/sim duration, travelled distance (engine pose), mean speed, field events and
 contacts. Optional --obstacle-after/--obstacle places a user obstacle on the robot's planned
 path mid-mission to exercise detection, slow-down/stop and replanning.
+Speeds come from the engine state (authoritative), never from the browser animation:
+``straight_cruise_speed_m_s`` is the median engine speed while the AMR drives straight
+(|yaw rate| < 0.05 rad/s, speed > 0.1 m/s); ``mean_speed_sim_m_s`` is distance / simulated time.
 Usage: run_missions.py dock_05 charger_01 ... --output report.json [--obstacle pallet --obstacle-after 6]
 """
 import argparse
@@ -58,7 +61,8 @@ def main():
             if last is not None:
                 distance += math.dist(last, (robot['x'], robot['y']))
             last = (robot['x'], robot['y'])
-            trajectory.append((round(time.monotonic()-start_wall, 2), round(robot['x'], 3), round(robot['y'], 3), round(robot['speed'], 3), robot['state']))
+            trajectory.append((round(time.monotonic()-start_wall, 2), round(robot['x'], 3), round(robot['y'], 3), round(robot['speed'], 3),
+                               robot['state'], round(sim, 3), round(robot['yaw'], 4), round(robot['wz'], 4)))
             speeds.append(robot['speed'])
             for e in world['events']:
                 if e['kind'] in ('protective_field', 'contact') and e['seq'] > seen and e not in events:
@@ -85,9 +89,13 @@ def main():
                 break
         wall, sim = time.monotonic()-start_wall, world['simulation']['sim_time']-start_sim
         goal = final['goal'] if final else None
+        straight = sorted(t[3] for t in trajectory if abs(t[7]) < .05 and t[3] > .1)
         entry.update({'status': final['status'] if final else 'timeout', 'detail': final['detail'] if final else None,
                       'recoveries': final['recoveries'] if final else None, 'wall_s': wall, 'sim_s': sim,
                       'distance_m': distance, 'mean_speed_wall_m_s': distance/wall if wall else 0.,
+                      'mean_speed_sim_m_s': distance/sim if sim else 0.,
+                      'straight_cruise_speed_m_s': straight[len(straight)//2] if straight else None,
+                      'straight_samples': len(straight),
                       'max_speed_m_s': max(speeds, default=0.), 'final_position_error_m': math.dist(last, goal[:2]) if goal else None,
                       'protective_field_events': sum(1 for e in events if e['kind'] == 'protective_field'),
                       'contacts': [e for e in events if e['kind'] == 'contact'], 'obstacle': placed,
@@ -95,14 +103,15 @@ def main():
         if placed and placed.get('accepted'):
             after = [t for t in trajectory if t[0] >= placed['mission_time_s']]
             ox, oy = placed['at']
-            placed['min_centre_distance_m'] = min((math.dist((x, y), (ox, oy)) for _, x, y, _, _ in after), default=None)
+            placed['min_centre_distance_m'] = min((math.dist((t[1], t[2]), (ox, oy)) for t in after), default=None)
             placed['stopped_samples'] = sum(1 for t in after if abs(t[3]) < .02)
         entry['trajectory'] = trajectory
         if placed and placed.get('id'):
             call(a.api, 'DELETE', f"/api/v1/obstacles/{placed['id']}")
         results.append(entry)
         print(json.dumps({k: entry[k] for k in ('destination', 'status', 'wall_s', 'sim_s', 'distance_m', 'mean_speed_wall_m_s',
-                                                 'final_position_error_m', 'protective_field_events', 'recoveries')}))
+                                                 'straight_cruise_speed_m_s', 'max_speed_m_s', 'final_position_error_m',
+                                                 'protective_field_events', 'recoveries')}), flush=True)
         time.sleep(2)
     json.dump(results, open(a.output, 'w'), indent=1)
 

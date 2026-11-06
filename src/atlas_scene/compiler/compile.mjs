@@ -8,7 +8,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCampus, LAYERS } from './atlas_campus.mjs';
-import { navigation, enclosure } from './campus_navigation.mjs';
+import { navigation, enclosure, upperWalls, SHELL, DOCK_DOORS } from './campus_navigation.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUTPUTS = [resolve(here, '../config/atlas_campus.scene.json'),
@@ -31,9 +31,14 @@ function instances(values) {
 const atlas = buildCampus();
 const layers = Object.fromEntries(LAYERS.map(layer => [layer,
   Object.fromEntries(Object.entries(atlas.groups[layer]).filter(([, v]) => v.length).map(([shape, v]) => [shape, instances(v)]))]));
-// LIVE addition (not in the prototype): physical wall cladding, hidden by default in the browser.
-const wall = [0x8f / 255, 0xa3 / 255, 0xb4 / 255].map(r4);
-layers.enclosure = { cube: enclosure().flatMap(([x, y, z, l, w, h, yaw]) => [x, y, z, l, w, h].map(r4).concat(wall, [0, r4(yaw), 0, 0])) };
+// LIVE additions (not in the prototype): the building shell of campus_navigation.mjs. The
+// enclosure is the physical wall at robot height; walls_<side> close each wall up to the roof.
+const boxes = (list, hex) => {
+  const colour = [1, 3, 5].map(i => r4(parseInt(hex.slice(i, i + 2), 16) / 255));
+  return { cube: list.flatMap(([x, y, z, l, w, h, yaw]) => [x, y, z, l, w, h].map(r4).concat(colour, [0, r4(yaw), 0, 0])) };
+};
+layers.enclosure = boxes(enclosure(), '#8fa3b4');
+for (const [side, list] of Object.entries(upperWalls())) layers[`walls_${side}`] = boxes(list, '#9baec1');
 const solids = atlas.solids.map((s, i) => ({ id: `solid_${String(i).padStart(3, '0')}`, tag: s.tag,
   x: r4(s.x), y: r4(-s.z), length: r4(s.w), width: r4(s.d), yaw: r4(s.yaw) }));
 const lanes = Object.fromEntries(Object.entries(atlas.LOOPS).map(([id, l]) => [id,
@@ -79,7 +84,12 @@ const scene = {
   },
   coordinates: { frame: 'world', x: 'east', y: 'north', z: 'up', units: 'metres_radians',
     webgl: 'X = x, Y = z, Z = -y; yaw unchanged (rotation about +Y)' },
-  building: { interior: { x_min: -72.65, x_max: 72.65, y_min: -53.5, y_max: 53.65 }, size: [146, 108], height: 14.5 },
+  building: { interior: { x_min: -72.65, x_max: 72.65, y_min: -53.5, y_max: 53.65 }, size: [146, 108], height: 14.5,
+    // Exterior walls by side (layers enclosure + walls_<side>); outward normals in the world frame.
+    shell: { plinth_height: SHELL.plinth, wall_top: SHELL.top, outer: SHELL.outer, inner: SHELL.inner,
+      dock_doors: { centres_x: DOCK_DOORS, width: SHELL.dockDoorWidth, height: SHELL.dockDoorHeight },
+      sides: { west: { layer: 'walls_west', normal: [-1, 0] }, east: { layer: 'walls_east', normal: [1, 0] },
+        north: { layer: 'walls_north', normal: [0, 1] }, south: { layer: 'walls_south', normal: [0, -1] } } } },
   instance_fields: ['x', 'y', 'z', 'length', 'width', 'height', 'r', 'g', 'b', 'emission', 'yaw', 'tilt', 'roll'],
   layers,
   solids,
@@ -104,7 +114,7 @@ if (process.argv.includes('--check')) {
   console.log('scene up to date', geometrySha.slice(0, 16));
 } else {
   for (const path of OUTPUTS) { await mkdir(dirname(path), { recursive: true }); await writeFile(path, text); }
-  const counts = Object.fromEntries([...LAYERS, 'enclosure'].map(l => [l, Object.values(layers[l]).reduce((s, v) => s + v.length / 13, 0)]));
+  const counts = Object.fromEntries(Object.keys(layers).map(l => [l, Object.values(layers[l]).reduce((s, v) => s + v.length / 13, 0)]));
   console.log(JSON.stringify({ geometry_sha256: geometrySha, bytes: text.length, instances: counts, solids: solids.length,
     workers: workers.length, forklifts: forklifts.length }));
 }

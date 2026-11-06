@@ -26,6 +26,126 @@ now in `src/amr_lite_sim/scripts/perf/`: `monitor_topics.py`, `sample_system.py`
 `ws_probe.py`; operations profile with
 16 workers and 3 forklifts, one Nav2 mission running, browser on the LIVE page).
 
+## Follow-up (2026-11-06): walls, AMR speed, route ownership, persistence
+
+Evidence: `evidence-phase6/followup/` (ignored by Git). Persistence is documented in
+[PHASE_2_STORAGE.md](PHASE_2_STORAGE.md) (recorder for the lite runtime, Compose storage, history CLI).
+
+| Change | Before | After |
+|---|---|---|
+| Exterior walls in the default 3D view (fraction of each wall face drawn, `audit_walls.py`, dock doors excluded) | west/east 36 %, north 12 %, south 14 %; physical walls hidden; open runs up to 8.25 m at robot height | 100 % on all four walls ("Completas"); default "Automático" cuts only the walls between an outside camera and the hall down to the physical 3 m plinth |
+| Rear (north) wall panels | 14 panels rotated 90° (7.1 m fins across the wall, 3.2 m into the hall at 1.6–11.5 m) | in the wall plane between the columns |
+| Physical boundary | 3 m enclosure, north outer corners notched 0.35 × 0.35 m | same inner faces; corners closed; map v9 re-verified with identical residuals |
+| AMR cruise (`desired_linear_vel`) | 0.45 m/s, measured 0.450 m/s straight | 0.60 m/s, measured 0.600 m/s straight (engine state) |
+| Five station missions incl. workers, forklifts and a placed obstacle | 4/5 succeeded, 0.406 m/s overall, 989.7 s simulated | 5/5 succeeded, 0.528 m/s overall (+30 %), 769.8 s (−22 %), 0 contacts, RTF ≥ 0.998 |
+| Route overlays | one toggle drew the forklift/fleet loops (static `routes` layer, minimap lanes) and the AMR plan | loops never drawn; "Rotas de navegação AMR" draws only AMR routes (LIVE: Nav2 plan + goal; DEMO: route ahead of each AMR) |
+
+### Building walls
+
+The building shell is described once, in `campus_navigation.mjs` (`SHELL`, `enclosure()`,
+`upperWalls()`), and compiled into the scene: `enclosure` (0–3 m, the physical wall that bodies hit
+and floor scanners see: west/east/north 0.7 m thick, dock wall 0.25 m between the eight dock doors)
+and `walls_west|east|north|south` (3 m up to the roof line at 14 m, with a lintel above every dock
+door, 8.4 × 5.2 m openings filled by the prototype's roll-up doors). `building.shell` in the scene
+lists sides, layers, outward normals, inner/outer faces and the doors. The upper walls lie above
+every simulated band (bodies ≤ 0.6 m, people 1.8 m, forklifts 2.0 m, scanners 0.21/0.48 m), so they
+change no collision, scan, map or Gazebo world (`test_upper_walls_change_no_simulated_band`).
+
+Defects found by the audit (`src/atlas_scene/scripts/audit_walls.py`, before/after JSON in
+`evidence-phase6/followup/walls/`):
+1. The default view hid the physical enclosure and showed only the prototype's cut-away walls: the
+   side walls are open from y = −30.25 to 30.45 m, the rear wall has a 1.6 m gap at the floor and no
+   panels at either corner (x < −55.75, x > 63.35), the dock wall has nothing between the doors.
+2. Rear wall panels had width and depth swapped in `makeArchitecture` (fins across the wall). Fixed
+   in `atlas_campus.mjs` (documented deviation from the prototype; count and colours unchanged).
+3. The enclosure's north outer corners were notched (north wall 146 m long against side walls whose
+   outer faces are at ±73.35 m); it now spans the outer faces. Inner faces unchanged.
+4. Enclosure and rear columns share their faces (0.7 m), which z-fought when the enclosure was shown.
+   Wall layers are drawn with a recessed material (`polygonOffset`) so coplanar columns and frames show.
+5. The enclosure was 3 m high against 11.5–13 m prototype walls; the upper walls complete the height.
+
+Wall presentation ("Paredes do galpão": Automático / Completas / Corte) is browser-only
+(`scene.ts`, `wallVisibility`): Automático hides an upper wall only while the camera is outside the
+building beyond that wall (the overview cuts two walls; first-person views from inside show all
+four); Corte shows the plinth and the prototype cut-away; the plinth is always drawn. The engine's
+walls never change. Checks: scene tests (shell closed except the doors, corners, doors = prototype
+door panels), engine tests (`test_exterior_walls_stop_the_robot_and_are_seen_at_their_inner_face`:
+for each wall the front scanner's centre beam measures the inner face within 2 cm and driving into it
+ends in a structure contact inside the building), `register_campus_map.py` on the new scene (same
+transform, residuals and enclosure fractions as v9; registration provenance updated to the new scene
+hash), browser screenshots of every mode in DEMO and LIVE.
+
+### AMR speed
+
+Only `FollowPath.desired_linear_vel` changed (0.45 → 0.60 m/s). Unchanged and still active: curvature
+regulation (min radius 1.0 m), cost regulation (0.6 m), approach slow-down (0.8 m), collision
+detection up to the carrot (2 s), rotate-to-heading, the drive limits (0.70 m/s, 0.5 m/s²), the
+command guard's 0.70 m/s rejection, the engine's personnel safety scanner and the simulation time
+(RTF 1.0). Lookahead at 0.6 m/s is 0.9 m (1.5 s), inside its 0.5–1.1 m bounds.
+
+Safety at the new speed: the protective field is sized from the speed (v²/(2·0.5 m/s²) + 0.3 m: 0.50 m
+at 0.45 m/s, 0.66 m at 0.60 m/s; warning field +1.0 m, speed limited to 0.3 m/s); the safe stop brakes
+at 1.5 m/s², i.e. 0.12 m from 0.6 m/s, inside the protective field. The dimensions follow the speed,
+so no constant changed.
+
+Same five missions, same start (spawn), operations profile (16 workers, 3 forklifts), engine-state
+speeds via the Gateway (`run_missions.py`, now also reporting `straight_cruise_speed_m_s` and
+`mean_speed_sim_m_s`); `evidence-phase6/followup/speed_{baseline_045,new_060}/`,
+`speed_comparison.json`:
+
+| Mission (what it exercises) | 0.45 m/s: status, simulated s, mean m/s, goal error | 0.60 m/s |
+|---|---|---|
+| spawn → charger_01 (straight hall and 60 m north cross aisle with forklift EMP-1, turns) | ok, 169.5 s, 0.429, 0.18 m | ok, 126.3 s, 0.572, 0.17 m |
+| → pick_north_e1 (2.26 m rack aisle, worker COL-07 working in it) | **failed** (Nav2 104 after 8 recoveries, 0.41 m short) | ok, 82.1 s, 0.413, 0.12 m, 5 recoveries |
+| → dock_05 (hall, south cross aisle and dock aisle with forklifts, dock workers) | ok, 250.3 s, 0.426, 0.27 m | ok, 206.1 s, 0.515, 0.20 m, 5 recoveries |
+| → production_w (station to station across the campus) | ok, 229.1 s, 0.424, 0.17 m | ok, 180.6 s, 0.565, 0.15 m |
+| → receiving_01 with a box placed 6 m ahead on the plan | ok, 238.5 s, 0.385, 0.16 m; stopped ~24 s, passed 1.2 m away | ok, 174.7 s, 0.525, 0.19 m; stopped ~11 s, passed 1.07 m away, no contact |
+| Totals | 4/5, 0.406 m/s overall, straight cruise 0.450 m/s | 5/5, 0.528 m/s, straight cruise 0.600 m/s (median and p10) |
+
+Contacts 0 in both, RTF 0.996–1.000; CPU per process group unchanged (Nav2 39.6 → 41.5 %, engine
+27.0 → 26.8 %, Gateway 27.6 → 27.5 %, machine 17.6 → 16.6 % of 8 threads). Protective-field events (objects or people inside the field,
+reported by the engine) 3 → 6 and recoveries 15 → 15 in total; one run each, so differences in
+individual missions are within run-to-run variation of the people and forklift timing. The goal
+error is ground truth against the station pose (AMCL error included), as before.
+
+### Route ownership in the browser
+
+AMR navigation (allowed): the Nav2 plan and goal of LIVE robots (`type === 'amr'` in world state),
+the onboard view of that plan, the minimap plan; in DEMO the next 26 m of each AMR's own track
+(`kind === 'amr'`, detours included). Non-AMR movement (never drawn): the forklift loops and the
+prototype's fleet loops (`routes` layer: never uploaded; `scene.lanes`: kept for the engine and the
+DEMO traffic, no longer drawn on the minimap), worker paths (never drawn). Painted floor markings
+(`markings` layer: safety lanes, crosswalks, staging, parking) stay. The toggle is "Rotas de
+navegação AMR"; vehicles, people, safety fields and walls are independent toggles.
+
+### Browser evidence and checks
+
+`evidence-phase6/followup/browser/`: `demo-before_*` (HEAD frontend, forklift and fleet loops drawn,
+cut-away walls) against `demo-after_*`; `live_*` with a Nav2 mission (overview in each wall mode,
+storage/docks/production presets, onboard view of the plan, AMR follow view with the route on and
+off: dynamic instances 825 → 580, only the overlay disappears; forklifts EMP-1/2/3 moving at
+1.45/1.30/1.35 m/s, their loops not drawn). `playwright_headed/`: the project's
+`test/atlas.browser.ts`, extended with the wall modes (full: 4 walls, cut: 0, auto from the overview:
+2) and the DEMO route toggle (725 → 525 dynamic instances), passed headed on the Intel GPU (DEMO and
+LIVE: 54.9 / 54.5 FPS at the end of the run, WebSocket 20.0 Hz, latency 0.7 ms, RTF 0.999, obstacle
+round trip, industrial and onboard cameras, follow). Headless Chromium renders with SwiftShader
+(~3 FPS) here, so FPS is measured headed. Same-machine A/B with `measure_fps.mjs --headed` (DEMO
+overview, two rounds): HEAD 59.99 / 59.75 FPS, new 59.76 / 59.76 FPS at the 60 FPS cap, frame p95
+20.9 ms in both; draw calls 16 → 18 (recessed wall meshes), static instances 10,671 → 10,427.
+Live scan check (`check_scan_geometry.py`, new scene): median and p90 distance of both scanners'
+returns to the scene 0.02 m (grid resolution).
+
+Tests: `atlas_scene` 11 (3 new), `amr_lite_sim` 24 (4 new), `amr_navigation` 31,
+`amr_route_planner` 26, `digital_twin_gateway` 53 (colcon test: 145, 0 failures), frontend unit 25
+(4 new), `npm run build`, browser 2 (headed), `build_graph --check`, recorder 23 (see the storage
+document).
+
+The Phase 5 warehouse graph records the SHA-256 of `nav2_params.yaml` as a source, so the speed
+change made it stale (`build_graph --check` failed as designed). It was rebuilt deterministically:
+only `graph_version` (31fba3aa050bd251 → 09de537d47d8038f) and the `nav2_params`/`planner_config`
+source hashes changed; nodes, edges and statuses are identical. `route_planner.yaml` keeps its
+Phase 5 turn weight (comment updated).
+
 ## What was built
 
 | Package / area | Role |
@@ -105,6 +225,13 @@ GZ_PARTITION=campus_validation ros2 launch amr_simulation gazebo_validation.laun
 GZ_PARTITION=campus_validation python3 src/amr_lite_sim/scripts/compare_gazebo_lidar.py --output /tmp/cmp.json
 # Scene recompilation (after editing the ATLAS builders or campus_navigation.mjs), then drift check
 node src/atlas_scene/compiler/compile.mjs && node src/atlas_scene/compiler/compile.mjs --check
+# Wall coverage audit of a compiled scene (layers as drawn); then re-verify the map against it
+python3 src/atlas_scene/scripts/audit_walls.py src/atlas_scene/config/atlas_campus.scene.json \
+  --layers architecture enclosure walls_west walls_east walls_north walls_south
+python3 src/amr_lite_sim/scripts/register_campus_map.py --map src/amr_navigation/maps/campus.yaml --output /tmp/reg.json
+# After any change to nav2_params.yaml: the Phase 5 graph records its hash (check, then rebuild)
+ros2 run amr_route_planner build_graph --check || ros2 run amr_route_planner build_graph
+# Telemetry recording and history (Mosaico): see PHASE_2_STORAGE.md
 ```
 
 ## Scene and coordinates
@@ -119,8 +246,9 @@ node src/atlas_scene/compiler/compile.mjs && node src/atlas_scene/compiler/compi
   `maps/campus_registration.json`, used only for the Nav2 plan and mission goals.
 - **Physical model**: each prototype "solid" (racks, conveyor, cells, tables, stairs, fence, pallets,
   chargers, pillars, extinguishers) is the object's envelope: it stops bodies and is seen by floor
-  scanners, as in the prototype's own traffic code. The cut-away walls get a 3 m cladding layer
-  (`enclosure`), hidden by default in the browser ("Fechamento das paredes").
+  scanners, as in the prototype's own traffic code. The building shell (follow-up section above):
+  the physical 3 m `enclosure` and the upper walls `walls_<side>`; the browser always draws the
+  enclosure and cuts the upper walls per side only for the view.
 - **Temporary objects**: none are generated; cones, boxes and pallets exist only when a user places
   them. Permanent structure (racks with cargo, floor pallets, conveyor, cells, chargers, docks,
   trucks, mezzanine) is preserved. The 30 × 20 m warehouse and its Gazebo scenarios stay available
@@ -267,7 +395,9 @@ reconnect with backoff and resynchronise from the next snapshot.
 - Camera views (below): first person from every industrial camera and from each AMR's onboard
   RGB-D camera; the camera coverage drawings (floor polygons, outlines, frustum rays, minimap
   coverage, their layer toggle) were removed. No image stream or detection is simulated.
-- Tests: `npm test` (21 unit), `npm run build` (types, schema drift, bundle),
+- Walls: "Paredes do galpão" Automático (default) / Completas / Corte; routes: "Rotas de navegação
+  AMR" (AMR overlays only). See the follow-up section.
+- Tests: `npm test` (25 unit), `npm run build` (types, schema drift, bundle),
   `TWIN_ATLAS_EVIDENCE_DIR=... npx playwright test test/atlas.browser.ts --headed` (DEMO and LIVE).
   Screenshots: `evidence-phase6/frontend/`, `evidence-phase6/first_person/`.
 
@@ -382,9 +512,9 @@ unchanged code paths except the defaulted `sensors`/`bridge_config` launch argum
 - Lite LiDAR is ideal 2D: no divergence, reflectivity or motion distortion (noise optional).
 - No RGB-D or industrial-camera images in lite mode: first-person views are 3D renderings from the
   lens poses (far plane 260 m, not the RGB-D 10 m clip), with no lens distortion or exposure.
-- Seen from the AMR lens (0.26 m high), the scene's raised, emissive lane markings ("Rotas e
-  trajetórias" layer) look like broad bands when the robot crosses them; the layer can be hidden.
-  The building geometry was not changed.
+- The prototype's raised, emissive forklift lane loops are no longer drawn (route ownership); the
+  physical floor markings remain. The building geometry was changed only as listed in the follow-up
+  section (rear wall panel orientation, closed corners, upper walls).
 - Campus SLAM uses odometry poses (scan matching measurably worse here); not representative of a real
   robot's SLAM in this layout.
 - Workers and forklifts are scripted. People always step aside to their right; a worker who cannot

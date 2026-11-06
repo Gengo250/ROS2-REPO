@@ -3,18 +3,44 @@
 // Everything here is in the ROS world frame (x east, y north, z up), metres and radians.
 'use strict';
 
-// The prototype draws cut-away walls (columns plus high panels) so the camera can see in.
-// A real building is closed at robot height, so a 3 m cladding layer is added for
-// collisions and floor-level scanners. The browser hides it by default (ATLAS look).
+// Building shell: the one description of the exterior walls (the prototype only draws
+// cut-away walls: columns plus high panels, open at floor level and along most of the sides).
+//  * enclosure (0 to PLINTH m): the physical wall at robot and person height that bodies hit
+//    and floor scanners see. West/east/north 0.7 m thick, dock wall 0.25 m between the eight
+//    dock doors (the doors themselves are the prototype's roll-up door panels).
+//  * walls_<side> (PLINTH m to the roof line): the rest of each wall, with a lintel over every
+//    dock door, so the building is closed when drawn. Above every simulated body and sensor
+//    band, so it changes no collision, scan or map; the browser may cut it away per side.
+// Corners: the north wall spans the outer faces of the side walls, the side walls reach the
+// dock wall's outer face, so no corner is open. All coordinates in the ROS world frame.
+export const SHELL = { plinth: 3, top: 14, dockDoorWidth: 8.4, dockDoorHeight: 5.2,
+  outer: { west: -73.35, east: 73.35, north: 54.35, south: -54 },
+  inner: { west: -72.65, east: 72.65, north: 53.65, south: -53.75 } };
+export const DOCK_DOORS = Array.from({ length: 8 }, (_, i) => -56+16*i);   // door centres (x)
+const dockSpans = () => {
+  const half = SHELL.dockDoorWidth/2, d = DOCK_DOORS;
+  return [[SHELL.inner.west, d[0]-half], ...d.slice(0, -1).map((x, i) => [x+half, d[i+1]-half]), [d.at(-1)+half, SHELL.inner.east]];
+};
+
+function sideWalls(z0, z1) {
+  const h = z1-z0, z = (z0+z1)/2, o = SHELL.outer;   // x, y, z, length, width, height, yaw
+  return {
+    west: [[-73, 0, z, .7, 108, h, 0]],
+    east: [[73, 0, z, .7, 108, h, 0]],
+    north: [[0, 54, z, o.east-o.west, .7, h, 0]],
+    south: dockSpans().map(([a, b]) => [(a+b)/2, -53.875, z, b-a, .25, h, 0]),
+  };
+}
+
 export function enclosure() {
-  const boxes = []; // x, y, z, length, width, height, yaw
-  const height = 3, z = height/2;
-  boxes.push([-73, 0, z, .7, 108, height, 0], [73, 0, z, .7, 108, height, 0], [0, 54, z, 146, .7, height, 0]);
-  // Dock wall: fill only between the eight dock doors (x = -56 + 16 i, 8 m wide).
-  const doors = Array.from({ length: 8 }, (_, i) => -56+16*i);
-  const gaps = [[-72.65, doors[0]-4.2], ...doors.slice(0, -1).map((x, i) => [x+4.2, doors[i+1]-4.2]), [doors.at(-1)+4.2, 72.65]];
-  for (const [a, b] of gaps) boxes.push([(a+b)/2, -53.875, z, b-a, .25, height, 0]);
-  return boxes;
+  return Object.values(sideWalls(0, SHELL.plinth)).flat();
+}
+
+export function upperWalls() {
+  const walls = sideWalls(SHELL.plinth, SHELL.top);
+  const lintel = SHELL.top-SHELL.dockDoorHeight;
+  for (const x of DOCK_DOORS) walls.south.push([x, -53.875, SHELL.dockDoorHeight+lintel/2, SHELL.dockDoorWidth, .25, lintel, 0]);
+  return walls;
 }
 
 const RACK_ROWS_WEST = [-64, -58, -52, -46, -40, -34, -28, -22];

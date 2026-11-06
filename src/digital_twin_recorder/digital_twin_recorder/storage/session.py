@@ -16,13 +16,17 @@ class RecordingSession:
         self.records=self.context.Queue(maxsize=config.queue_size)
         self.results=self.context.Queue(maxsize=4)
         self.heartbeat=self.context.Value('d',time.monotonic())
-        self.process=self.context.Process(target=worker,args=(config,metadata,self.records,self.results,self.heartbeat))
+        # Daemon: never outlives this process (an aborted caller cannot leave a writer behind).
+        self.process=self.context.Process(target=worker,args=(config,metadata,self.records,self.results,self.heartbeat),daemon=True)
         self.path=config.output/metadata['execution_id']; self.path.mkdir(parents=True,exist_ok=False)
         self.started=time.monotonic(); self.finalized=False; self.stop_reason=None
+        # Facts gathered by the ROS side while recording (engine sessions, simulation time span,
+        # per-topic received/recorded/decimated counts); stored in the finalization summary.
+        self.observed={}
 
     def report(self):
         return dict(state=self.state,error=self.error,metadata=self.metadata,stop_reason=self.stop_reason,
-            elapsed_wall_seconds=time.monotonic()-self.started,
+            elapsed_wall_seconds=time.monotonic()-self.started,observed=self.observed,
             topics={topic:value.report() for topic,value in self.integrity.items()},verification=self.verification)
 
     def save(self):
@@ -69,7 +73,8 @@ class RecordingSession:
             self.state='finalizing'
             self.save()
             summary=dict(topics={t:v.report() for t,v in self.integrity.items()},
-                ended_wall_utc=datetime.now(timezone.utc).isoformat(),stop_reason=reason)
+                ended_wall_utc=datetime.now(timezone.utc).isoformat(),stop_reason=reason,
+                recording_wall_seconds=time.monotonic()-self.started,observed=self.observed)
             deadline=time.monotonic()+self.config.finalize_timeout
             try:
                 self.records.put({'finalize':summary},timeout=min(2,self.config.finalize_timeout))

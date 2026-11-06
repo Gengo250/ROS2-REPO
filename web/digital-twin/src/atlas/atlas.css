@@ -22,3 +22,4 @@
 .viewhud button.active,.viewmodes button.active{background:#194a4a;border-color:#368a7a;color:#baffeb}.viewhud button:focus-visible,.viewmodes button:focus-visible{outline:2px solid #65eed7;outline-offset:2px}.viewhud .key{border:1px solid #ffffff23;background:#ffffff08;border-radius:4px;padding:0 4px;font-size:9px;color:#96aac0}
 .viewmodes{margin-top:12px;display:grid;gap:6px}.viewmodes .vmlabel{font:700 10px 'Space Grotesk';letter-spacing:1.4px;color:var(--muted)}
 canvas#scene.fp,canvas#scene.fp:active{cursor:default}canvas#scene.fp.look{cursor:grab}canvas#scene.fp.look:active{cursor:grabbing}
+.walls-row{margin-bottom:6px}.walls-row button.active{background:#194a4a;border-color:#368a7a;color:#baffeb}.toolhead small{font:500 10px "DM Sans";color:var(--muted)}

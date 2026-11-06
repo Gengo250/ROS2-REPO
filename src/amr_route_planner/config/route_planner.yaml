@@ -22,8 +22,9 @@ registration:
 cost:
   # cost(edge) = distance_weight * distance + static penalty; turns add turn_weight * |Δheading|.
   distance_weight: 1.0
-  # Distance not travelled while rotating in place: desired_linear_vel / rotate_to_heading_angular_vel
-  # = 0.45 / 0.35 (nav2_params.yaml). Breaks ties between equal-length staircase routes.
+  # Distance not travelled while rotating in place, Phase 5 calibration: desired_linear_vel /
+  # rotate_to_heading_angular_vel = 0.45 / 0.35. Only breaks ties between equal-length staircase
+  # routes; kept when the cruise speed became 0.60 m/s so validated route choices do not change.
   turn_weight_m_per_rad: 1.2857
   # Optional nonnegative operational penalties (m). Hard closures never use a large cost.
   station_access_penalty_m: 0.0

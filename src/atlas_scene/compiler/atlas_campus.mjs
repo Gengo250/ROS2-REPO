@@ -1,5 +1,6 @@
 // ATLAS industrial campus builders, taken from ATLAS_Galpao_Industrial_3D.html with the
-// geometry, colours, seed and call order unchanged. Only the DOM writes were removed.
+// geometry, colours, seed and call order unchanged. Only the DOM writes were removed, and one
+// transform fix: the rear wall panels (makeArchitecture) lie in the wall plane.
 // Output is in ATLAS/WebGL axes (x east, y up, z south); compile.mjs converts it to the
 // ROS world frame. Instance layout per primitive (13 floats):
 // x, y, z, scale x, scale y, scale z, r, g, b, emission, yaw, tilt, roll.
@@ -42,7 +43,9 @@ export function buildCampus() {
   }
   function makeArchitecture(){// side and rear walls, cutaway south walls
    for(let x of [-73,73]){for(let z=-54;z<54;z+=8){box('architecture',x,6.1,z,.65,12.5,.7,'#8fa3b4');if(z<-35||z>29)box('architecture',x,6.3,z+3.9,.35,11.6,7.3,'#5a7389')}}
-   for(let x=-72;x<73;x+=8){box('architecture',x,6.5,-54,.7,13,.7,'#60798e');if(x>-60&&x<58){box('architecture',x+3.8,9,-54,.18,5,7.1,'#80a9be');box('architecture',x+3.8,3.6,-54,.18,4,7.1,'#98aebd')}}
+   // Rear wall panels span between the columns (7.1 m along x, 0.18 m thick). The prototype passed
+   // width and depth swapped, which turned them into 7.1 m fins across the wall (3.2 m into the hall).
+   for(let x=-72;x<73;x+=8){box('architecture',x,6.5,-54,.7,13,.7,'#60798e');if(x>-60&&x<58){box('architecture',x+3.8,9,-54,7.1,5,.18,'#80a9be');box('architecture',x+3.8,3.6,-54,7.1,4,.18,'#98aebd')}}
    // south side: structural columns + loading doors
    for(let x=-72;x<=72;x+=9){box('architecture',x,5.7,54,.6,11.5,.7,'#8197ab');cyl('deco',x,10.4,53.9,.15,.35,'#83d7cf',0,.8)}
    for(let i=0;i<8;i++){let x=-56+16*i;box('architecture',x,7.7,54,13.2,1.0,.5,'#7b94a9');box('architecture',x,2.1,54,8,4.2,.25,'#3b586a');for(let y=.7;y<4.2;y+=.75)box('architecture',x,y,54.17,7.7,.09,.14,'#637e94');box('architecture',x-4.2,2.6,53.8,.24,5.2,.35,'#dcb264');box('architecture',x+4.2,2.6,53.8,.24,5.2,.35,'#dcb264');box('deco',x,5.0,53.85,3.1,.34,.18,'#326d78',0,.65);box('deco',x,5,54.01,1.6,.20,.05,'#c9fff0',0,.9);box('architecture',x,.33,54,10,.45,2,'#657b87')}

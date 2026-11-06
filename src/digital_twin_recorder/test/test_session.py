@@ -56,3 +56,9 @@ def test_late_worker_event_cannot_erase_failure(tmp_path):
     assert s.error=='Source clock reset'
     assert s.verification is None
     s.records.close()
+
+def test_worker_never_outlives_the_recorder(tmp_path):
+    # An aborted caller (exception before finish) must not leave a non-daemon writer that blocks exit.
+    s=session(tmp_path)
+    assert s.process.daemon
+    s.records.close(); s.results.close()

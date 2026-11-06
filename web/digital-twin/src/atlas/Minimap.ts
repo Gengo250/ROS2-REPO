@@ -24,10 +24,8 @@ export class Minimap {
       const w = s.length / 154 * bg.width, h = s.width / 116 * bg.height; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.restore();
     }
     ctx.fillStyle = '#798bb055'; ctx.fillRect(X(50.5), Y(49), X(67.5) - X(50.5), Y(29) - Y(49));
-    for (const lane of Object.values(scene.lanes)) {
-      ctx.strokeStyle = lane.colour + '55'; ctx.lineWidth = 1.2; ctx.beginPath();
-      lane.points.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.closePath(); ctx.stroke();
-    }
+    // Scripted vehicle loops (scene.lanes) are not AMR navigation and are not drawn; the only
+    // route on the minimap is the AMR's (draw(), path argument).
     ctx.fillStyle = '#c9dee8'; ctx.font = 'bold 14px sans-serif'; ctx.fillText('N', bg.width - 20, 19);
     this.background = bg;
   }

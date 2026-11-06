@@ -1,0 +1,18 @@
+# Overlay for a storage server reached over a network (e.g. Windows + Docker Desktop on the LAN,
+# ROS 2 on Ubuntu): `docker compose -f compose.yaml -f compose.remote.yaml up -d --wait`.
+# Adds server-authenticated TLS and API-key enforcement to mosaicod. PostgreSQL stays private.
+# Publish only on the interface the robots' network uses (MOSAICO_BIND_ADDRESS), never on a
+# public interface; restrict the port in the host firewall to the ROS machines.
+services:
+  mosaicod:
+    environment:
+      MOSAICOD_TLS_ENABLED: 'true'
+      MOSAICOD_TLS_CERT_FILE: /run/secrets/tls_cert
+      MOSAICOD_TLS_PRIVATE_KEY_FILE: /run/secrets/tls_key
+      MOSAICOD_API_KEY_ENABLED: 'true'
+    secrets: [db_password, tls_cert, tls_key]
+secrets:
+  tls_cert:
+    file: ${MOSAICO_TLS_CERT_FILE:?Set MOSAICO_TLS_CERT_FILE in .env}
+  tls_key:
+    file: ${MOSAICO_TLS_KEY_FILE:?Set MOSAICO_TLS_KEY_FILE in .env}

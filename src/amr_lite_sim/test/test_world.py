@@ -195,3 +195,25 @@ def test_person_pinned_against_a_robot_can_step_away(scene, model):
     for _ in range(300):
         world.step(.01)
     assert start-worker.y > .3
+
+
+@pytest.mark.parametrize('side,x,y,yaw', [('west', -70.4, 0., math.pi), ('east', 70.4, 0., 0.),
+                                          ('north', 0., 51.5, math.pi/2), ('south', -48., -51., -math.pi/2)])
+def test_exterior_walls_stop_the_robot_and_are_seen_at_their_inner_face(scene, model, side, x, y, yaw):
+    """Each of the four building walls: the front scanner's centre beam measures the wall's inner
+    face, and driving at it ends in a structure contact with the footprint inside the building."""
+    inner = scene.raw['building']['shell']['inner'][side]
+    world = World(scene, model, 'empty')
+    robot = world.robots['amr_01']
+    robot.drive.x, robot.drive.y, robot.drive.yaw = x, y, yaw
+    spec = model.front
+    sx, sy, _ = world.sensor_pose(robot, spec)
+    expected = abs(inner-(sx if side in ('west', 'east') else sy))
+    ranges = world.scan('amr_01', spec)
+    assert ranges[len(ranges)//2] == pytest.approx(expected, abs=.02)
+    run(world, 12., v=.6)
+    assert robot.state == 'blocked' and robot.contact_with == 'structure'
+    poly = footprint(model, robot.drive.x, robot.drive.y, robot.drive.yaw)
+    limit = {'west': poly[:, 0].min() >= inner-1e-6, 'east': poly[:, 0].max() <= inner+1e-6,
+             'north': poly[:, 1].max() <= inner+1e-6, 'south': poly[:, 1].min() >= inner-1e-6}
+    assert limit[side]

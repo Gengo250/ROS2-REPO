@@ -15,7 +15,8 @@ export interface WorkerSpec { id: string; role: string; level_z: number; path: [
 export interface CampusScene {
   schema_version: string; scene_id: string;
   metadata: { title: string; geometry_sha256: string; scene_sha256: string; stock_volumes: number };
-  building: { interior: { x_min: number; x_max: number; y_min: number; y_max: number }; size: [number, number]; height: number };
+  building: { interior: { x_min: number; x_max: number; y_min: number; y_max: number }; size: [number, number]; height: number;
+    shell?: BuildingShell };
   layers: Record<string, Partial<Record<Shape, number[]>>>;
   solids: Solid[]; lanes: Record<string, { id: string; colour: string; points: [number, number][] }>;
   zones: Zone[]; views: Record<string, View>; stations: Station[]; spawns: { id: string; robot_id: string; pose: number[] }[];
@@ -25,10 +26,39 @@ export interface CampusScene {
   obstacle_catalogue: Record<string, { label: string; length: number; width: number; height: number }>;
 }
 
-/** Layer toggles of the prototype, plus the LIVE wall cladding (hidden by default: ATLAS look). */
+export type WallSide = 'west' | 'east' | 'north' | 'south';
+export interface BuildingShell {
+  plinth_height: number; wall_top: number;
+  outer: Record<WallSide, number>; inner: Record<WallSide, number>;
+  dock_doors: { centres_x: number[]; width: number; height: number };
+  sides: Record<WallSide, { layer: string; normal: [number, number] }>;
+}
+
+/** Static layers switched by the visibility panel. */
 export const LAYER_GROUPS: Record<string, string[]> = {
-  roof: ['roof'], racks: ['racks', 'cargo'], vehicles: ['equipment'], routes: ['routes'], enclosure: ['enclosure'],
+  roof: ['roof'], racks: ['racks', 'cargo'], vehicles: ['equipment'],
 };
+/** Static layers that are never drawn. ``routes`` holds the prototype's painted loops of the
+ * scripted vehicle routes (forklifts; in DEMO also its scripted fleet): route ownership is not
+ * AMR navigation, so they are not shown. The loops themselves stay in ``scene.lanes`` for the
+ * engine and the DEMO traffic. Painted floor markings are the ``markings`` layer (always drawn). */
+export const HIDDEN_LAYERS = ['routes'];
+/** Wall presentation. ``auto``: walls between an outside camera and the interior are cut down to
+ * the physical plinth (enclosure), the others stay closed; ``full``: closed building; ``cut``:
+ * every wall at plinth height. Presentation only: the engine's collision walls never change. */
+export type WallMode = 'auto' | 'full' | 'cut';
+export const WALL_MODES: WallMode[] = ['auto', 'full', 'cut'];
+
+/** Visibility of each upper wall layer for a camera at world (x, y). */
+export function wallVisibility(shell: BuildingShell | undefined, mode: WallMode, eye: { x: number; y: number }): Record<string, boolean> {
+  const out: Record<string, boolean> = {};
+  if (!shell) return out;
+  const o = shell.outer;
+  const outside: Record<WallSide, boolean> = { west: eye.x < o.west, east: eye.x > o.east, north: eye.y > o.north, south: eye.y < o.south };
+  for (const [side, spec] of Object.entries(shell.sides) as [WallSide, BuildingShell['sides'][WallSide]][])
+    out[spec.layer] = mode === 'full' || (mode === 'auto' && !outside[side]);
+  return out;
+}
 
 export async function fetchScene(url: string, signal?: AbortSignal): Promise<CampusScene> {
   const response = await fetch(url, { signal });
@@ -41,13 +71,15 @@ export async function fetchScene(url: string, signal?: AbortSignal): Promise<Cam
 export function buildStatic(renderer: InstancedRenderer, scene: CampusScene) {
   renderer.clearStatic();
   let instances = 0;
+  const walls = new Set(['enclosure', ...Object.values(scene.building.shell?.sides ?? {}).map(s => s.layer)]);
   for (const [layer, shapes] of Object.entries(scene.layers)) {
+    if (HIDDEN_LAYERS.includes(layer)) continue;   // never uploaded
     const converted: Partial<Record<Shape, Float32Array>> = {};
     for (const [shape, values] of Object.entries(shapes)) {
       converted[shape as Shape] = instancesToGl(values!);
       instances += values!.length / 13;
     }
-    renderer.setStaticLayer(layer, converted);
+    renderer.setStaticLayer(layer, converted, walls.has(layer));
   }
   return instances;
 }
