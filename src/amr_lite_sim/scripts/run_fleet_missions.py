@@ -16,7 +16,8 @@ plans (sampled), mission status transitions, station ownership and queue changes
 distance between robot *footprints* (collision boxes, from engine poses; physical separation, not
 only the absence of contact events), contact events, time spent in the engine's blocked state,
 recoveries, failures and the RTF. Each scenario ends with explicit checks; a queued robot never
-counts as arrived. Scenarios: see SCENARIOS below.
+counts as arrived. Forklifts are recorded too: their state/reason transitions, restarts within 6 m
+of a robot (stop-and-go) and the minimum robot–forklift footprint gap. Scenarios: see SCENARIOS below.
 Usage: run_fleet_missions.py --scenario shared_destination --scenario reassign --output s.json
 """
 import argparse
@@ -42,7 +43,9 @@ def run_round(api, pairs, timeout):
     seen = max((e['seq'] for e in world['events']), default=-1)
     amrs = {e['id']: e for e in world['entities'] if e['type'] == 'amr'}
     start = {r: (amrs[r]['x'], amrs[r]['y']) for r in amrs}
-    stations = {s['id']: s for s in json.loads(urllib.request.urlopen(api+'/api/v1/world/scene', timeout=10).read())['stations']}
+    scene = json.loads(urllib.request.urlopen(api+'/api/v1/world/scene', timeout=10).read())
+    stations = {s['id']: s for s in scene['stations']}
+    FORKLIFT_BOX.update({f['id']: (f['length'], f['width'], f['centre_offset']) for f in scene.get('agents', {}).get('forklifts', ())})
     result = {'missions': {}, 'idle_robots_moved_m': {}}
     for robot, destination in pairs:
         status, reply = call(api, 'POST', '/api/v1/missions', {'robot_id': robot, 'destination': destination})
@@ -106,10 +109,15 @@ ENDED = ('succeeded', 'failed', 'canceled', 'rejected', 'blocked')
 CHARGER_AISLE_ENTRANCE = (63.4, 22.0)
 
 
-def box(e):
+FORKLIFT_BOX = {}                                     # id → (length, width, centre offset), from the scene
+CHARGER_AISLE = (61.8, 65.0, 22.0, 46.0)               # navigation.corridors charger_aisle (x0, x1, y0, y1)
+
+
+def box(e, dims=None):
+    length, width, offset = dims or FORKLIFT_BOX.get(e['id']) or (LENGTH, WIDTH, OFFSET)
     c, s = math.cos(e['yaw']), math.sin(e['yaw'])
-    cx, cy = e['x']+c*OFFSET, e['y']+s*OFFSET
-    return [(cx+c*dx-s*dy, cy+s*dx+c*dy) for dx, dy in ((LENGTH/2, WIDTH/2), (-LENGTH/2, WIDTH/2), (-LENGTH/2, -WIDTH/2), (LENGTH/2, -WIDTH/2))]
+    cx, cy = e['x']+c*offset, e['y']+s*offset
+    return [(cx+c*dx-s*dy, cy+s*dx+c*dy) for dx, dy in ((length/2, width/2), (-length/2, width/2), (-length/2, -width/2), (length/2, -width/2))]
 
 
 def _inside(p, poly):
@@ -147,6 +155,7 @@ class Recorder:
         self.min_gap = {'m': math.inf}
         self.blocked_s, self.rtfs, self.trajectories, self.steps = {}, [], {}, []
         self.expected = {}       # robot → id of the mission this scenario sent last
+        self.forklift = {'min_gap': {'m': math.inf}, 'transitions': [], 'restarts_near_robot': {}, 'last': {}, 'moving': {}}
 
     def poll(self):
         _, w = call(self.api, 'GET', '/api/v1/world')
@@ -188,6 +197,7 @@ class Recorder:
             if path and (r not in self.plans or self.plans[r][-1]['path'][-1] != [round(v, 2) for v in path[-1]] or
                          sim-self.t0_sim-self.plans[r][-1]['sim'] >= 10.):
                 self.plans.setdefault(r, []).append({'sim': round(sim-self.t0_sim, 2), 'path': [[round(v, 2) for v in p] for p in path[::8]+[path[-1]]]})
+        self._forklifts(w, amrs, sim)
         stations = {'stations': w.get('stations', []), 'corridors': w.get('corridors', [])}
         if stations != self.last_stations:
             self.last_stations = stations
@@ -198,6 +208,26 @@ class Recorder:
                 self.events.append(e)
         self.samples.append({'sim': round(sim-self.t0_sim, 2), 'rtf': w['simulation']['real_time_factor'], 'gaps': gaps})
         return w
+
+    def _forklifts(self, w, amrs, sim):
+        fk = self.forklift
+        for f in (e for e in w['entities'] if e['type'] == 'forklift'):
+            key = (f['state'], f.get('reason'))
+            if key != fk['last'].get(f['id']):
+                fk['last'][f['id']] = key
+                fk['transitions'].append({'sim': round(sim-self.t0_sim, 2), 'forklift': f['id'], 'state': key[0], 'reason': key[1],
+                                          'pose': [round(f['x'], 2), round(f['y'], 2), round(f['yaw'], 2)]})
+            gaps = {r: footprint_gap(a, f) for r, a in amrs.items()}
+            nearest = min(gaps.items(), key=lambda kv: kv[1]) if gaps else (None, math.inf)
+            if nearest[1] < fk['min_gap']['m']:
+                fk['min_gap'] = {'m': nearest[1], 'pair': f"{nearest[0]}-{f['id']}", 'sim': round(sim-self.t0_sim, 2)}
+            moving = f['speed'] > .06
+            if moving and fk['moving'].get(f['id']) is False and nearest[1] < 6.:
+                fk['restarts_near_robot'][f['id']] = fk['restarts_near_robot'].get(f['id'], 0)+1
+            fk['moving'][f['id']] = moving
+
+    def forklift_entity(self, fid):
+        return next(e for e in self.world['entities'] if e['id'] == fid)
 
     def mission(self, robot):
         """The robot's mission in the latest world state, only once it is the one this scenario sent
@@ -266,7 +296,10 @@ class Recorder:
                 'rtf_min': min(self.rtfs, default=None), 'rtf_mean': round(sum(self.rtfs)/len(self.rtfs), 3) if self.rtfs else None,
                 'sim_seconds': round(self.sim(), 1), 'steps': self.steps, 'transitions': self.transitions,
                 'status_sequences': statuses, 'reservations': self.reservations, 'events': self.events,
-                'trajectories': self.trajectories, 'plans': self.plans, 'gap_samples': self.samples[::4]}
+                'trajectories': self.trajectories, 'plans': self.plans, 'gap_samples': self.samples[::4],
+                'forklifts': {'min_robot_gap': {**self.forklift['min_gap'], 'm': round(self.forklift['min_gap']['m'], 3)},
+                              'restarts_near_robot': self.forklift['restarts_near_robot'],
+                              'transitions': self.forklift['transitions']}}
 
 
 def ended(robots):
@@ -408,13 +441,61 @@ def scenario_single_mission(rec, stations, timeout):
             'at_station': at_station(rec, 'amr_01', 'dock_05', stations, .6)}, {}
 
 
+def in_charger_aisle_mouth(f):
+    """The forklift's body overlaps the charger aisle (the only way out of it)."""
+    xs, ys = zip(*box(f))
+    x0, x1, y0, y1 = CHARGER_AISLE
+    return max(xs) > x0 and min(xs) < x1 and max(ys) > y0 and min(ys) < y1
+
+
+def scenario_forklift_parked_reassign(rec, stations, timeout):
+    """The EMP-1 / amr_01 report: amr_01 parked at charger_01 when EMP-1 reaches its U-turn at the
+    charger aisle mouth; then pick_south_e1, cancelled after 6 s of simulation, and dock_05. Checks: the
+    forklift never stands in the aisle mouth while held, the robot gets out and arrives, no
+    stop-and-go (one restart per encounter), robot–forklift gap ≥ the 0.3 m vehicle margin."""
+    if not at_station(rec, 'amr_01', 'charger_01', stations, .6):
+        rec.send({'amr_01': 'charger_01'})
+        rec.wait(ended(('amr_01',)), timeout, 'amr_01 parked at charger_01')
+    held = {'since': None, 'mouth': False}
+
+    def emp_held(s):
+        f = s.forklift_entity('EMP-1')
+        if f['speed'] < .06 and math.hypot(f['x']-63.4, f['y']-24.) < 6.:
+            held['mouth'] |= in_charger_aisle_mouth(f)
+            held['since'] = held['since'] if held['since'] is not None else s.sim()
+            return s.sim()-held['since'] >= 35.
+        held['since'] = None
+        return False
+    waited = rec.wait(emp_held, timeout, 'EMP-1 held by the parked robot for 35 s')
+    rec.forklift['restarts_near_robot'].clear()
+    rec.send({'amr_01': 'pick_south_e1'})
+    t0 = rec.sim()
+    rec.wait(lambda s: s.sim()-t0 >= 6., 120, '6 s of simulation on the way to pick_south_e1')
+    rec.cancel('amr_01')
+    rec.wait(lambda s: (s.mission('amr_01') or {}).get('status') not in DRIVING, 30, 'pick_south_e1 cancelled')
+    rec.send({'amr_01': 'dock_05'})
+    done = rec.wait(ended(('amr_01',)), timeout, 'dock_05 ended')
+    forklift_contacts = [e for e in rec.events if e['kind'] == 'contact' and e['other'].startswith('EMP')]
+    return {'emp1_held_by_parked_robot': waited,
+            'emp1_never_held_in_aisle_mouth': not held['mouth'],
+            'dock_05_succeeded': done and (rec.mission('amr_01') or {}).get('status') == 'succeeded',
+            'at_dock_05': at_station(rec, 'amr_01', 'dock_05', stations, .6),
+            'no_forklift_contact': not forklift_contacts,
+            'forklift_gap_above_margin': rec.forklift['min_gap']['m'] >= .3,
+            'emp1_at_most_one_restart_per_encounter': rec.forklift['restarts_near_robot'].get('EMP-1', 0) <= 1}, \
+        {'vehicle_wait_events': [e for e in rec.events if e['kind'] in ('vehicle_wait', 'vehicle_resumed')]}
+
+
 SCENARIOS = {'shared_destination': scenario_shared_destination, 'reassign': scenario_reassign, 'head_on': scenario_head_on,
              'three_missions': scenario_three_missions, 'occupied_station': scenario_occupied_station,
-             'cancellation': scenario_cancellation, 'single_mission': scenario_single_mission}
+             'cancellation': scenario_cancellation, 'single_mission': scenario_single_mission,
+             'forklift_parked_reassign': scenario_forklift_parked_reassign}
 
 
 def run_scenario(api, name, timeout, checkpoint):
-    stations = {s['id']: s for s in json.loads(urllib.request.urlopen(api+'/api/v1/world/scene', timeout=10).read())['stations']}
+    scene = json.loads(urllib.request.urlopen(api+'/api/v1/world/scene', timeout=10).read())
+    stations = {s['id']: s for s in scene['stations']}
+    FORKLIFT_BOX.update({f['id']: (f['length'], f['width'], f['centre_offset']) for f in scene.get('agents', {}).get('forklifts', ())})
     rec = Recorder(api, name)
     checks, extra = SCENARIOS[name](rec, stations, timeout)
     if checkpoint:

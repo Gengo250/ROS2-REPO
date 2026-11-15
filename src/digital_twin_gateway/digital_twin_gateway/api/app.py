@@ -39,6 +39,14 @@ def scene_corridors(path):
     return tuple(Corridor.from_scene(c) for c in json.loads(Path(path).read_text()).get('navigation', {}).get('corridors', ()))
 
 
+def scene_vehicles(path):
+    """Forklift collision boxes (length, width, centre offset) by id (fleet coordination)."""
+    if path is None or not Path(path).is_file():
+        return {}
+    agents = json.loads(Path(path).read_text()).get('agents', {})
+    return {f['id']: (float(f['length']), float(f['width']), float(f['centre_offset'])) for f in agents.get('forklifts', ())}
+
+
 def create_app(settings=None, runtime_factory=None, manager=None, world=None):
     settings = settings or Settings.from_env()
     manager = manager or StateManager(settings)
@@ -50,6 +58,7 @@ def create_app(settings=None, runtime_factory=None, manager=None, world=None):
         world = WorldStore(settings, world_registration.load(registration_path))
     world.stations = scene_stations(scene_path)
     world.corridors = scene_corridors(scene_path)
+    world.vehicles = scene_vehicles(scene_path)
     if runtime_factory is None:
         from ..ros.node import RosRuntime
         runtime_factory = RosRuntime

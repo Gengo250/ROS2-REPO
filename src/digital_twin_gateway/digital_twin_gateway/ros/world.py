@@ -118,7 +118,7 @@ class Commands:
     (resume) when clear, and stops robots in an unresolvable conflict (blocked). Only Nav2 actions
     are used; each robot's command guard remains its only cmd_vel writer."""
 
-    def __init__(self, node, store, settings, stations, corridors=()):
+    def __init__(self, node, store, settings, stations, corridors=(), vehicles=None):
         from amr_lite_interfaces.srv import AddObstacle, RemoveObstacle
         from nav2_msgs.action import NavigateToPose
         from rclpy.action import ActionClient
@@ -129,7 +129,7 @@ class Commands:
         self.remove_client = node.create_client(RemoveObstacle, '/lite_sim/remove_obstacle')
         # One NavigateToPose client per robot, on that robot's own Nav2 (its namespace).
         self.navigate = {r.id: ActionClient(node, NavigateToPose, r.topic('navigate_to_pose')) for r in settings.fleet}
-        self.traffic = Traffic({k: v['pose'] for k, v in stations.items()}, corridors)
+        self.traffic = Traffic({k: v['pose'] for k, v in stations.items()}, corridors, vehicles=vehicles)
         self.goals = {}        # mission id → goal handle of its current Nav2 goal
         self.tokens = {}       # mission id → token of the goal whose callbacks may still update it
         self.intent = {}       # mission id → 'hold' | 'block': why the coordinator cancelled its goal

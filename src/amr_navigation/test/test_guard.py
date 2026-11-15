@@ -12,6 +12,7 @@ def fixture():
         received={k:now for k in ['scan','top_scan','odom','command']},stamps={k:10. for k in ['scan','top_scan','odom','command']},
         buffer=SimpleNamespace(lookup_transform=lambda *a:tf,clear=lambda:None),
         get_publishers_info_by_topic=lambda _:[],get_name=lambda:'navigation_command_guard')
+    guard.command_gap=lambda failure:CommandGuard.command_gap(guard,failure)
     return guard,now
 
 def test_missing_sensors_fail_closed():
@@ -141,3 +142,24 @@ def test_audit_detects_blind_sectors():
     ring=[False]*20+[True]*680+[False]*20
     assert blind_arc(ring,True)==40 and blind_arc(ring,False)==20
     assert blind_arc([False]*8,True)==8
+
+
+def test_standstill_after_zero_command_is_standby_not_a_failure():
+    nav=[SimpleNamespace(node_name='controller_server')]
+    g,t=fixture();g.nav_topic='/nav_cmd_vel';g.get_publishers_info_by_topic=lambda topic:nav if topic=='/nav_cmd_vel' else []
+    g.command.twist.linear.x=0.;g.received.pop('command')            # last Nav2 command was a stop
+    assert CommandGuard.check(g,t,10.)=='Standby: no active Nav2 command'
+    g.stamps['command']=9.;g.received['command']=t                     # zero command 1 s old in sim time
+    assert CommandGuard.check(g,t,10.)=='Standby: no active Nav2 command'
+    g.command=None;g.received.pop('command')                            # nothing sent yet
+    assert CommandGuard.check(g,t,10.)=='Standby: no active Nav2 command'
+
+
+def test_silence_after_motion_or_without_publisher_is_a_failure():
+    nav=[SimpleNamespace(node_name='controller_server')]
+    g,t=fixture();g.nav_topic='/nav_cmd_vel';g.get_publishers_info_by_topic=lambda topic:nav if topic=='/nav_cmd_vel' else []
+    g.received.pop('command')                                           # stopped arriving while moving (0.2 m/s)
+    assert CommandGuard.check(g,t,10.)=='Missing or stale command'
+    g,t=fixture();g.nav_topic='/nav_cmd_vel'
+    g.command.twist.linear.x=0.;g.received.pop('command')             # zero, but the publisher is gone
+    assert CommandGuard.check(g,t,10.)=='Missing or stale command'

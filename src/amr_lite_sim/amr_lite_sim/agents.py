@@ -12,6 +12,18 @@ import numpy as np
 from .geometry import box_of, circle_overlaps_polygon, first_overlap, oriented_box, overlap, wrap
 
 TAU = 2*math.pi
+# Forklift traffic constants for interactions with other vehicles (Nav2 AMRs and forklifts).
+SAMPLE_STEP = .35       # m, spacing of the look-ahead footprints (Forklift.plan_samples)
+VEHICLE_MARGIN = .3     # m, clearance kept to another vehicle's body (_scan_hazards)
+STOP_SPEED = .06        # m/s, below this a forklift counts as stopped (Traffic.state)
+# A forklift held for a vehicle resumes only after the way has been clear for one Nav2 replanning
+# period (expected_planner_frequency 1 Hz): an AMR's intent (plan, twist) changes on that time
+# scale, so a single-cycle flicker of its predicted path cannot restart the forklift.
+RESUME_DWELL = 1.
+VEHICLE_REASONS = ('veh', 'yield', 'follow')
+# The keep-clear check sweeps the body finely: in a tight turn the clearance to a body beside the
+# lane changes by tens of centimetres within one look-ahead sample.
+ZONE_STEP = .1
 
 
 def clamp(value, low, high):
@@ -306,6 +318,13 @@ class Forklift:
         self.replans = 0
         self.detour_fail = False
         self.curve = False
+        # Vehicle hold (hysteresis): set when the forklift has stopped for a vehicle; released only
+        # after the way stayed clear for RESUME_DWELL with at least ``resume_room`` of free lane:
+        # the braking distance from cruise speed plus one look-ahead sample.
+        self.hold = None
+        self.resume_room = self.speed*self.speed/(2*self.brake)+SAMPLE_STEP
+        self.zones = []          # lane intervals (d_in, d_out) where its body covers a narrow corridor
+        self.wait_reported = False
         self.pose = self.pose_at(self.d)
         self.obb = self.footprint(self.pose)
 
@@ -362,21 +381,93 @@ def circle_hits_box(box, x, y, radius):
 
 
 class Traffic:
-    """Forklift traffic step; the Nav2 AMR takes part only as an observed vehicle."""
+    """Forklift traffic step; the Nav2 AMR takes part only as an observed vehicle.
 
-    def __init__(self, forklifts, static_index):
+    Rules with other vehicles (both deterministic):
+      * right of way: a forklift yields to an AMR whose predicted path it would cross (Nav2 robots do
+        not negotiate); between forklifts whoever arrives later yields, ties and long waits by priority;
+      * keep clear: a forklift never stops for a vehicle with its body across the mouth of a
+        capacity-1 corridor (it would close the only way out of e.g. the charger aisle): before such a
+        lane interval it checks the whole interval and waits at its entry until it is clear.
+    """
+
+    def __init__(self, forklifts, static_index, corridors=()):
+        """``corridors``: (id, polygon) of the narrow (capacity-1) navigation corridors."""
         self.forklifts = forklifts
         self.static = static_index
+        for r in forklifts:
+            r.zones = self._zones(r, corridors)
+
+    @staticmethod
+    def _zones(r, corridors, step=.2):
+        """Keep-clear lane intervals of one lap where the footprint overlaps a narrow corridor, with
+        their body sweep precomputed (the lane is fixed): dicts d_in, d_out, sweep, boxes, lo, hi."""
+        if not corridors:
+            return []
+        polys = [p for _, p in corridors]
+        boxes = [box_of(p) for p in polys]
+        inside = []
+        n = int(math.ceil(r.lane.total/step))
+        for i in range(n):
+            f = r.footprint(r.pose_at(i*step))
+            b = box_of(f)
+            inside.append(any(b[0] <= bb[2] and bb[0] <= b[2] and b[1] <= bb[3] and bb[1] <= b[3] and overlap(f, p)
+                              for p, bb in zip(polys, boxes)))
+        zones, start = [], None
+        for i, flag in enumerate(inside+[False]):
+            if flag and start is None:
+                start = i
+            elif not flag and start is not None:
+                d_in, d_out = (start-1)*step, i*step      # widened by one step at the entry
+                sweep = [r.footprint(r.pose_at(d)) for d in np.arange(d_in, d_out+1e-6, ZONE_STEP)]
+                sb = np.array([box_of(f) for f in sweep])
+                zones.append({'d_in': d_in, 'd_out': d_out, 'sweep': sweep, 'boxes': sb,
+                              'lo': sb[:, :2].min(0)-VEHICLE_MARGIN, 'hi': sb[:, 2:].max(0)+VEHICLE_MARGIN})
+                start = None
+        return zones
+
+    def _zone_ahead(self, r):
+        """Next keep-clear interval within the look-ahead: (distance to its entry, zone), or None."""
+        if r.detour or r.backoff:
+            return None
+        lap = r.lane.total
+        for z in r.zones:
+            if (r.d-z['d_in']) % lap < z['d_out']-z['d_in']:
+                return None                      # already inside: drive through
+            ahead = (z['d_in']-r.d) % lap
+            if ahead <= r.look:
+                return ahead, z
+        return None
+
+    def _zone_blocker(self, r, zone, vehicles):
+        """A vehicle whose body or predicted samples come within VEHICLE_MARGIN of the swept body."""
+        lo, hi = zone['lo'], zone['hi']
+        for q in vehicles:
+            if q.agent is r:
+                continue
+            for body in [q.obb]+[qs[2] for qs in q.samples[1:]]:
+                bl, bh = body.min(0), body.max(0)
+                if (bl > hi).any() or (bh < lo).any():
+                    continue
+                near = np.nonzero((zone['boxes'][:, 0] <= bh[0]+VEHICLE_MARGIN) & (zone['boxes'][:, 2] >= bl[0]-VEHICLE_MARGIN)
+                                  & (zone['boxes'][:, 1] <= bh[1]+VEHICLE_MARGIN) & (zone['boxes'][:, 3] >= bl[1]-VEHICLE_MARGIN))[0]
+                if any(obb_hit(zone['sweep'][i], body, VEHICLE_MARGIN) for i in near):
+                    return q
+        return None
 
     def _scan_hazards(self, r, vehicles, workers, obstacles):
+        """Nearest hazard (sample index, kind, ref) and, separately, the nearest vehicle hazard."""
         smp = r.samples
         polys = [x[2] for x in smp]
         boxes = np.array([x[3] for x in smp])
         lo, hi = boxes[:, :2].min(0), boxes[:, 2:].max(0)
         best = None
+        self._vehicle_hit = None
 
         def consider(hit, kind, refs):
             nonlocal best
+            if hit is not None and kind == 'veh':
+                self._vehicle_hit = (hit[0], kind, refs[hit[1]])
             if hit is not None and (best is None or hit[0] < best[0]):
                 best = (hit[0], kind, refs[hit[1]])
         ids = self.static.query_ids(lo-.1, hi+.1)
@@ -389,7 +480,26 @@ class Traffic:
                      'obj', obstacles)
         others = [q for q in vehicles if q.agent is not r]
         if others:
-            consider(first_overlap(polys, boxes, [q.obb for q in others], [box_of(q.obb) for q in others], .3), 'veh', others)
+            consider(first_overlap(polys, boxes, [q.obb for q in others], [box_of(q.obb) for q in others], VEHICLE_MARGIN),
+                     'veh', others)
+            if self._vehicle_hit is not None and self._vehicle_hit[0] > 0 and r.hold is not None and r.v < STOP_SPEED:
+                # Held at a standstill: the speed profile is not used; the last free sample is a
+                # conservative stopping point for the release check (no extra footprints per step).
+                i = self._vehicle_hit[0]
+                self._vehicle_hit = (i, 'veh', self._vehicle_hit[2], smp[i-1][0])
+            elif self._vehicle_hit is not None and self._vehicle_hit[0] > 0:
+                # Continuous stopping point: the first touching distance between the last free sample
+                # and the first hit one (bisection). Without it the stopping point jumps by a whole
+                # sample whenever the body ahead crosses one, which makes the speed profile jerk.
+                i, q = self._vehicle_hit[0], self._vehicle_hit[2]
+                a, b = smp[i-1][0], smp[i][0]
+                for _ in range(7):                     # 0.35/2**7: under 3 mm
+                    m = (a+b)/2
+                    if obb_hit(r.footprint(r.pose_at(r.d+m)), q.obb, VEHICLE_MARGIN):
+                        b = m
+                    else:
+                        a = m
+                self._vehicle_hit = (i, 'veh', q, a)
         for w in workers:
             if not w.on_floor or w.x < lo[0]-1.5 or w.x > hi[0]+1.5 or w.y < lo[1]-1.5 or w.y > hi[1]+1.5:
                 continue
@@ -466,6 +576,7 @@ class Traffic:
 
     def _decide(self, r, vehicles, workers, obstacles, dt):
         if r.backoff:
+            r.hold = None
             self._backoff_step(r, dt, vehicles, workers, obstacles)
             return
         lim, why, ref = math.inf, None, None
@@ -477,7 +588,16 @@ class Traffic:
             s = r.samples[hazard[0]][0]
             if s < lim:
                 lim, why, ref = s, hazard[1], hazard[2]
-        # Crossings and merges: whoever arrives later yields; ties go to priority.
+        # Free lane before the nearest stopping point that any vehicle imposes (body ahead, yield,
+        # keep-clear entry), whatever else is nearer; drives the hold hysteresis below.
+        veh_room, veh_ref = math.inf, None
+        if self._vehicle_hit is not None:
+            vs = self._vehicle_hit[3] if len(self._vehicle_hit) > 3 else r.samples[self._vehicle_hit[0]][0]
+            veh_room, veh_ref = vs-r.gap, self._vehicle_hit[2]
+            if why == 'veh' and ref is veh_ref:
+                lim = min(lim, vs)
+        # Crossings and merges. AMRs have right of way over forklifts (Nav2 does not negotiate with
+        # forklifts); between forklifts whoever arrives later yields, ties go to priority.
         y_to, y_lim = None, math.inf
         for q in vehicles:
             if q.agent is r or not q.samples or (q.agent is not None and q.agent.yield_to is r):
@@ -489,22 +609,45 @@ class Traffic:
             if not fc:
                 continue
             s_a, s_b = r.samples[fc[0]][0], q.samples[fc[1]][0]
-            q_wait = q.agent.wait_t if q.agent else 0.
-            t_a = s_a/max(r.v, .5)
-            t_b = math.inf if (q.v < .05 and q_wait > .6) else s_b/max(q.v, .5)
-            q_prio = q.agent.priority() if q.agent else 1.
-            give = t_a > t_b+.35 or (abs(t_a-t_b) <= .35 and r.priority() < q_prio)
-            if r.yield_to is q.agent and t_b < math.inf and r.priority() < 100:
+            if q.agent is None:
                 give = True
+            else:
+                t_a = s_a/max(r.v, .5)
+                t_b = math.inf if (q.v < .05 and q.agent.wait_t > .6) else s_b/max(q.v, .5)
+                give = t_a > t_b+.35 or (abs(t_a-t_b) <= .35 and r.priority() < q.agent.priority())
+                if r.yield_to is q.agent and t_b < math.inf and r.priority() < 100:
+                    give = True
             if give:
                 limit = max(0., s_a-.45)
                 if limit < y_lim:
                     y_lim, y_to = limit, q
         if y_to and y_lim < lim:
             lim, why, ref = y_lim, 'yield', y_to
-        if why in ('yield', 'veh') and ref is not None and math.cos(wrap(ref.yaw-r.pose[2])) > .8 and ref.v > .05:
-            why = 'follow'
+        if y_to and y_lim < veh_room:
+            veh_room, veh_ref = y_lim, y_to
+        # Keep clear: no stop for a vehicle with the body across a narrow corridor's mouth.
+        zone = self._zone_ahead(r)
+        if zone is not None:
+            blocker = self._zone_blocker(r, zone[1], vehicles)
+            if blocker is not None:
+                if zone[0] < lim:
+                    lim, why, ref = zone[0], 'yield', blocker
+                if zone[0] < veh_room:
+                    veh_room, veh_ref = zone[0], blocker
+        if why in ('yield', 'veh') and ref is not None and math.cos(wrap(ref.yaw-r.pose[2])) > .8:
+            following = r.why == 'follow' and r.ref is not None and r.ref.id == ref.id
+            if ref.v > (.01 if following else .05):
+                why = 'follow'
         r.yield_to = y_to.agent if y_to else None
+        # Hold release: the way must stay clear for RESUME_DWELL (separate enter/leave conditions).
+        if r.hold is not None:
+            r.hold['clear'] = r.hold['clear']+dt if veh_room >= r.resume_room else 0.
+            if veh_ref is not None:
+                r.hold['ref'] = veh_ref
+            if r.hold['clear'] >= RESUME_DWELL:
+                r.hold = None
+            elif why is None or why in VEHICLE_REASONS:
+                why, ref = r.hold['why'], r.hold['ref']      # one stable reason while held
         # Target speed: cruise, curve limit, braking profile to the stopping point.
         vt = r.speed
         r.curve = False
@@ -516,15 +659,35 @@ class Traffic:
                 allowed = math.sqrt(vc*vc+2*r.brake*sm[i-1][0])
                 if allowed < vt:
                     vt, r.curve = allowed, True
+        available = math.inf
         if lim < math.inf:
             available = lim-(0 if why == 'yield' else r.gap)
             vs = math.sqrt(2*r.brake*available) if available > 0 else 0.
             vt = min(vt, vs)
+        if r.hold is not None:
+            vt = 0.
         dv = vt-r.v
-        r.v += min(dv, r.accel*dt) if dv > 0 else max(dv, -r.emerg*(2 if why == 'emerg' else 1)*dt)
+        if dv > 0:
+            r.v += min(dv, r.accel*dt)
+        else:
+            if why == 'emerg':
+                decel = 2*r.emerg
+            elif why in VEHICLE_REASONS and available < math.inf:
+                # Behind a vehicle: the deceleration that stops in the free lane (service braking at
+                # least, emergency at most), instead of emergency braking on every speed change.
+                decel = r.emerg if available <= 1e-3 else clamp(r.v*r.v/(2*available), r.brake, r.emerg)
+            elif lim < math.inf:
+                decel = r.emerg                  # people, objects, structure: as before
+            else:
+                decel = r.brake                  # curve, cruise, held: service braking
+            r.v += max(dv, -decel*dt)
         r.v = max(r.v, 0.)
-        stopped = r.v < .06
-        r.wait_t = r.wait_t+dt if stopped and lim < math.inf else 0.
+        stopped = r.v < STOP_SPEED
+        # Enter a hold: stopped for a vehicle that is not driving away ahead of it (a leader being
+        # followed opens the way by itself; the braking profile tracks it without a hold).
+        if stopped and r.hold is None and why in ('veh', 'yield') and veh_room < r.resume_room:
+            r.hold = {'why': why, 'ref': ref, 'clear': 0.}
+        r.wait_t = r.wait_t+dt if stopped and (lim < math.inf or r.hold is not None) else 0.
         if r.wait_t > 12 and r.boost_t <= 0:
             r.boost_t = 5.
         r.boost_t -= dt
@@ -532,7 +695,7 @@ class Traffic:
                 ((ref.agent.why == 'veh' and ref.agent.ref is r.view_ref and r.priority() < ref.agent.priority())
                  or (r.wait_t > 9 and ref.agent.why in ('veh', 'yield') and ref.agent.wait_t > 3))
                 and self._rear_clear(r, 1.2, vehicles, workers, obstacles)):
-            r.backoff, r.wait_t = {'left': 3., 'hold': 2.6, 'from': ref}, 0.
+            r.backoff, r.wait_t, r.hold = {'left': 3., 'hold': 2.6, 'from': ref}, 0., None
         # User object on the lane: plan a lateral detour while there is room.
         r.next_plan -= dt
         if r.v > .4 or (r.wait_t > 20 and r.replans >= 3):
@@ -549,7 +712,7 @@ class Traffic:
             r.detour_fail = False
         r.why, r.ref = why, ref
         r.field = 2 if (why == 'emerg' or (lim < math.inf and lim <= r.prot+.05 and why not in ('follow', 'yield'))) \
-            else 1 if (lim < math.inf or (r.curve and r.v < r.speed*.6)) else 0
+            else 1 if (lim < math.inf or r.hold is not None or (r.curve and r.v < r.speed*.6)) else 0
 
     def step(self, dt, vehicles, workers, obstacles):
         """``vehicles`` holds VehicleViews for every forklift and every AMR."""

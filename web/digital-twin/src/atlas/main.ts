@@ -230,6 +230,8 @@ function describe(e: WorldEvent): string | null {
       ? `${e.entity}: giro bloqueado, ${e.other} na área de varredura`
       : `${e.entity}: parada de segurança, ${e.other} no campo de proteção`;
     case 'turned_back': return `${e.entity} esperou um veículo e voltou pela rota`;
+    case 'vehicle_wait': return `${e.entity} aguardando ${e.other ? robotName(e.other) : 'outro veículo'}: sem passagem segura`;
+    case 'vehicle_resumed': return `${e.entity}: passagem livre, retomou a rota`;
     case 'obstacle_added': return `${e.detail === 'box' ? 'Caixa' : e.detail === 'pallet' ? 'Palete' : 'Cone'} inserido no piso (${e.entity})`;
     case 'obstacle_removed': return `Objeto ${e.entity} removido`;
     case 'paused': return 'Simulação pausada';

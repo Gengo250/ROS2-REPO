@@ -53,7 +53,7 @@ class CommandGuard(Node):
         # AMCL latches its pose and republishes only after motion: a volatile subscription that
         # matches after the first estimate would never see one, and the robot could never move.
         self.create_subscription(PoseWithCovarianceStamped,'amcl_pose',self.localized,QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL,reliability=ReliabilityPolicy.RELIABLE))
-        self.create_subscription(TwistStamped,'nav_cmd_vel',self.velocity,10)
+        self.nav_topic=self.create_subscription(TwistStamped,'nav_cmd_vel',self.velocity,10).topic_name
         self.publisher=self.create_publisher(TwistStamped,'cmd_vel',10)
         self.cmd_topic=self.publisher.topic_name
         self.diagnostics=self.create_publisher(DiagnosticArray,'navigation/diagnostics',10)
@@ -84,9 +84,11 @@ class CommandGuard(Node):
             self.last_clock=sim;self.clock_changed=wall
         if sim<=0 or wall-self.clock_changed>1.:return 'Simulation clock stopped or reset'
         for key in ['scan','top_scan','odom','command']:
-            if key not in self.received or wall-self.received[key]>1.:return 'Missing or stale '+key
+            if key not in self.received or wall-self.received[key]>1.:
+                return self.command_gap('Missing or stale '+key) if key=='command' else 'Missing or stale '+key
             age=sim-self.stamps[key]
-            if age < -.1 or age > .4:return 'Invalid simulation timestamp: '+key
+            if age < -.1 or age > .4:
+                return self.command_gap('Invalid simulation timestamp: '+key) if key=='command' else 'Invalid simulation timestamp: '+key
         if self.command is None or not command_is_finite(self.command):return 'Invalid command'
         if self.covariance is None or any(not math.isfinite(self.covariance[i]) or self.covariance[i]>1. for i in [0,7,35]):return 'Localization unavailable or uncertain'
         f=getattr(self,'frame_prefix','')
@@ -103,6 +105,17 @@ class CommandGuard(Node):
         v=self.command.twist
         if v.linear.x<0 or abs(v.linear.x)>.70 or abs(v.angular.z)>1.50:return 'Command outside drive limits'
         return 'ready'
+    def command_gap(self,failure):
+        """Reason for a command stream that is absent or old. Nav2 ends every command stream with an
+        explicit zero twist (goal reached, cancelled or failed, behaviour finished): silence after a zero
+        command, with its publisher still present, is a legitimate standstill (no goal, a Wait recovery,
+        replanning). Silence after a moving command, or a vanished publisher, is a communication failure
+        (``failure``). Both are not ready: the guard keeps publishing zero velocity either way."""
+        c=self.command
+        if c is not None and (abs(c.twist.linear.x)>1e-3 or abs(c.twist.angular.z)>1e-3):return failure
+        topic=getattr(self,'nav_topic',None)
+        if topic is None or not self.get_publishers_info_by_topic(topic):return failure
+        return 'Standby: no active Nav2 command'
     def tick(self):
         wall=time.monotonic();sim=self.get_clock().now().nanoseconds/1e9;reason=self.check(wall,sim)
         # ros2_control's simulation-clock update loop can stall while Gazebo keeps

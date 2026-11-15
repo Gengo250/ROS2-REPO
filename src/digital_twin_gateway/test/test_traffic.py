@@ -197,3 +197,44 @@ def test_progress_resets_stall_timer():
     t.step(0., near(0.), missions, {})
     t.step(8., near(0.5), missions, {})                    # moved 0.5 m: progress
     assert t.step(15., near(0.5), missions, {})[0] == []  # only 7 s since the last progress
+
+
+FORK = {'EMP-1': (4.55, 1.98, 0.8)}
+
+
+def forklift(x, y, yaw=0., speed=0.):
+    return SimpleNamespace(id='EMP-1', type='forklift', x=x, y=y, yaw=yaw, speed=speed, reason=None)
+
+
+def test_robot_stalled_by_a_stopped_forklift_yields_and_resumes_when_it_has_passed():
+    t = Traffic(STATIONS, vehicles=FORK)
+    missions = {'amr_01': mission('amr_01', 'dock_03')}
+    robot = amr('amr_01', 60.5, 22.9, -1.57)
+    stopped = forklift(62.3, 21.0)                       # body 0.4 m from the robot, standing
+    for sim in (0., 6., 11.9):
+        assert t.step(sim, [robot, stopped], missions, {})[0] == []      # a brief stop never qualifies
+    actions, _ = t.step(12.1, [robot, stopped], missions, {})
+    assert actions == [('hold', 'amr_01', actions[0][2])] and actions[0][2].blocker == 'EMP-1'
+    missions['amr_01'] = mission('amr_01', 'dock_03', 'waiting')
+    assert t.step(14.5, [robot, stopped], missions, {})[0] == []          # still in the way
+    gone = forklift(56.0, 24.0, 3.14, 1.2)                                 # passed and drove on
+    assert t.step(16., [robot, gone], missions, {})[0] == [('resume', 'amr_01')]
+
+
+def test_passing_forklift_is_temporary_and_a_forklift_that_cannot_leave_ends_in_block():
+    t = Traffic(STATIONS, vehicles=FORK)
+    missions = {'amr_01': mission('amr_01', 'dock_03')}
+    robot = amr('amr_01', 60.5, 22.9, -1.57)
+    t.step(0., [robot, forklift(62.3, 21.0, speed=.5)], missions, {})
+    assert t.step(13., [robot, forklift(62.3, 21.0, speed=.5)], missions, {})[0] == []
+    stopped = forklift(62.3, 21.0)
+    assert t.step(13.5, [robot, stopped], missions, {})[0][0][0] == 'hold'
+    missions['amr_01'] = mission('amr_01', 'dock_03', 'waiting')
+    assert t.step(30., [robot, stopped], missions, {})[0] == []
+    actions, _ = t.step(43.6, [robot, stopped], missions, {})               # held block_seconds, no way out
+    assert [(a[0], a[1], a[2].on) for a in actions] == [('block', 'amr_01', 'EMP-1')]
+
+
+def test_forklift_box_gap_uses_its_own_dimensions():
+    robot, f = amr('amr_01', 60.5, 22.9, -1.57), forklift(62.3, 21.0)
+    assert abs(footprint_gap(robot, f, dims_b=FORK['EMP-1']) - footprint_gap(robot, f)) > .5

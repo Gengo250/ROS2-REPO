@@ -28,6 +28,13 @@ blocking each other: the lower-priority one yields (held until the other has pas
 swapped once; if that fails too, or a robot is stuck behind a parked one for ``block_seconds``,
 the robots are stopped and reported blocked instead of retrying unsafe motion.
 
+Forklifts (engine-driven on their lanes, never commanded here): a driving robot stalled for
+``stall_seconds`` next to a *stopped* forklift yields to it (goal held, so the robot stands still: a
+standing robot is no crossing for the forklift, which then passes if its lane is clear) and resumes
+once the forklift has moved ``clear_gap`` away; if the forklift does not get away within
+``block_seconds`` (its lane is closed by this robot) or the robot already yielded ``max_yields`` times
+in the mission, the robot is stopped and reported blocked. A moving forklift is a passing one.
+
 Priority: older mission first (creation time), then robot id. Every rule is deterministic.
 """
 from dataclasses import dataclass, field
@@ -35,6 +42,8 @@ import math
 
 DRIVING = ('pending', 'active', 'recovering')
 LENGTH, WIDTH, OFFSET = 0.975, 0.70, 0.0125          # AMR collision box (amr_dimensions.json, as the engine)
+AMR_BOX = (LENGTH, WIDTH, OFFSET)
+VEHICLE_MOVING = 0.06                                  # m/s, the engine's forklift standstill threshold
 
 
 @dataclass(frozen=True)
@@ -57,8 +66,8 @@ class Corridor:
 
 @dataclass
 class Hold:
-    kind: str                # 'corridor' | 'robot'
-    on: str                  # corridor id or robot id
+    kind: str                # 'corridor' | 'robot' | 'vehicle' (a forklift)
+    on: str                  # corridor id, robot id or forklift id
     blocker: str | None      # robot the hold waits for
     since: float             # simulation time
     swapped: bool = False
@@ -82,11 +91,12 @@ class Waiting:
     position: int | None = None
 
 
-def box(x, y, yaw):
+def box(x, y, yaw, dims=AMR_BOX):
+    length, width, offset = dims
     c, s = math.cos(yaw), math.sin(yaw)
-    cx, cy = x+c*OFFSET, y+s*OFFSET
-    return [(cx+c*dx-s*dy, cy+s*dx+c*dy) for dx, dy in ((LENGTH/2, WIDTH/2), (-LENGTH/2, WIDTH/2),
-                                                        (-LENGTH/2, -WIDTH/2), (LENGTH/2, -WIDTH/2))]
+    cx, cy = x+c*offset, y+s*offset
+    return [(cx+c*dx-s*dy, cy+s*dx+c*dy) for dx, dy in ((length/2, width/2), (-length/2, width/2),
+                                                        (-length/2, -width/2), (length/2, -width/2))]
 
 
 def _inside(p, poly):
@@ -104,9 +114,9 @@ def _segment_distance(p, a, b):
     return math.hypot(p[0]-a[0]-t*dx, p[1]-a[1]-t*dy)
 
 
-def footprint_gap(a, b):
-    """Distance between two AMR collision boxes (0 when they touch or overlap)."""
-    pa, pb = box(a.x, a.y, a.yaw), box(b.x, b.y, b.yaw)
+def footprint_gap(a, b, dims_a=AMR_BOX, dims_b=AMR_BOX):
+    """Distance between two collision boxes (AMRs by default; 0 when they touch or overlap)."""
+    pa, pb = box(a.x, a.y, a.yaw, dims_a), box(b.x, b.y, b.yaw, dims_b)
     if any(_inside(p, pb) for p in pa) or any(_inside(p, pa) for p in pb):
         return 0.
     return min(min(_segment_distance(p, q[i], q[(i+1) % 4]) for p in p_ for i in range(4))
@@ -116,10 +126,12 @@ def footprint_gap(a, b):
 class Traffic:
     def __init__(self, stations, corridors=(), occupancy_radius=1.5, queue_limit=4, lookahead=6.,
                  stall_seconds=12., block_seconds=30., conflict_gap=1.0, clear_gap=2.0, min_hold=2.,
-                 max_yields=2, plan_max_age=5.):
+                 max_yields=2, plan_max_age=5., vehicles=None):
         """``stations``: id → (x, y, yaw) world pose; ``corridors``: Corridor list (only capacity 1 is gated).
         ``occupancy_radius``: robot centre within this distance of the station pose = station occupied
-        (circumscribed radius 0.6 m of the box + 0.9 m clearance)."""
+        (circumscribed radius 0.6 m of the box + 0.9 m clearance). ``vehicles``: forklift id →
+        (length, width, centre offset) collision box (scene agents)."""
+        self.vehicles = dict(vehicles or {})
         self.stations = {k: tuple(v[:2]) for k, v in stations.items()}
         self.corridors = [c for c in corridors if c.capacity == 1]
         self.occupancy_radius, self.queue_limit, self.lookahead = occupancy_radius, queue_limit, lookahead
@@ -222,6 +234,7 @@ class Traffic:
         actions: ('dispatch', robot) | ('hold', robot, Waiting) | ('resume', robot) | ('block', robot, Waiting)
         waiting: robot → Waiting for every mission queued for a station."""
         amrs = {e.id: e for e in entities if e.type == 'amr'}
+        forklifts = {e.id: e for e in entities if e.type == 'forklift' and e.id in self.vehicles}
         actions = []
         status = {r: m.status for r, m in missions.items() if m is not None}
         prio = lambda r: self.priority(r, missions)
@@ -292,7 +305,16 @@ class Traffic:
                 actions.append(('resume', robot))
 
         # 3. Robot-to-robot yields: release when the robot yielded to has passed or stopped driving.
+        #    Yields to a forklift: release once it has moved clear_gap away; block if it cannot get away.
         for robot, h in list(self.holds.items()):
+            if h.kind == 'vehicle' and sim-h.since >= self.min_hold:
+                f = forklifts.get(h.on)
+                if f is None or footprint_gap(amrs[robot], f, AMR_BOX, self.vehicles[h.on]) > self.clear_gap:
+                    self.holds.pop(robot)
+                    actions.append(('resume', robot))
+                elif sim-h.since >= self.block_seconds:
+                    actions += self._block((robot,), sim, amrs, h.on)
+                continue
             if h.kind != 'robot' or sim-h.since < self.min_hold:
                 continue
             winner = amrs.get(h.on)
@@ -320,9 +342,20 @@ class Traffic:
             stalled = sim-p.since
             if stalled < self.stall_seconds:
                 continue
-            blocker = self._blocker(e, amrs)
+            blocker = self._blocker(e, amrs, forklifts)
             if blocker is None:
-                continue                          # not a robot conflict: Nav2's own recovery applies
+                continue                          # not a vehicle conflict: Nav2's own recovery applies
+            if blocker in forklifts:
+                if abs(forklifts[blocker].speed) > VEHICLE_MOVING:
+                    continue                      # a passing forklift: temporary
+                if self.yields.get(m.id, 0) >= self.max_yields:
+                    actions += self._block((robot,), sim, amrs, blocker)
+                else:
+                    self.yields[m.id] = self.yields.get(m.id, 0)+1
+                    self.holds[robot] = Hold('vehicle', blocker, blocker, sim)
+                    actions.append(('hold', robot, Waiting('robot', blocker, blocker)))
+                acted.add(robot)
+                continue
             other = self.holds.get(blocker)
             if driving(blocker):
                 q = self.progress.get(blocker)
@@ -353,11 +386,14 @@ class Traffic:
                 acted.add(robot)
         return actions, waiting
 
-    def _blocker(self, e, amrs):
+    def _blocker(self, e, amrs, forklifts=None):
+        """Nearest AMR or forklift within ``conflict_gap`` of the robot's footprint (or in contact)."""
+        forklifts = forklifts or {}
         contact = (e.reason or '').removeprefix('contact:') if (e.reason or '').startswith('contact:') else None
-        if contact in amrs:
+        if contact in amrs or contact in forklifts:
             return contact
         near = [(footprint_gap(e, o), r) for r, o in amrs.items() if r != e.id]
+        near += [(footprint_gap(e, f, AMR_BOX, self.vehicles[r]), r) for r, f in forklifts.items()]
         near = [(g, r) for g, r in near if g < self.conflict_gap]
         return min(near)[1] if near else None
 

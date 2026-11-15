@@ -20,6 +20,7 @@ AMR_WARNING_EXTRA = 1.0
 AMR_SAFETY_BRAKING = 1.5     # m/s², safe stop, above the 0.5 m/s² motion profile
 AMR_WARNING_SPEED = 0.3      # m/s with a person in the warning field
 ROTATION_SAFETY_MARGIN = 0.15  # m beyond the circumscribed radius
+FORKLIFT_WAIT_REPORT = 30.     # s of simulation: a forklift held this long reports a persistent conflict
 
 
 @dataclass
@@ -59,8 +60,16 @@ class Robot:
 
     def view(self, model):
         d = self.drive
-        return VehicleView(self.id, d.x, d.y, d.yaw, d.v, footprint(model, d.x, d.y, d.yaw),
-                           predicted_samples(model, d), False, None)
+        body = footprint(model, d.x, d.y, d.yaw)
+        if abs(d.v) < .05 and abs(d.w) > .05:
+            # Turning in place: the robot occupies the disc its body sweeps (circumscribed radius),
+            # the same area the rotation stop protects; no motion is predicted beyond that.
+            body = disc(d.x, d.y, rotation_radius(model), 16)
+        return VehicleView(self.id, d.x, d.y, d.yaw, d.v, body, predicted_samples(model, d), False, None)
+
+
+def rotation_radius(model):
+    return math.hypot(model.length/2+abs(model.footprint_offset), model.width/2)
 
 
 def footprint(model, x, y, yaw, inflate=0.):
@@ -68,7 +77,9 @@ def footprint(model, x, y, yaw, inflate=0.):
 
 
 def predicted_samples(model, d, horizon=3., step=.35):
-    """Constant-twist look-ahead of an AMR, so forklifts can negotiate crossings with it."""
+    """Constant-twist look-ahead of an AMR, so forklifts can negotiate crossings with it. A robot
+    standing still keeps one sample, its current footprint: it stays an occupied body for every
+    check (forklift hazards use its view's body), and no motion is invented for it."""
     out, s, x, y, yaw = [], 0., d.x, d.y, d.yaw
     speed = abs(d.v)
     if speed < .05:
@@ -124,7 +135,9 @@ class World:
                               for f in agents['forklifts']]
         elif profile not in ('mapping', 'empty'):
             raise ValueError('profile must be operations, mapping or empty')
-        self.traffic = Traffic(self.forklifts, StaticIndex(scene.band_polygons(0.05, 2.0)))
+        narrow = [(c['id'], oriented_box(c['centre'][0], c['centre'][1], 0., c['size'][0], c['size'][1]))
+                  for c in scene.section('navigation').get('corridors', []) if int(c.get('capacity', 1)) == 1]
+        self.traffic = Traffic(self.forklifts, StaticIndex(scene.band_polygons(0.05, 2.0)), narrow)
         self.obstacles = {}
         self.obstacle_seq = 0
         self.catalogue = scene.section('obstacle_catalogue')
@@ -340,8 +353,22 @@ class World:
                     w.turned_back = False
                     self.emit('turned_back', w.id, '', 'waited for a vehicle and turned back', w.x, w.y)
             self.traffic.step(h, views, self.workers, obstacles)
+            self._report_waits()
         self.elapsed_ns += int(round(dt*1e9))
         self.time = self.elapsed_ns/1e9
+
+    def _report_waits(self):
+        """A forklift held for a vehicle longer than FORKLIFT_WAIT_REPORT is a persistent conflict:
+        reported once per hold (event ``vehicle_wait``), and once more when it resumes."""
+        for f in self.forklifts:
+            if f.hold is not None and f.wait_t > FORKLIFT_WAIT_REPORT and not f.wait_reported:
+                other = getattr(f.hold['ref'], 'id', '')
+                f.wait_reported = True
+                self.emit('vehicle_wait', f.id, other, f'waiting {FORKLIFT_WAIT_REPORT:.0f} s for {other or "a vehicle"} '
+                          f'({f.hold["why"]}): no safe way past', f.pose[0], f.pose[1])
+            elif f.hold is None and f.wait_reported:
+                f.wait_reported = False
+                self.emit('vehicle_resumed', f.id, '', 'way clear: resumed', f.pose[0], f.pose[1])
 
     def _worker_blocked(self, dynamic):
         """Disc test against structure and the dynamic bodies prepared for this agent step."""
