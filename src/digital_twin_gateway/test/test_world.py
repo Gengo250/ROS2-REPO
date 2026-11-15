@@ -195,6 +195,8 @@ def test_missions_go_to_the_robots_own_nav2(store):
     commands.node = SimpleNamespace(get_clock=lambda: SimpleNamespace(now=lambda: SimpleNamespace(to_msg=Time)))
     commands.store, commands.settings, commands.NavigateToPose, commands.goals = s, Settings(), NavigateToPose, {}
     commands.stations = {'dock_01': {'pose': [2., 4., 0, 0, 0, 0]}}
+    from digital_twin_gateway.world.traffic import Traffic
+    commands.traffic, commands.tokens, commands.intent, commands.recovery_mark = Traffic({'dock_01': (2., 4., 0.)}), {}, {}, {}
     commands.navigate = {r.id: Client(r.id) for r in Settings().fleet}
 
     async def run(robot):

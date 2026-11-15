@@ -4,6 +4,7 @@
   "$defs": {
     "Mission": {
       "additionalProperties": false,
+      "description": "One robot's mission. ``waiting``: accepted but held by fleet coordination (no Nav2 goal running):\nqueued for its station, before a narrow corridor another AMR is using, or yielding to another AMR\n(``waiting_for`` / ``waiting_on`` / ``blocking_robot`` / ``queue_position`` say which).\n``recovering``: Nav2 recovery behaviours under way. ``blocked``: stopped by the coordinator after a\npersistent conflict it could not resolve safely (intervention needed; the robot did not arrive).",
       "properties": {
         "id": {
           "maxLength": 64,
@@ -28,11 +29,14 @@
         "status": {
           "enum": [
             "pending",
+            "waiting",
             "active",
+            "recovering",
             "succeeded",
             "failed",
             "canceled",
-            "rejected"
+            "rejected",
+            "blocked"
           ],
           "title": "Status",
           "type": "string"
@@ -91,6 +95,68 @@
           "format": "date-time",
           "title": "Updated At",
           "type": "string"
+        },
+        "waiting_for": {
+          "anyOf": [
+            {
+              "enum": [
+                "station",
+                "corridor",
+                "robot"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Waiting For"
+        },
+        "waiting_on": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Waiting On"
+        },
+        "blocking_robot": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Blocking Robot"
+        },
+        "queue_position": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Queue Position"
+        },
+        "yields": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Yields",
+          "type": "integer"
         }
       },
       "required": [

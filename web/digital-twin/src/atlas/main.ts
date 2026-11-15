@@ -13,7 +13,7 @@ import { createDemo, type Demo } from './demo/atlasDemo.js';
 import { boxDyn, drawPlacement } from './rig/atlasRig.js';
 import { rosToGl } from './coords';
 import { VisionView } from './vision/VisionView';
-import type { WorldEvent } from '../core/types/world-state';
+import type { WorldEvent, WorldState } from '../core/types/world-state';
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const params = new URLSearchParams(location.search);
@@ -206,10 +206,10 @@ function entityPanel(e: RenderedEntity) {
   const kind = e.type === 'amr' ? 'ROBÔ MÓVEL · NAV2' : e.type === 'forklift' ? 'EMPILHADEIRA' : 'FUNCIONÁRIO';
   const field = { free: ['#4fe3c1', 'livre'], warning: ['#ffbf45', 'alerta'], protective: ['#ff5145', 'proteção'] }[e.field_state];
   let meta = `${e.type === 'human' ? scene.agents.roles[scene.agents.workers.find(w => w.id === e.id)?.role ?? '']?.name ?? '' : kind}<br>`;
-  meta += `<span style="color:#73e9ce">● ${e.stale ? 'Último estado conhecido' : STATE_LABEL[e.state] ?? e.state}${e.activity ? ' · ' + (scene.agents.acts[e.activity]?.label ?? e.activity) : ''}${e.reason ? ' · ' + e.reason : ''}</span><br>`;
+  meta += `<span style="color:#73e9ce">● ${e.stale ? 'Último estado conhecido' : STATE_LABEL[e.state] ?? e.state}${e.activity ? ' · ' + (scene.agents.acts[e.activity]?.label ?? e.activity) : ''}${e.reason ? ' · ' + reasonText(e.reason) : ''}</span><br>`;
   meta += `Velocidade ${fmt(Math.abs(e.speed))} m/s · posição (${fmt(e.x)}; ${fmt(e.y)}) m`;
   if (e.type !== 'human') meta += `<br>Campo de proteção <span style="color:${field[0]}">${field[1]}</span> · ${fmt(e.field_length)} m`;
-  if (robot) meta += `<br>Interlock: ${robot.interlock ?? 'sem diagnóstico'}${robot.mission ? `<br>Missão ${robot.mission.destination}: ${robot.mission.status}` : ''}`;
+  if (robot) meta += `<br>Interlock: ${robot.interlock ?? 'sem diagnóstico'}${robot.mission ? `<br>Missão ${robot.mission.destination}: ${missionText(robot.mission)}` : ''}`;
   const controls = e.type === 'amr' ? viewModes(e.id) : `<button class="followbtn" id="followBtn">${following ? 'Parar de acompanhar' : 'Acompanhar com a câmera'}</button>`;
   $('#selection').innerHTML = `<h3>${kind} <span class="small-pill">${e.stale ? 'DESATUALIZADO' : 'AO VIVO'}</span></h3><div class="selected-title">${e.id}</div><div class="selected-meta">${meta}</div>${controls}`;
 }
@@ -238,6 +238,43 @@ function describe(e: WorldEvent): string | null {
   }
 }
 const missionLog = new Map<string, string>();
+type MissionState = NonNullable<WorldState['robots'][number]['mission']>;
+const robotName = (id: string | null | undefined) => id ? id.toUpperCase().replace('_', ' ') : 'outro AMR';
+/** User-facing explanation of a mission state (fleet coordination included); Nav2 internals stay out. */
+function missionText(m: MissionState): string {
+  switch (m.status) {
+    case 'pending': return 'Enviando a missão ao Nav2';
+    case 'active': return 'Navegando';
+    case 'recovering': return 'Recalculando trajetória';
+    case 'succeeded': return 'Destino alcançado';
+    case 'canceled': return 'Missão cancelada';
+    case 'rejected': return 'Missão recusada';
+    case 'failed': return 'Falha na navegação: destino não alcançado';
+    case 'blocked': return `Bloqueio persistente${m.blocking_robot ? ` com o ${robotName(m.blocking_robot)}` : ''}. Intervenção necessária.`;
+    case 'waiting':
+      if (m.waiting_for === 'station') {
+        // Reserved (its owner is on the way) or occupied (a robot is physically on it).
+        const st = live?.latest?.stations?.find(s => s.id === m.waiting_on);
+        const holder = m.blocking_robot ? ` (${st?.owner === m.blocking_robot && !(st.occupants as string[]).includes(m.blocking_robot) ? 'reservada para o' : 'ocupada pelo'} ${robotName(m.blocking_robot)})` : '';
+        return `Aguardando liberação da estação ${m.waiting_on}${holder}${m.queue_position ? ` · posição ${m.queue_position} na fila` : ''}`;
+      }
+      if (m.waiting_for === 'corridor') return `Aguardando passagem do ${robotName(m.blocking_robot)} no corredor ${m.waiting_on}`;
+      return `Aguardando passagem do ${robotName(m.blocking_robot ?? m.waiting_on)}`;
+    default: return m.status;
+  }
+}
+/** Engine reason of an entity state, in Portuguese where it names a contact. */
+function reasonText(reason: string) {
+  return reason.startsWith('contact:') ? `contato com ${reason.slice(8).startsWith('amr_') ? robotName(reason.slice(8)) : reason.slice(8)}` : reason;
+}
+/** Station of the selected robot's mission as a shared resource (owner and queue). */
+function stationText(id: string): string {
+  const st = live?.latest?.stations?.find(s => s.id === id);
+  if (!st) return '';
+  const parts = [st.owner ? `reservada para o ${robotName(st.owner)}` : st.occupants.length ? `ocupada pelo ${robotName(st.occupants[0])}` : 'livre'];
+  if (st.queue.length) parts.push(`fila: ${st.queue.map(robotName).join(', ')}`);
+  return `Estação ${id}: ${parts.join(' · ')}`;
+}
 /** Robot the mission panel addresses (selector; follows the AMR selected in the scene). */
 function missionRobot() { return $<HTMLSelectElement>('#missionRobot').value; }
 /** Nav2 plan and active goal of every AMR in the latest world state, keyed by robot id. */
@@ -290,12 +327,13 @@ function liveStatus() {
     if (!msg && s.connection.registration !== 'verified') msg = 'Registro mundo/mapa não verificado: trajetórias do Nav2 não são desenhadas.';
     $('#modeBadge').textContent = `LIVE ROS · RTF ${sim.real_time_factor === null ? '—' : fmt(sim.real_time_factor, 2)}`;
     const nav = s.robots.find(r => r.id === missionRobot()), m = nav?.mission;
-    const status = !nav ? `${missionRobot()} ausente do estado do backend.` : m ? `<b>${m.destination}</b> · ${m.status}${m.distance_remaining_m !== null ? ` · faltam ${fmt(m.distance_remaining_m)} m` : ''}${m.recoveries ? ` · ${m.recoveries} recuperações` : ''}${m.detail ? `<br>${m.detail}` : ''}` : 'Nenhuma missão ativa.';
+    const driving = m && ['active', 'recovering'].includes(m.status);
+    const status = !nav ? `${missionRobot()} ausente do estado do backend.` : m ? `<b>${m.destination}</b> · ${missionText(m)}${driving && m.distance_remaining_m !== null ? ` · faltam ${fmt(m.distance_remaining_m)} m` : ''}${m.recoveries ? ` · ${m.recoveries} ${m.recoveries === 1 ? 'recuperação' : 'recuperações'}` : ''}${stationText(m.destination) ? `<br>${stationText(m.destination)}` : ''}` : 'Nenhuma missão ativa.';
     $('#missionStatus').innerHTML = `${status}<br>Interlock: ${nav?.interlock ?? 'sem diagnóstico do Nav2'}`;
     // Mission changes of every AMR go to the event log, each with its robot.
     for (const r of s.robots) {
-      const key = r.mission ? `${r.mission.id}:${r.mission.status}` : '';
-      if (r.mission && key !== missionLog.get(r.id)) { missionLog.set(r.id, key); logEvent(`${r.id} · missão ${r.mission.destination}: ${r.mission.status}`); }
+      const key = r.mission ? `${r.mission.id}:${r.mission.status}:${r.mission.waiting_for ?? ''}:${r.mission.blocking_robot ?? ''}` : '';
+      if (r.mission && key !== missionLog.get(r.id)) { missionLog.set(r.id, key); logEvent(`${robotName(r.id)} · ${r.mission.destination}: ${missionText(r.mission)}`); }
     }
     $('#robotCount').textContent = String(s.entities.filter(e => e.type === 'amr').length).padStart(2, '0');
     $('#livePerf').innerHTML = `Fator de tempo real: <b>${sim.real_time_factor === null ? '—' : fmt(sim.real_time_factor, 3)}</b> · tempo simulado <b>${fmt(sim.sim_time ?? 0, 1)} s</b>`;
@@ -600,7 +638,7 @@ function updateHud(force = false) {
       const e = lastEntities.find(x => x.id === id), mission = live?.latest?.robots.find(r => r.id === id)?.mission;
       stale = !e || e.stale;
       const navigating = mission && ['pending', 'active'].includes(mission.status);
-      status = e ? `${navigating ? 'Navegando' : STATE_LABEL[e.state] ?? e.state} · ${fmt(Math.abs(e.speed), 2)} m/s${mission ? ` · destino ${mission.destination} (${mission.status})` : ''}` : 'Robô ausente do estado do backend';
+      status = e ? `${navigating ? 'Navegando' : STATE_LABEL[e.state] ?? e.state} · ${fmt(Math.abs(e.speed), 2)} m/s${mission ? ` · destino ${mission.destination} (${missionText(mission)})` : ''}` : 'Robô ausente do estado do backend';
     } else {
       const r = demo!.robots.find(x => x.id === id);
       status = r ? `${demo!.vehStatus(r)} · ${fmt(r.v, 2)} m/s · AMR demonstrativo: lente na frente do veículo do protótipo` : '';

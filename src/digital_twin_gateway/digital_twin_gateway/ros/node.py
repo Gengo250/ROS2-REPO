@@ -26,7 +26,8 @@ class RosRuntime:
                 from .world import Commands, subscribe_world
                 self.subscriptions += subscribe_world(self.node, self.world, self.settings)
                 try:
-                    self.commands = Commands(self.node, self.world, self.settings, self.world.stations)
+                    self.commands = Commands(self.node, self.world, self.settings, self.world.stations,
+                                            getattr(self.world, 'corridors', ()))
                 except ImportError:
                     logging.warning('Lite interfaces or Nav2 messages missing: commands disabled')
                 self.world.set_ros_initialized(True)

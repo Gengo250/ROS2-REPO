@@ -101,18 +101,39 @@ def bridge(ros_future, loop, timeout):
     return asyncio.wait_for(future, timeout)
 
 
+DRIVING = ('pending', 'active', 'recovering')
+ENDED = ('succeeded', 'failed', 'canceled', 'rejected', 'blocked')
+WAIT_FIELDS = dict(waiting_for=None, waiting_on=None, blocking_robot=None, queue_position=None)
+
+
+def waiting_fields(info):
+    return dict(waiting_for=info.kind, waiting_on=info.on, blocking_robot=info.blocker, queue_position=info.position)
+
+
 class Commands:
-    def __init__(self, node, store, settings, stations):
+    """Mission and obstacle commands. Missions go through the fleet coordinator (world/traffic.py):
+    a station is reserved before the robot's Nav2 goal is sent, otherwise the mission waits in that
+    station's queue; the coordinator's periodic step (coordinate()) dispatches queued missions, holds
+    a goal (cancel) before a busy narrow corridor or while yielding to another AMR, sends it again
+    (resume) when clear, and stops robots in an unresolvable conflict (blocked). Only Nav2 actions
+    are used; each robot's command guard remains its only cmd_vel writer."""
+
+    def __init__(self, node, store, settings, stations, corridors=()):
         from amr_lite_interfaces.srv import AddObstacle, RemoveObstacle
         from nav2_msgs.action import NavigateToPose
         from rclpy.action import ActionClient
+        from ..world.traffic import Traffic
         self.node, self.store, self.settings, self.stations = node, store, settings, stations
         self.AddObstacle, self.RemoveObstacle, self.NavigateToPose = AddObstacle, RemoveObstacle, NavigateToPose
         self.add_client = node.create_client(AddObstacle, '/lite_sim/add_obstacle')
         self.remove_client = node.create_client(RemoveObstacle, '/lite_sim/remove_obstacle')
         # One NavigateToPose client per robot, on that robot's own Nav2 (its namespace).
         self.navigate = {r.id: ActionClient(node, NavigateToPose, r.topic('navigate_to_pose')) for r in settings.fleet}
-        self.goals = {}
+        self.traffic = Traffic({k: v['pose'] for k, v in stations.items()}, corridors)
+        self.goals = {}        # mission id → goal handle of its current Nav2 goal
+        self.tokens = {}       # mission id → token of the goal whose callbacks may still update it
+        self.intent = {}       # mission id → 'hold' | 'block': why the coordinator cancelled its goal
+        self.recovery_mark = {}
 
     async def add_obstacle(self, request):
         if not self.add_client.service_is_ready():
@@ -135,6 +156,10 @@ class Commands:
     def _mission(self, previous, **changes):
         return previous.model_copy(update={**changes, 'updated_at': datetime.now(timezone.utc)})
 
+    def _amrs(self):
+        view = self.store.coordination_view()
+        return {e.id: e for e in view[1] if e.type == 'amr'} if view else {}
+
     async def start_mission(self, request):
         registration = self.store.registration
         station = self.stations.get(request.destination)
@@ -146,18 +171,55 @@ class Commands:
         if navigate is None:
             return CommandResult(accepted=False, reason=f'unknown robot {request.robot_id!r}')
         active = self.store.mission(request.robot_id)
-        if active and active.status in ('pending', 'active'):
+        if active and active.status in DRIVING:
             return CommandResult(accepted=False, reason=f'mission {active.id} is still {active.status}; cancel it first')
         if not navigate.server_is_ready():
             return CommandResult(accepted=False, reason=f'Nav2 navigate_to_pose of {request.robot_id} unavailable')
+        if active and active.status == 'waiting':
+            # A waiting mission has no Nav2 goal running: the new request replaces it.
+            self._end(active, 'canceled', f'replaced by a mission to {request.destination}')
         wx, wy, wyaw = station['pose'][0], station['pose'][1], station['pose'][5]
-        mx, my = registration.world_to_map(wx, wy)
-        myaw = registration.world_yaw_to_map(wyaw)
         now = datetime.now(timezone.utc)
         mission = Mission(id=f'mission_{uuid4().hex[:8]}', robot_id=request.robot_id, destination=request.destination,
                           strategy='direct', status='pending', detail=None, goal=(wx, wy, wyaw),
                           distance_remaining_m=None, recoveries=0, created_at=now, updated_at=now)
-        self.store.update_mission(mission)
+        # Reservation decision before any await: simultaneous requests are decided one at a time.
+        decision, info = self.traffic.request(request.robot_id, request.destination, self._amrs())
+        if decision == 'reject':
+            rejected = self._mission(mission, status='rejected', detail=info)
+            self.store.update_mission(rejected)
+            return CommandResult(accepted=False, reason=info, mission=rejected)
+        if decision == 'queue':
+            waiting = self._mission(mission, status='waiting', **waiting_fields(info))
+            self.store.update_mission(waiting)
+            return CommandResult(accepted=True, reason=None, mission=waiting)
+        return await self._send(mission)
+
+    def _end(self, mission, status, detail=None):
+        """Mission over (no Nav2 goal left running for it): release everything it held."""
+        # A blocked mission keeps naming the robot it conflicts with.
+        fields = WAIT_FIELDS if status != 'blocked' else {**WAIT_FIELDS, 'blocking_robot': mission.blocking_robot}
+        self.store.update_mission(self._mission(mission, status=status, detail=detail, **fields))
+        self.traffic.mission_ended(mission.robot_id)
+        for table in (self.goals, self.tokens, self.intent, self.recovery_mark):
+            table.pop(mission.id, None)
+
+    async def _send(self, mission):
+        """Send (or send again, on resume) the mission's Nav2 goal; returns the command result."""
+        robot = mission.robot_id
+        navigate = self.navigate[robot]
+        if not navigate.server_is_ready():
+            self._end(mission, 'failed', f'Nav2 navigate_to_pose of {robot} unavailable')
+            return CommandResult(accepted=False, reason=f'Nav2 navigate_to_pose of {robot} unavailable', mission=self.store.mission(robot))
+        registration = self.store.registration
+        wx, wy, wyaw = mission.goal
+        mx, my = registration.world_to_map(wx, wy)
+        myaw = registration.world_yaw_to_map(wyaw)
+        pending = self._mission(mission, status='pending', **WAIT_FIELDS)
+        self.store.update_mission(pending)
+        self.intent.pop(mission.id, None)
+        token = self.tokens[mission.id] = object()
+        base = mission.recoveries
         goal = self.NavigateToPose.Goal()
         goal.pose.header.frame_id = 'map'
         goal.pose.header.stamp = self.node.get_clock().now().to_msg()
@@ -166,26 +228,37 @@ class Commands:
         loop = asyncio.get_running_loop()
 
         def feedback(message):
-            current = self.store.mission(request.robot_id)
-            if current is not None and current.id == mission.id and current.status in ('pending', 'active'):
-                f = message.feedback
-                self.store.update_mission(self._mission(current, status='active',
-                                                        distance_remaining_m=max(0., f.distance_remaining),
-                                                        recoveries=f.number_of_recoveries))
+            current = self.store.mission(robot)
+            if self.tokens.get(mission.id) is not token or mission.id in self.intent or current is None or current.id != mission.id \
+                    or current.status not in DRIVING:
+                return
+            f = message.feedback
+            remaining, recoveries = max(0., f.distance_remaining), base+f.number_of_recoveries
+            status = 'active' if current.status == 'pending' else current.status
+            if recoveries > current.recoveries:
+                status, self.recovery_mark[mission.id] = 'recovering', remaining
+            elif status == 'recovering' and remaining < self.recovery_mark.get(mission.id, math.inf)-.5:
+                status = 'active'
+            self.store.update_mission(self._mission(current, status=status, distance_remaining_m=remaining, recoveries=recoveries))
         handle = await bridge(navigate.send_goal_async(goal, feedback_callback=feedback), loop,
                               self.settings.command_timeout)
+        if self.tokens.get(mission.id) is not token:
+            # Cancelled or replaced while the goal was being sent: that goal must not keep driving.
+            if handle.accepted:
+                await bridge(handle.cancel_goal_async(), loop, self.settings.command_timeout)
+            return CommandResult(accepted=False, reason='mission cancelled or replaced', mission=self.store.mission(robot))
         if not handle.accepted:
-            rejected = self._mission(mission, status='rejected', detail='Nav2 rejected the goal')
-            self.store.update_mission(rejected)
-            return CommandResult(accepted=False, reason='Nav2 rejected the goal', mission=rejected)
+            self._end(pending, 'rejected', 'Nav2 rejected the goal')
+            return CommandResult(accepted=False, reason='Nav2 rejected the goal', mission=self.store.mission(robot))
         self.goals[mission.id] = handle
-        started = self._mission(mission, status='active')
-        self.store.update_mission(started)
+        current = self.store.mission(robot)
+        if current is not None and current.id == mission.id and current.status == 'pending':
+            self.store.update_mission(self._mission(current, status='active'))
 
         def finished(future):
             from action_msgs.msg import GoalStatus
-            current = self.store.mission(request.robot_id)
-            if current is None or current.id != mission.id:
+            current = self.store.mission(robot)
+            if self.tokens.get(mission.id) is not token or current is None or current.id != mission.id:
                 return
             try:
                 result = future.result()
@@ -194,17 +267,75 @@ class Commands:
                 detail = None if status == 'succeeded' else f'Nav2 status {result.status}, error {result.result.error_code}'
             except Exception as error:  # executor shutdown or transport failure
                 status, detail = 'failed', str(error)[:256]
-            self.store.update_mission(self._mission(current, status=status, detail=detail))
+            intent = self.intent.pop(mission.id, None)
             self.goals.pop(mission.id, None)
+            if status != 'succeeded' and intent == 'hold':
+                return                         # held by the coordinator: stays waiting, resumed later
+            if status != 'succeeded' and intent == 'block':
+                status, detail = 'blocked', current.detail
+            self._end(current, status, detail)
         handle.get_result_async().add_done_callback(finished)
-        return CommandResult(accepted=True, reason=None, mission=started)
+        return CommandResult(accepted=True, reason=None, mission=self.store.mission(robot))
 
     async def cancel_mission(self, robot_id):
         current = self.store.mission(robot_id)
-        if current is None or current.status not in ('pending', 'active'):
+        if current is None or current.status not in DRIVING+('waiting',):
             return CommandResult(accepted=False, reason='no active mission')
         handle = self.goals.get(current.id)
+        if current.status == 'waiting':
+            # Queued or held: no goal is driving the robot (a hold's cancel may still be in flight).
+            self._end(current, 'canceled', 'canceled while waiting')
+            if handle is not None:
+                await bridge(handle.cancel_goal_async(), asyncio.get_running_loop(), self.settings.command_timeout)
+            return CommandResult(accepted=True, reason=None, mission=self.store.mission(robot_id))
         if handle is None:
             return CommandResult(accepted=False, reason='mission has no Nav2 goal handle')
+        self.intent.pop(current.id, None)
         await bridge(handle.cancel_goal_async(), asyncio.get_running_loop(), self.settings.command_timeout)
         return CommandResult(accepted=True, reason=None, mission=self.store.mission(robot_id))
+
+    # ---------------------------------------------------------------- fleet coordination
+    async def coordinate(self):
+        """One coordination step (called periodically by the API loop)."""
+        view = self.store.coordination_view()
+        if view is None:
+            return
+        sim, entities, missions, plans = view
+        actions, waiting = self.traffic.step(sim, entities, missions, plans)
+        for robot, info in waiting.items():
+            m = missions.get(robot)
+            fields = waiting_fields(info)
+            if m is not None and m.status == 'waiting' and any(getattr(m, k) != v for k, v in fields.items()):
+                self.store.update_mission(self._mission(m, **fields))
+        for action in actions:
+            kind, robot = action[0], action[1]
+            m = self.store.mission(robot)
+            if m is None:
+                continue
+            try:
+                if kind in ('dispatch', 'resume') and m.status == 'waiting':
+                    await self._send(m)
+                elif kind == 'hold' and m.status in DRIVING:
+                    await self._stop(m, 'hold', status='waiting', **waiting_fields(action[2]))
+                elif kind == 'block' and m.status in DRIVING+('waiting',):
+                    await self._stop(m, 'block', status='blocked', detail=f'persistent conflict with {action[2].on}',
+                                     **waiting_fields(action[2]))
+            except (asyncio.TimeoutError, RuntimeError) as error:
+                self.node.get_logger().warning(f'coordination {kind} {robot} failed: {error}')
+        stations, corridors = self.traffic.describe(entities)
+        self.store.update_reservations(stations, corridors)
+
+    async def _stop(self, mission, intent, **changes):
+        """Cancel the mission's Nav2 goal on behalf of the coordinator (hold or block)."""
+        handle = self.goals.get(mission.id)
+        stopped = self._mission(mission, **changes)
+        if intent == 'block':
+            stopped = stopped.model_copy(update=WAIT_FIELDS | {k: v for k, v in changes.items() if k in WAIT_FIELDS})
+            self.traffic.mission_ended(mission.robot_id)
+        self.store.update_mission(stopped)
+        if handle is None:
+            if intent == 'block':
+                self._end(stopped, 'blocked', stopped.detail)
+            return
+        self.intent[mission.id] = intent
+        await bridge(handle.cancel_goal_async(), asyncio.get_running_loop(), self.settings.command_timeout)

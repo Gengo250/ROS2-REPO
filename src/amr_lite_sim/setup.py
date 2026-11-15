@@ -19,4 +19,5 @@ setup(name='amr_lite_sim', version='0.1.0', packages=['amr_lite_sim'],
       install_requires=['setuptools'], tests_require=['pytest'], zip_safe=True, maintainer='Gengo',
       maintainer_email='gengo@users.noreply.github.com',
       description='Gazebo-free lite simulation engine', license='Apache-2.0',
-      entry_points={'console_scripts': ['lite_sim = amr_lite_sim.node:main', 'lite_survey = amr_lite_sim.survey:main', 'free_space_relay = amr_lite_sim.free_space_relay:main']})
+      entry_points={'console_scripts': ['lite_sim = amr_lite_sim.node:main', 'lite_survey = amr_lite_sim.survey:main', 'free_space_relay = amr_lite_sim.free_space_relay:main',
+                                          'fleet_tracker = amr_lite_sim.fleet_scan:main']})

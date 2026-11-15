@@ -59,8 +59,58 @@
       "title": "Connection",
       "type": "object"
     },
+    "CorridorReservation": {
+      "additionalProperties": false,
+      "description": "A capacity-1 corridor: the robot cleared to drive through it, robots inside, robots held before it.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "claimed_by": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Claimed By"
+        },
+        "occupants": {
+          "items": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Occupants",
+          "type": "array"
+        },
+        "waiting": {
+          "items": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Waiting",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "claimed_by",
+        "occupants",
+        "waiting"
+      ],
+      "title": "CorridorReservation",
+      "type": "object"
+    },
     "Mission": {
       "additionalProperties": false,
+      "description": "One robot's mission. ``waiting``: accepted but held by fleet coordination (no Nav2 goal running):\nqueued for its station, before a narrow corridor another AMR is using, or yielding to another AMR\n(``waiting_for`` / ``waiting_on`` / ``blocking_robot`` / ``queue_position`` say which).\n``recovering``: Nav2 recovery behaviours under way. ``blocked``: stopped by the coordinator after a\npersistent conflict it could not resolve safely (intervention needed; the robot did not arrive).",
       "properties": {
         "id": {
           "maxLength": 64,
@@ -85,11 +135,14 @@
         "status": {
           "enum": [
             "pending",
+            "waiting",
             "active",
+            "recovering",
             "succeeded",
             "failed",
             "canceled",
-            "rejected"
+            "rejected",
+            "blocked"
           ],
           "title": "Status",
           "type": "string"
@@ -148,6 +201,68 @@
           "format": "date-time",
           "title": "Updated At",
           "type": "string"
+        },
+        "waiting_for": {
+          "anyOf": [
+            {
+              "enum": [
+                "station",
+                "corridor",
+                "robot"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Waiting For"
+        },
+        "waiting_on": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Waiting On"
+        },
+        "blocking_robot": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Blocking Robot"
+        },
+        "queue_position": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Queue Position"
+        },
+        "yields": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Yields",
+          "type": "integer"
         }
       },
       "required": [
@@ -391,6 +506,55 @@
         "age_seconds"
       ],
       "title": "Simulation",
+      "type": "object"
+    },
+    "StationReservation": {
+      "additionalProperties": false,
+      "description": "A station as a single-capacity resource: the robot whose mission to it is under way, robots\nphysically inside its occupancy disc, and the FIFO queue of waiting missions.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "title": "Id",
+          "type": "string"
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Owner"
+        },
+        "occupants": {
+          "items": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Occupants",
+          "type": "array"
+        },
+        "queue": {
+          "items": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Queue",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "owner",
+        "occupants",
+        "queue"
+      ],
+      "title": "StationReservation",
       "type": "object"
     },
     "WorldEntity": {
@@ -711,6 +875,24 @@
       },
       "maxItems": 50,
       "title": "Events",
+      "type": "array"
+    },
+    "stations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/StationReservation"
+      },
+      "maxItems": 64,
+      "title": "Stations",
+      "type": "array"
+    },
+    "corridors": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CorridorReservation"
+      },
+      "maxItems": 128,
+      "title": "Corridors",
       "type": "array"
     }
   },

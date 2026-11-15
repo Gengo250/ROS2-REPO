@@ -79,3 +79,26 @@ def test_robot_namespace_rewrites_only_robot_frames_and_topics():
     assert (amcl['base_frame_id'],amcl['odom_frame_id'],amcl['global_frame_id'],amcl['scan_topic'])==('amr_03/base_link','amr_03/odom','map','/amr_03/scan')
     written=yaml.safe_load(open(robot_params(original,'amr_02','amr_02/')).read())
     assert written==nested
+
+
+def test_fleet_layer_is_added_only_on_request_and_follows_the_namespace():
+    """Multi-robot stacks get the fleet tracking layer (other AMRs) in both costmaps, on the robot's
+    own topic; the validated parameter file is not edited and single-robot stacks are unchanged."""
+    from amr_navigation.launch_support import robot_params, with_fleet_layer
+    original=ROOT/'config/nav2_params.yaml'
+    params=yaml.safe_load(original.read_text())
+    assert robot_params(original)==str(original) and 'fleet_layer' not in str(params)
+    fleet=with_fleet_layer(params)
+    for name,reach in (('local_costmap',8.),('global_costmap',25.)):
+        c=fleet[name][name]['ros__parameters']
+        assert c['plugins']==['static_layer','obstacle_layer','top_obstacle_layer','fleet_layer','inflation_layer']
+        f=c['fleet_layer']['fleet']
+        assert f['topic']=='/fleet/robots' and f['marking'] and f['clearing'] and f['inf_is_valid'] and f['observation_persistence']==0.0
+        assert f['obstacle_max_range']==reach and f['raytrace_max_range']>reach and f['expected_update_rate']>0
+        # The scanner layers are untouched.
+        assert c['obstacle_layer']==params[name][name]['ros__parameters']['obstacle_layer']
+    assert fleet['controller_server']==params['controller_server']
+    root=yaml.safe_load(open(robot_params(original,'','',fleet=True)).read())
+    assert root==fleet
+    amr_02=yaml.safe_load(open(robot_params(original,'amr_02','amr_02/',fleet=True)).read())['amr_02']
+    assert amr_02['local_costmap']['local_costmap']['ros__parameters']['fleet_layer']['fleet']['topic']=='/amr_02/fleet/robots'

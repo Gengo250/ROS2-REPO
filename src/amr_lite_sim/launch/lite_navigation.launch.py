@@ -8,6 +8,9 @@ independent stack (map server, AMCL, Nav2 servers, command guard) in their names
 The campus map's origin is amr_01's spawn pose (SLAM starts there), so amr_01 is initialised at
 map (0, 0, 0); every other robot's spawn is converted world → map through the verified
 campus_registration.json (the same transform the Gateway uses for goals and plans).
+
+With more than one simulated AMR, ``fleet_tracker`` publishes the other robots' footprints to each
+stack's fleet tracking costmap layer (navigation.launch.py fleet_obstacles:=true).
 """
 import json
 import math
@@ -17,6 +20,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def spawn_in_map(registration, pose):
@@ -41,6 +45,12 @@ def setup(context):
     if not registration.get('verified') or registration.get('parent_frame') != 'world' or registration.get('child_frame') != 'map':
         raise RuntimeError(f'Unverified world/map registration {value("registration")}')
     actions = []
+    # Several AMRs: each stack sees the others through the fleet tracking layer (amr_lite_sim
+    # fleet_scan.py). One robot: the validated single-robot parameters, unchanged.
+    fleet_tracking = len(robots) > 1
+    if fleet_tracking:
+        actions.append(Node(package='amr_lite_sim', executable='fleet_tracker', output='screen',
+                            parameters=[{'robots': ','.join(navigated)}]))  # stamps come from the engine state, no /clock needed
     stagger = float(value('stack_stagger'))
     for index, robot in enumerate(navigated):
         x, y, yaw = spawn_in_map(registration, spawns[robot]['pose'])
@@ -52,7 +62,8 @@ def setup(context):
             launch_arguments={'map': value('map'), 'amcl_scan_topic': value('amcl_scan_topic'), 'initialize': 'true',
                               'initial_x': f'{x:.6f}', 'initial_y': f'{y:.6f}', 'initial_yaw': f'{yaw:.6f}',
                               'simulation_backend': 'lite', 'rviz': value('rviz') if robot == navigated[0] else 'false',
-                              'namespace': fleet.namespace(robot), 'frame_prefix': fleet.frame_prefix(robot)}.items())
+                              'namespace': fleet.namespace(robot), 'frame_prefix': fleet.frame_prefix(robot),
+                              'fleet_obstacles': 'true' if fleet_tracking else 'false'}.items())
         actions.append(TimerAction(period=index*stagger, actions=[include]) if index and stagger > 0 else include)
     return actions
 

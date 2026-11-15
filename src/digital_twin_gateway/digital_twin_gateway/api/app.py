@@ -1,5 +1,6 @@
 """FastAPI lifespan owns ROS, snapshot publication and client cleanup."""
 import asyncio
+import logging
 import json
 from contextlib import asynccontextmanager, suppress
 from pathlib import Path
@@ -30,6 +31,14 @@ def scene_stations(path):
     return {s['id']: s for s in json.loads(Path(path).read_text()).get('stations', ())}
 
 
+def scene_corridors(path):
+    """Navigation corridors with their capacity (fleet coordination of narrow passages)."""
+    from ..world.traffic import Corridor
+    if path is None or not Path(path).is_file():
+        return ()
+    return tuple(Corridor.from_scene(c) for c in json.loads(Path(path).read_text()).get('navigation', {}).get('corridors', ()))
+
+
 def create_app(settings=None, runtime_factory=None, manager=None, world=None):
     settings = settings or Settings.from_env()
     manager = manager or StateManager(settings)
@@ -40,6 +49,7 @@ def create_app(settings=None, runtime_factory=None, manager=None, world=None):
             default_path('amr_navigation', 'maps/campus_registration.json')
         world = WorldStore(settings, world_registration.load(registration_path))
     world.stations = scene_stations(scene_path)
+    world.corridors = scene_corridors(scene_path)
     if runtime_factory is None:
         from ..ros.node import RosRuntime
         runtime_factory = RosRuntime
@@ -82,8 +92,20 @@ def create_app(settings=None, runtime_factory=None, manager=None, world=None):
                     app.state.world_latest = world.snapshot()
                     hub_world.publish(app.state.world_latest.model_dump_json())
 
+            async def coordinate():
+                # Fleet coordination (stations, narrow corridors, conflicts): 2 Hz on the API loop,
+                # decisions on simulation time; it only sends and cancels Nav2 goals.
+                commands = getattr(runtime, 'commands', None)
+                while commands is not None and hasattr(commands, 'coordinate'):
+                    await asyncio.sleep(settings.coordination_period)
+                    try:
+                        await commands.coordinate()
+                    except Exception:
+                        logging.exception('fleet coordination step failed')
+
             tasks = [asyncio.create_task(publish(), name='twin-publisher'),
-                     asyncio.create_task(publish_world(), name='world-publisher')]
+                     asyncio.create_task(publish_world(), name='world-publisher'),
+                     asyncio.create_task(coordinate(), name='fleet-coordination')]
             app.state.runtime = runtime
             yield
         finally:

@@ -66,6 +66,7 @@ class Settings(BaseModel):
     # Robots of the lite twin with an independent navigation stack (world-state v1 missions/plans).
     fleet: tuple[FleetRobot, ...] = DEFAULT_FLEET
     command_timeout: float = Field(default=5, gt=0, le=30)
+    coordination_period: float = Field(default=0.5, gt=0, le=5)
 
     @model_validator(mode='after')
     def validate_config(self):

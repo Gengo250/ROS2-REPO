@@ -36,11 +36,45 @@ def rewrite_for_robot(params, namespace, frame_prefix):
     return {ns: tree} if ns else tree
 
 
-def robot_params(path, namespace='', frame_prefix=''):
-    """Parameter file for a robot: the original file in the root namespace, else a rewritten copy."""
-    if not namespace.strip('/') and not frame_prefix:
+# Fleet tracking (multi-robot lite twin, amr_lite_sim/fleet_scan.py): the other AMRs' footprints from
+# the engine state, as an extra obstacle layer of both costmaps. Its own layer, so its clearing never
+# touches what the scanners observed; marking and clearing over 360 degrees, so a robot that drives
+# away leaves no ghost; fail-closed freshness (costmap not current when fleet data stops).
+FLEET_TOPIC = '/fleet/robots'
+
+
+def fleet_layer(max_range):
+    return {'plugin': 'nav2_costmap_2d::ObstacleLayer', 'enabled': True, 'footprint_clearing_enabled': True,
+            'observation_sources': 'fleet',
+            'fleet': {'topic': FLEET_TOPIC, 'data_type': 'LaserScan', 'marking': True, 'clearing': True,
+                      'min_obstacle_height': -0.1, 'max_obstacle_height': 2.0, 'obstacle_min_range': 0.0,
+                      'obstacle_max_range': max_range, 'raytrace_min_range': 0.0, 'raytrace_max_range': max_range+1.,
+                      'inf_is_valid': True, 'observation_persistence': 0.0, 'expected_update_rate': 0.5}}
+
+
+def with_fleet_layer(params):
+    """Copy of the Nav2 parameter tree with ``fleet_layer`` before the inflation layer of both costmaps
+    (local: the rolling window's reach; global: the planner sees robots up to 25 m away)."""
+    tree = yaml.safe_load(yaml.safe_dump(params))
+    for name, reach in (('local_costmap', 8.), ('global_costmap', 25.)):
+        costmap = tree[name][name]['ros__parameters']
+        plugins = list(costmap['plugins'])
+        if 'fleet_layer' not in plugins:
+            plugins.insert(plugins.index('inflation_layer'), 'fleet_layer')
+        costmap['plugins'] = plugins
+        costmap['fleet_layer'] = fleet_layer(reach)
+    return tree
+
+
+def robot_params(path, namespace='', frame_prefix='', fleet=False):
+    """Parameter file for a robot: the original file in the root namespace, else a rewritten copy
+    (``fleet``: with the fleet tracking layer, Nav2 parameter files only)."""
+    if not namespace.strip('/') and not frame_prefix and not fleet:
         return str(path)
-    data = rewrite_for_robot(yaml.safe_load(Path(path).read_text()), namespace, frame_prefix)
+    data = yaml.safe_load(Path(path).read_text())
+    if fleet:
+        data = with_fleet_layer(data)
+    data = rewrite_for_robot(data, namespace, frame_prefix)
     handle, name = tempfile.mkstemp(prefix=f'{namespace.strip("/")}_{Path(path).stem}_', suffix='.yaml')
     with os.fdopen(handle, 'w') as out:
         yaml.safe_dump(data, out, sort_keys=False)

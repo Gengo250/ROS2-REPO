@@ -72,18 +72,48 @@ class Simulation(Model):
     age_seconds: Number | None
 
 
+MissionStatus = Literal['pending', 'waiting', 'active', 'recovering', 'succeeded', 'failed', 'canceled', 'rejected', 'blocked']
+
+
 class Mission(Model):
+    """One robot's mission. ``waiting``: accepted but held by fleet coordination (no Nav2 goal running):
+    queued for its station, before a narrow corridor another AMR is using, or yielding to another AMR
+    (``waiting_for`` / ``waiting_on`` / ``blocking_robot`` / ``queue_position`` say which).
+    ``recovering``: Nav2 recovery behaviours under way. ``blocked``: stopped by the coordinator after a
+    persistent conflict it could not resolve safely (intervention needed; the robot did not arrive)."""
     id: Short
     robot_id: Short
     destination: Short
     strategy: Literal['direct']
-    status: Literal['pending', 'active', 'succeeded', 'failed', 'canceled', 'rejected']
+    status: MissionStatus
     detail: Annotated[str, Field(max_length=256)] | None
     goal: tuple[Number, Number, Number]
     distance_remaining_m: Number | None
     recoveries: int = Field(ge=0)
     created_at: AwareDatetime
     updated_at: AwareDatetime
+    waiting_for: Literal['station', 'corridor', 'robot'] | None = None
+    waiting_on: Short | None = None
+    blocking_robot: Short | None = None
+    queue_position: int | None = Field(default=None, ge=1)
+    yields: int = Field(default=0, ge=0)
+
+
+class StationReservation(Model):
+    """A station as a single-capacity resource: the robot whose mission to it is under way, robots
+    physically inside its occupancy disc, and the FIFO queue of waiting missions."""
+    id: Short
+    owner: Short | None
+    occupants: tuple[Short, ...] = Field(max_length=16)
+    queue: tuple[Short, ...] = Field(max_length=16)
+
+
+class CorridorReservation(Model):
+    """A capacity-1 corridor: the robot cleared to drive through it, robots inside, robots held before it."""
+    id: Short
+    claimed_by: Short | None
+    occupants: tuple[Short, ...] = Field(max_length=16)
+    waiting: tuple[Short, ...] = Field(max_length=16)
 
 
 class RobotNavigation(Model):
@@ -119,6 +149,8 @@ class WorldState(Model):
     robots: tuple[RobotNavigation, ...] = Field(max_length=16)
     obstacles: tuple[WorldObstacle, ...] = Field(max_length=256)
     events: tuple[WorldEvent, ...] = Field(max_length=50)
+    stations: tuple[StationReservation, ...] = Field(default=(), max_length=64)
+    corridors: tuple[CorridorReservation, ...] = Field(default=(), max_length=128)
 
 
 class ObstacleRequest(Model):

@@ -2,6 +2,7 @@
 
 ``namespace``/``frame_prefix`` start the stack for one robot of a multi-robot lite twin (e.g.
 namespace:=amr_02 frame_prefix:=amr_02/); empty (default) is the single-robot stack, unchanged.
+``fleet_obstacles:=true`` adds the fleet tracking costmap layer (other AMRs, amr_lite_sim fleet_tracker).
 """
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, Shutdown
@@ -13,7 +14,7 @@ from amr_navigation.launch_support import share, localization_actions, robot_par
 def start(context):
     namespace=LaunchConfiguration('namespace').perform(context).strip('/');prefix=LaunchConfiguration('frame_prefix').perform(context)
     exclusive_mode(namespace)
-    config=robot_params(share()/'config/nav2_params.yaml',namespace,prefix)
+    config=robot_params(share()/'config/nav2_params.yaml',namespace,prefix,fleet=LaunchConfiguration('fleet_obstacles').perform(context)=='true')
     nodes=localization_actions(LaunchConfiguration('map').perform(context),LaunchConfiguration('amcl_scan_topic').perform(context),namespace,prefix)
     for package,executable in [('nav2_controller','controller_server'),('nav2_planner','planner_server'),
                               ('nav2_behaviors','behavior_server'),('nav2_bt_navigator','bt_navigator')]:
@@ -43,4 +44,5 @@ def generate_launch_description():
         DeclareLaunchArgument('initial_yaw',default_value='0'),DeclareLaunchArgument('rviz',default_value='false'),
         DeclareLaunchArgument('namespace',default_value='',description='Robot namespace (multi-robot lite twin); empty: root'),
         DeclareLaunchArgument('frame_prefix',default_value='',description='TF frame prefix of that robot, e.g. amr_02/'),
+        DeclareLaunchArgument('fleet_obstacles',default_value='false',choices=['true','false'],description='Costmap layer with the other AMRs (<ns>/fleet/robots, multi-robot lite twin)'),
         OpaqueFunction(function=start)])

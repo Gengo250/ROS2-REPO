@@ -10,7 +10,8 @@ import math
 from threading import Lock
 from time import monotonic, time
 from uuid import uuid4
-from .models import Connection, RobotNavigation, Simulation, WorldEntity, WorldEvent, WorldObstacle, WorldState
+from .models import (Connection, CorridorReservation, RobotNavigation, Simulation, StationReservation, WorldEntity,
+                     WorldEvent, WorldObstacle, WorldState)
 
 FIELDS = ('free', 'warning', 'protective')
 
@@ -35,6 +36,7 @@ class WorldStore:
         self.plans = {}             # robot id → (receipt, world points, omitted reason)
         self.interlocks = {}        # robot id → (receipt, message)
         self.missions = {}
+        self.reservations = ((), ())  # (stations, corridors) from the fleet coordinator
 
     def set_ros_initialized(self, value):
         with self.lock:
@@ -97,6 +99,22 @@ class WorldStore:
         with self.lock:
             return self.missions.get(robot_id)
 
+    def update_reservations(self, stations, corridors):
+        items = (tuple(StationReservation(**s) for s in stations), tuple(CorridorReservation(**c) for c in corridors))
+        with self.lock:
+            self.reservations = items
+
+    def coordination_view(self):
+        """Inputs of one fleet coordination step: (sim_time, entities, missions, plans) from the latest
+        online engine state; plans as robot → (age seconds, world points). None without fresh data."""
+        with self.lock:
+            now = self.timer()
+            receipt, engine = self.engine if self.engine else (None, None)
+            if engine is None or self.availability(receipt, now) != 'online' or engine['paused']:
+                return None
+            plans = {r: (now-p[0], p[1]) for r, p in self.plans.items()}
+            return engine['sim_time'], engine['entities'], dict(self.missions), plans
+
     # ------------------------------------------------------------------ output (asyncio thread)
     def snapshot(self):
         with self.lock:
@@ -137,7 +155,8 @@ class WorldStore:
                                       simulation=simulation_availability, navigation=fleet_availability(availabilities, self.availability(None, now)),
                                       registration='verified' if self.registration else 'missing'),
                 entities=engine['entities'] if engine else (), robots=tuple(robots),
-                obstacles=engine['obstacles'] if engine else (), events=tuple(self.events))
+                obstacles=engine['obstacles'] if engine else (), events=tuple(self.events),
+                stations=self.reservations[0], corridors=self.reservations[1])
 
 
 def fleet_availability(per_robot, default):
