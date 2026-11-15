@@ -30,11 +30,13 @@ export class Minimap {
     this.background = bg;
   }
 
-  draw(marks: MiniMark[], path: [number, number][] = []) {
+  /** ``paths``: one planned route per AMR (the selected robot's is drawn brighter). */
+  draw(marks: MiniMark[], paths: { path: [number, number][]; sel?: boolean }[] = []) {
     const ctx = this.ctx, X = this.X, Y = this.Y;
     if (this.background) ctx.drawImage(this.background, 0, 0); else ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    if (path.length > 1) {
-      ctx.strokeStyle = '#5bf0d3'; ctx.lineWidth = 2; ctx.setLineDash([4, 3]); ctx.beginPath();
+    for (const { path, sel } of paths) {
+      if (path.length < 2) continue;
+      ctx.strokeStyle = sel ? '#b6fff0' : '#5bf0d3'; ctx.lineWidth = sel ? 2.6 : 2; ctx.setLineDash([4, 3]); ctx.beginPath();
       path.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.stroke(); ctx.setLineDash([]);
     }
     for (const p of marks) {

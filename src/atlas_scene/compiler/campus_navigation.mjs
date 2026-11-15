@@ -50,8 +50,15 @@ const mid = (a, b) => (a+b)/2;
 const aisleXs = rows => rows.slice(0, -1).map((x, i) => mid(x, rows[i+1]));
 
 export const navigation = {
-  // Home pose: the open central hall, facing north along the spine.
-  spawns: [{ id: 'amr_01_spawn', robot_id: 'amr_01', active: true, pose: [2.0, 0.0, 0.0, 0, 0, Math.PI/2] }],
+  // Home poses: the open central hall, facing north along the spine. amr_01 is the reference
+  // robot (the SLAM map is anchored at its spawn). amr_02 and amr_03 stand 7 m to the west and
+  // east, outside the forklift lanes of the spine (x = -1 and x = 5, 4 m away), 13 m and more from
+  // every worker path, on free cells of the installed map and clear of structure by 0.6 m.
+  spawns: [
+    { id: 'amr_01_spawn', robot_id: 'amr_01', active: true, pose: [2.0, 0.0, 0.0, 0, 0, Math.PI/2] },
+    { id: 'amr_02_spawn', robot_id: 'amr_02', active: true, pose: [-5.0, 0.0, 0.0, 0, 0, Math.PI/2] },
+    { id: 'amr_03_spawn', robot_id: 'amr_03', active: true, pose: [9.0, 0.0, 0.0, 0, 0, Math.PI/2] },
+  ],
   // Goal poses are where the robot centre stops. Every station is checked for a free
   // footprint plus clearance by the atlas_scene tests.
   stations: [

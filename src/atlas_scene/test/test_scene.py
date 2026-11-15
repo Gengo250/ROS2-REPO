@@ -74,6 +74,29 @@ def test_stations_and_spawn_have_free_footprints(scene):
         assert not (occupied & needed).any(), item['id']
 
 
+def _segment_distance(p, a, b):
+    p, a, b = (np.asarray(v, float) for v in (p, a, b))
+    d = b-a
+    t = np.clip(np.dot(p-a, d)/max(np.dot(d, d), 1e-12), 0, 1)
+    return float(np.linalg.norm(p-a-t*d))
+
+
+def test_three_active_robots_with_separate_clear_spawns(scene):
+    spawns = [s for s in scene.raw['spawns'] if s['active']]
+    assert [s['robot_id'] for s in spawns] == ['amr_01', 'amr_02', 'amr_03']
+    assert len({s['id'] for s in scene.raw['spawns']}) == len(scene.raw['spawns'])
+    # amr_01 stays where the SLAM map is anchored (campus_registration.json is its inverse).
+    assert spawns[0]['pose'] == [2, 0, 0, 0, 0, pytest.approx(np.pi/2)]
+    xy = [np.array(s['pose'][:2], float) for s in spawns]
+    assert min(np.linalg.norm(a-b) for i, a in enumerate(xy) for b in xy[i+1:]) >= 3.0
+    lanes = [(lane['points'][i], lane['points'][(i+1) % len(lane['points'])])
+             for lane in scene.raw['lanes'].values() for i in range(len(lane['points']))]
+    paths = [(w['path'][i], w['path'][i+1]) for w in scene.raw['agents']['workers'] for i in range(len(w['path'])-1)]
+    for p in xy[1:]:   # the added robots do not park on forklift lanes or worker paths
+        assert min(_segment_distance(p, a, b) for a, b in lanes) >= 2.5
+        assert min(_segment_distance(p, a, b) for a, b in paths) >= 3.0
+
+
 def test_rack_envelopes_block_scanners_and_bodies(scene):
     # Mid-bay point of a rack: no upright is drawn there, but the rack envelope (prototype
     # solid) is what bodies hit and floor scanners see, as in the ATLAS prototype.

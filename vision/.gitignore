@@ -1,0 +1,8 @@
+# Generated datasets, downloaded weights and training runs are not versioned (see README).
+.venv/
+data/
+weights/
+runs/
+__pycache__/
+*.pyc
+.pytest_cache/

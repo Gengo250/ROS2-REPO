@@ -34,8 +34,9 @@
  <button class="followbtn" id="clearObjs">Remover objetos posicionados</button>
  <div class="traffic-grid"><div><b id="cntStops">0</b><span id="lblStops">Paradas preventivas</span></div><div><b id="cntYield">0</b><span id="lblYield">Passagens cedidas</span></div><div><b id="cntDetour">0</b><span id="lblDetour">Desvios de rota</span></div><div><b id="cntHits" class="hits">0</b>Colisões</div></div>
  <div class="eventlog" id="eventlog"><div class="empty">Nenhuma ocorrência registrada ainda.</div></div>
- <div class="liveonly"><div class="separator"></div><div class="sidetitle">MISSÕES DO AMR <small>NAV2</small></div>
-  <div class="mission-row"><select id="missionTarget" aria-label="Destino da missão"></select><button id="missionSend">Enviar</button><button id="missionCancel" class="secondary">Cancelar</button></div>
+ <div class="liveonly"><div class="separator"></div><div class="sidetitle">MISSÕES DOS AMRs <small>NAV2 POR ROBÔ</small></div>
+  <div class="mission-row"><select id="missionRobot" aria-label="Robô da missão" class="robot-select"></select><select id="missionTarget" aria-label="Destino da missão"></select></div>
+  <div class="mission-row"><button id="missionSend">Enviar</button><button id="missionCancel" class="secondary">Cancelar</button></div>
   <div class="mission-status" id="missionStatus">Nenhuma missão ativa.</div>
   <button class="followbtn" id="missionOnboard">Ver pela câmera do AMR <span class="key">V</span></button></div>
  <div class="separator"></div><div class="sidetitle">EXPLORAR SETORES</div><div class="zone-buttons" id="zones"></div>

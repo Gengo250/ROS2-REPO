@@ -1,0 +1,33 @@
+# YOLO26n transfer learning on the synthetic onboard-camera dataset (scripts/train.py).
+# Every run copies this file, the resolved arguments, the dataset version and software versions
+# into runs/results/<date>_<nnn>/.
+model: weights/yolo26n.pt        # COCO-pretrained YOLO26n (downloaded by Ultralytics on first use)
+data: configs/dataset.yaml
+task: detect
+imgsz: 640
+epochs: 60
+batch: 8                         # GTX 1650 (3.6 GiB usable): 8 = 2.7 GiB in FP32 (AutoBatch profile), 16 runs out of memory
+patience: 15
+seed: 42
+deterministic: true
+device: auto                     # cuda:0 when PyTorch sees CUDA, else cpu
+workers: 4
+cache: ram                       # 2.1k images at 640x480 fit in RAM
+optimizer: auto
+cos_lr: false
+close_mosaic: 10
+# Augmentation: Ultralytics defaults minus geometry the onboard camera cannot produce. The camera
+# is fixed on the robot (no roll/pitch/shear/perspective); left-right mirroring is plausible in
+# the symmetric aisles; no vertical flips; colour jitter covers the day/night shader modes.
+degrees: 0.0
+shear: 0.0
+perspective: 0.0
+flipud: 0.0
+fliplr: 0.5
+mosaic: 1.0
+mixup: 0.0
+scale: 0.4
+translate: 0.1
+hsv_h: 0.015
+hsv_s: 0.5
+hsv_v: 0.4

@@ -18,6 +18,13 @@ from tf2_msgs.msg import TFMessage
 RAW = {
     '/imu/data': 'sensor_msgs/msg/Imu',
     '/camera/image_raw': 'sensor_msgs/msg/Image',
+    # Multi-robot lite twin (Phase 7): the other robots' sensors and the perception outputs.
+    '/amr_02/scan': 'sensor_msgs/msg/LaserScan', '/amr_03/scan': 'sensor_msgs/msg/LaserScan',
+    '/amr_02/odom': 'nav_msgs/msg/Odometry', '/amr_03/odom': 'nav_msgs/msg/Odometry',
+    '/amr_02/camera/image_raw': 'sensor_msgs/msg/Image', '/amr_03/camera/image_raw': 'sensor_msgs/msg/Image',
+    '/perception/detections': 'vision_msgs/msg/Detection2DArray',
+    '/amr_02/perception/detections': 'vision_msgs/msg/Detection2DArray',
+    '/amr_03/perception/detections': 'vision_msgs/msg/Detection2DArray',
     '/camera/depth/image_raw': 'sensor_msgs/msg/Image',
     '/camera/points': 'sensor_msgs/msg/PointCloud2',
     '/warehouse/camera_01/image_raw': 'sensor_msgs/msg/Image',

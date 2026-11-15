@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>ATLAS camera worker</title>
+<style>body{margin:0;background:#04080e;color:#9fb3c8;font:12px system-ui,sans-serif}canvas{position:fixed;left:0;top:0;width:8px;height:8px}#status{padding:16px 8px 8px}</style>
+</head>
+<body>
+<!-- Onboard-camera render worker (src/camera/worker.ts). Frames are rendered off screen into render
+     targets at the requested resolution; the canvas only hosts the WebGL context. -->
+<canvas id="gl" width="8" height="8"></canvas><div id="status">starting</div>
+<script type="module" src="/src/camera/worker.ts"></script>
+</body>
+</html>

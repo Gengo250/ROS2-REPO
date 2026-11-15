@@ -128,3 +128,79 @@ def test_world_routes_commands_and_socket(tmp_path):
             assert_schema(first, 'world-state.v1')
             assert socket.receive_json()['sequence'] > first['sequence']
     assert ('remove', '') in fake.calls
+
+
+def test_fleet_navigation_is_per_robot(store):
+    """Each AMR has its own interlock, plan and availability; nothing is shared or reattributed."""
+    s, timer = store
+    amr = engine()['entities'][0]
+    s.update_engine(engine(entities=[amr, dict(amr, id='amr_02', x=-5.), dict(amr, id='amr_03', x=9.)]))
+    s.update_interlock('amr_02', 'ready')
+    s.update_plan('amr_03', [(0., 0.), (0., 4.)], 'map')
+    snap = s.snapshot()
+    assert_schema(snap.model_dump(mode='json'), 'world-state.v1')
+    robots = {r.id: r for r in snap.robots}
+    assert set(robots) == {'amr_01', 'amr_02', 'amr_03'}
+    assert robots['amr_02'].interlock_ready and robots['amr_02'].interlock_availability == 'online'
+    assert robots['amr_01'].interlock is None and not robots['amr_01'].interlock_ready
+    assert robots['amr_03'].path and robots['amr_01'].path == () and robots['amr_02'].path == ()
+    # Fleet navigation availability is the least available robot's (amr_01/amr_03 never reported).
+    assert snap.connection.navigation == 'unknown'
+    for robot in ('amr_01', 'amr_03'):
+        s.update_interlock(robot, 'Missing or stale scan')
+    assert s.snapshot().connection.navigation == 'online'
+    timer.value = 3.
+    s.update_interlock('amr_01', 'ready')
+    snap = s.snapshot()
+    assert {r.id: r.interlock_availability for r in snap.robots} == {'amr_01': 'online', 'amr_02': 'stale', 'amr_03': 'stale'}
+    assert snap.connection.navigation == 'stale'
+
+
+def test_fleet_settings_reject_duplicates():
+    from pydantic import ValidationError
+    from digital_twin_gateway.config import FleetRobot
+    assert [r.topic('plan') for r in Settings().fleet] == ['/plan', '/amr_02/plan', '/amr_03/plan']
+    with pytest.raises(ValidationError):
+        Settings(fleet=(FleetRobot(id='amr_01'), FleetRobot(id='amr_01', namespace='x')))
+    with pytest.raises(ValidationError):
+        Settings(fleet=(FleetRobot(id='amr_01'), FleetRobot(id='amr_02')))   # both on the root topics
+
+
+def test_missions_go_to_the_robots_own_nav2(store):
+    """start_mission sends the goal to the requested robot's NavigateToPose client only."""
+    import asyncio
+    from types import SimpleNamespace
+    pytest.importorskip('nav2_msgs')
+    from nav2_msgs.action import NavigateToPose
+    from digital_twin_gateway.ros.world import Commands
+    from digital_twin_gateway.world.models import MissionRequest
+    s, _ = store
+    sent = []
+
+    class Client:
+        def __init__(self, robot):
+            self.robot = robot
+
+        def server_is_ready(self):
+            return True
+
+        def send_goal_async(self, goal, feedback_callback=None):
+            sent.append((self.robot, goal.pose.pose.position.x, goal.pose.pose.position.y))
+            future = SimpleNamespace(add_done_callback=lambda cb: cb(future), exception=lambda: None,
+                                     result=lambda: SimpleNamespace(accepted=False))
+            return future
+
+    commands = object.__new__(Commands)
+    from builtin_interfaces.msg import Time
+    commands.node = SimpleNamespace(get_clock=lambda: SimpleNamespace(now=lambda: SimpleNamespace(to_msg=Time)))
+    commands.store, commands.settings, commands.NavigateToPose, commands.goals = s, Settings(), NavigateToPose, {}
+    commands.stations = {'dock_01': {'pose': [2., 4., 0, 0, 0, 0]}}
+    commands.navigate = {r.id: Client(r.id) for r in Settings().fleet}
+
+    async def run(robot):
+        return await commands.start_mission(MissionRequest(robot_id=robot, destination='dock_01'))
+    result = asyncio.run(run('amr_02'))
+    assert sent == [('amr_02', pytest.approx(4.), pytest.approx(0.))]   # world (2, 4) → map (4, 0)
+    assert not result.accepted and s.mission('amr_02').status == 'rejected' and s.mission('amr_01') is None
+    unknown = asyncio.run(run('amr_09'))
+    assert not unknown.accepted and 'unknown robot' in unknown.reason and len(sent) == 1

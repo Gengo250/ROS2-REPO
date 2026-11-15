@@ -2,7 +2,9 @@
 import time
 import rclpy
 
-def exclusive_mode():
+def exclusive_mode(namespace=''):
+    """Refuse a second SLAM/localization/navigation stack in the same namespace (one per robot)."""
+    namespace='/'+namespace.strip('/') if namespace.strip('/') else '/'
     context = rclpy.Context()
     rclpy.init(context=context)
     node = rclpy.create_node('navigation_launch_check', context=context)
@@ -12,9 +14,10 @@ def exclusive_mode():
         deadline = time.monotonic()+3.
         while time.monotonic()<deadline:
             executor.spin_once(timeout_sec=.1)
-        conflicts = set(node.get_node_names()) & {'slam_toolbox','amcl','map_server','bt_navigator','controller_server'}
+        present = {name for name, ns in node.get_node_names_and_namespaces() if ns == namespace}
+        conflicts = present & {'slam_toolbox','amcl','map_server','bt_navigator','controller_server'}
         if conflicts:
-            raise RuntimeError('Stop the existing mapping/localization/navigation mode first: '+', '.join(sorted(conflicts)))
+            raise RuntimeError(f'Stop the existing mapping/localization/navigation mode in {namespace} first: '+', '.join(sorted(conflicts)))
     finally:
         executor.shutdown()
         node.destroy_node()

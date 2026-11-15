@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Sample per-process CPU/RSS (grouped), Intel GPU busy (RC6 residency), i915 per-client
-render-engine busy time from /proc/<pid>/fdinfo, and nouveau runtime power state.
+render-engine busy time from /proc/<pid>/fdinfo, nouveau runtime power state and, with the NVIDIA
+driver, GPU utilisation, memory and power plus per-process GPU memory (nvidia-smi).
 Read-only; writes one JSON report.
 """
 import argparse
 import json
 import os
 import signal
+import subprocess
 import time
 from pathlib import Path
 
@@ -21,6 +23,11 @@ GROUPS = {
     'command_guard': ('command_guard',),
     'gateway': ('digital_twin_gateway/lib', '/gateway', 'simulation_pose_adapter', 'uvicorn'),
     'lite_engine': ('lite_sim', 'amr_lite'),
+    # Phase 7 vision (before 'browser': the camera worker is a Chromium process too).
+    'perception': ('serve_perception',),
+    # Every process of the camera worker carries its profile directory (children lack the URL).
+    'camera_worker': ('atlas-camera-worker-', 'camera.html'),
+    'dataset_generation': ('generate_dataset.py', 'evaluate_scenarios.py'),
     'browser': ('chrome', 'chromium', 'headless_shell'),
     'vite': ('vite',),
     'static_tf': ('static_transform_publisher',),
@@ -73,6 +80,24 @@ def snapshot():
     return out
 
 
+def nvidia_sample():
+    """(device row, {pid: MiB}) from nvidia-smi, or (None, {}) without the NVIDIA driver."""
+    try:
+        dev = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu,memory.used,power.draw,temperature.gpu',
+                              '--format=csv,noheader,nounits'], capture_output=True, text=True, timeout=5, check=True).stdout
+        apps = subprocess.run(['nvidia-smi', '--query-compute-apps=pid,used_memory', '--format=csv,noheader,nounits'],
+                              capture_output=True, text=True, timeout=5, check=True).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None, {}
+    util, mem, power, temp = (float(x) if x.strip() not in ('[N/A]', 'N/A') else None for x in dev.strip().split(',')[:4])
+    per_pid = {}
+    for line in apps.strip().splitlines():
+        pid, used = (x.strip() for x in line.split(','))
+        if pid.isdigit() and used.replace('.', '').isdigit():
+            per_pid[int(pid)] = float(used)
+    return {'nvidia_gpu_util_percent': util, 'nvidia_mem_used_mib': mem, 'nvidia_power_w': power, 'nvidia_temp_c': temp}, per_pid
+
+
 def read_int(path):
     try:
         return int(path.read_text())
@@ -102,8 +127,12 @@ def main():
         now, current = time.monotonic(), snapshot()
         dt = now-t_before
         row = {'t': now-start, 'groups': {}}
+        nvidia, nvidia_pids = nvidia_sample()
+        if nvidia:
+            row.update(nvidia)
         for pid, (group, ticks, rss, gpu) in current.items():
-            g = row['groups'].setdefault(group, {'cpu_percent': 0., 'rss_mib': 0., 'intel_gpu_percent': 0.})
+            g = row['groups'].setdefault(group, {'cpu_percent': 0., 'rss_mib': 0., 'intel_gpu_percent': 0., 'nvidia_mem_mib': 0.})
+            g['nvidia_mem_mib'] += nvidia_pids.get(pid, 0.)
             if pid in before:
                 g['cpu_percent'] += 100.*(ticks-before[pid][1])/TICK/dt
                 g['intel_gpu_percent'] += 100.*(gpu-before[pid][3])/1e9/dt
@@ -129,8 +158,9 @@ def main():
         values = [r['groups'][group] for r in rows if group in r['groups']]
         if values:
             summary[group] = {k: {'mean': sum(v[k] for v in values)/len(values), 'max': max(v[k] for v in values)}
-                              for k in ('cpu_percent', 'rss_mib', 'intel_gpu_percent')}
-    for key in ('system_cpu_percent', 'intel_gpu_busy_percent', 'intel_gpu_freq_mhz', 'system_mem_used_mib'):
+                              for k in ('cpu_percent', 'rss_mib', 'intel_gpu_percent', 'nvidia_mem_mib')}
+    for key in ('system_cpu_percent', 'intel_gpu_busy_percent', 'intel_gpu_freq_mhz', 'system_mem_used_mib',
+                'nvidia_gpu_util_percent', 'nvidia_mem_used_mib', 'nvidia_power_w', 'nvidia_temp_c'):
         values = [r[key] for r in rows if r.get(key) is not None]
         if values:
             summary[key] = {'mean': sum(values)/len(values), 'max': max(values)}

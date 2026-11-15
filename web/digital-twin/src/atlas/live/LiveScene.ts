@@ -9,6 +9,8 @@ import type { RenderedEntity } from './LiveWorld';
 import type { WorldObstacle } from '../../core/types/world-state';
 
 const FIELD_INDEX = { free: 0, warning: 1, protective: 2 } as const;
+/** One AMR's navigation overlay: its own Nav2 plan and the goal of its active mission. */
+export interface RobotRoute { path: [number, number][]; goal: number[] | null }
 const AMR = { L: .975, W: .70, cx: .0125 };
 
 interface Animator {
@@ -54,12 +56,15 @@ export class LiveScene {
     this.forklifts = new Map(scene.agents.forklifts.map((f, rank) => [f.id, { color: f.color, L: f.length, W: f.width, cx: f.centre_offset, rank: rank + 8 }]));
   }
 
-  draw(a: DynamicBatch, entities: RenderedEntity[], obstacles: WorldObstacle[], path: [number, number][], goal: number[] | null,
+  /** ``routes``: Nav2 plan and active goal of each AMR, keyed by robot id (world frame). */
+  draw(a: DynamicBatch, entities: RenderedEntity[], obstacles: WorldObstacle[], routes: Map<string, RobotRoute>,
        opts: { people: boolean; vehicles: boolean; fields: boolean; routes: boolean; selected: string | null; eye: number[]; time: number;
-         /** Robot seen from its own onboard camera: its field outline would sit on the lens. */ onboard: string | null }) {
-    const now = performance.now() / 1000, dt = Math.min(.1, Math.max(0, now - this.lastFrame));
+         /** Robot seen from its own onboard camera: its field outline would sit on the lens. */ onboard: string | null;
+         /** Animation step in seconds (camera capture: simulation time between snapshots); default: wall time since the last frame. */ dt?: number }) {
+    const now = performance.now() / 1000, dt = opts.dt ?? Math.min(.1, Math.max(0, now - this.lastFrame));
     this.lastFrame = now;
-    if (opts.routes && path.length > 1) {
+    if (opts.routes) for (const { path, goal } of routes.values()) {
+      if (path.length < 2) continue;
       // Seen from the onboard lens (0.26 m high) the raised strip would fill the image: draw it on the floor.
       const [width, height] = opts.onboard ? [.08, .02] : [.14, .17];
       for (let i = 0; i + 1 < path.length; i++) segDyn(a, path[i]![0], -path[i]![1], path[i + 1]![0], -path[i + 1]![1], width, height, '#53debc', .7);
@@ -81,7 +86,7 @@ export class LiveScene {
         const r = { pose: { x: e.x, z: -e.y, yaw: e.yaw }, color: '#53debc', field: FIELD_INDEX[e.field_state], emergT: e.state === 'blocked' ? 1 : 0,
           lift: false, rank: 0, S: AMR, prot: e.field_length };
         drawRobotTrue(a, r, opts.time);
-        if (opts.fields && e.id !== opts.onboard) drawFieldSamples(a, r, samplesAhead(e.x, e.y, e.yaw, e.field_length + 1, path));
+        if (opts.fields && e.id !== opts.onboard) drawFieldSamples(a, r, samplesAhead(e.x, e.y, e.yaw, e.field_length + 1, routes.get(e.id)?.path ?? null));
       } else if (e.type === 'forklift') {
         if (!opts.vehicles) continue;
         const spec = this.forklifts.get(e.id) ?? { color: '#f4b64f', L: 4.55, W: 1.98, cx: .8, rank: 8 };

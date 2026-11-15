@@ -1,0 +1,22 @@
+# Synthetic dataset generation (scripts/generate_dataset.py). Values are the initial choice; every
+# run records the exact configuration and its hash in data/synthetic/metadata/.
+image: {width: 640, height: 480}
+frames_per_session: 40          # frames share one engine world (seed, objects, lighting); splits are by session
+split: {train: 0.70, val: 0.15, test: 0.15}
+night_fraction: 0.3             # the twin's night lighting (shader uNight), per session
+warmup_seconds: [20, 150]       # simulated before the first frame so workers and forklifts spread out
+seconds_between_frames: [0.4, 1.6]
+engine_step: 0.02               # simulation step while generating (the agents' own update period)
+view_modes: {targeted: 0.70, driving: 0.30}
+targets: {person: 0.34, forklift: 0.16, amr: 0.16, obstacle: 0.24, static: 0.10}
+target_distance_m: [1.0, 13.0]  # camera distance to a targeted object's outline (log-uniform; its radius is added)
+heading_jitter_rad: 0.55        # the targeted object is not always centred, sometimes cut by the border
+obstacles_per_session: [3, 10]
+obstacle_kinds: {cone: 0.36, box: 0.34, pallet: 0.30}
+quality:                        # frame gate: a rejected frame is re-rendered after relocating the camera robot
+  min_gray_std: 8.0             # grey-level std; below it the camera faces a wall or object point-blank
+  min_change_from_previous: 1.0 # mean |grey difference| to the robot's previous frame; below it a stuck robot repeats itself
+  max_retries: 8
+annotation:
+  min_pixels: 25                # visible pixels of an instance to be labelled (smaller ones are reported as ignored)
+  min_box_side: 4               # pixels

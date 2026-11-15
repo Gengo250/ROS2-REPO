@@ -5,6 +5,11 @@ both scanners (front /scan and 360-degree /top_scan), odom, clock and localizati
 TF are fresh. Uses a wall-clock timer so a
 paused simulator cannot freeze the guard. Original drive limits remain in force.
 
+Topics are relative, so the guard serves the robot of its namespace: in the root namespace they
+are the single-robot topics (/scan, /cmd_vel, ...); in /amr_02 they are /amr_02/scan ... with
+``frame_prefix`` 'amr_02/' for that robot's TF frames (multi-robot lite twin, amr_lite_sim/fleet.py).
+A guard only ever publishes its own robot's cmd_vel.
+
 Parameter ``simulation_backend``: ``gazebo`` (default; requires GZ_PARTITION and pauses
 through ``gz service``) or ``lite`` (pauses through the lite engine's /lite_sim/set_paused).
 """
@@ -34,6 +39,7 @@ class CommandGuard(Node):
     def __init__(self):
         super().__init__('navigation_command_guard',parameter_overrides=[Parameter('use_sim_time',value=True)])
         self.backend=self.declare_parameter('simulation_backend','gazebo').value
+        self.frame_prefix=self.declare_parameter('frame_prefix','').value
         if self.backend not in ('gazebo','lite'):raise RuntimeError('simulation_backend must be gazebo or lite')
         if self.backend=='gazebo' and not os.environ.get('GZ_PARTITION'):
             raise RuntimeError('Set GZ_PARTITION to the existing warehouse partition before starting navigation')
@@ -41,19 +47,21 @@ class CommandGuard(Node):
         self.buffer=Buffer(node=self);self.listener=TransformListener(self.buffer,self)
         self.received={};self.stamps={};self.command=None;self.covariance=None
         self.last_clock=None;self.clock_changed=0.;self.last_motion=0.;self.emergency_latched=False;self.pause_process=None;self.pause_acknowledged=False;self.next_pause_retry=0.;self.reason='Waiting for sensors and localization';self.last_report=0.
-        self.create_subscription(LaserScan,'/scan',lambda m:self.sensor('scan',m),qos_profile_sensor_data)
-        self.create_subscription(LaserScan,'/top_scan',lambda m:self.sensor('top_scan',m),qos_profile_sensor_data)
-        self.create_subscription(Odometry,'/odom',lambda m:self.sensor('odom',m),qos_profile_sensor_data)
+        self.create_subscription(LaserScan,'scan',lambda m:self.sensor('scan',m),qos_profile_sensor_data)
+        self.create_subscription(LaserScan,'top_scan',lambda m:self.sensor('top_scan',m),qos_profile_sensor_data)
+        self.create_subscription(Odometry,'odom',lambda m:self.sensor('odom',m),qos_profile_sensor_data)
         # AMCL latches its pose and republishes only after motion: a volatile subscription that
         # matches after the first estimate would never see one, and the robot could never move.
-        self.create_subscription(PoseWithCovarianceStamped,'/amcl_pose',self.localized,QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL,reliability=ReliabilityPolicy.RELIABLE))
-        self.create_subscription(TwistStamped,'/nav_cmd_vel',self.velocity,10)
-        self.publisher=self.create_publisher(TwistStamped,'/cmd_vel',10)
-        self.diagnostics=self.create_publisher(DiagnosticArray,'/navigation/diagnostics',10)
+        self.create_subscription(PoseWithCovarianceStamped,'amcl_pose',self.localized,QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL,reliability=ReliabilityPolicy.RELIABLE))
+        self.create_subscription(TwistStamped,'nav_cmd_vel',self.velocity,10)
+        self.publisher=self.create_publisher(TwistStamped,'cmd_vel',10)
+        self.cmd_topic=self.publisher.topic_name
+        self.diagnostics=self.create_publisher(DiagnosticArray,'navigation/diagnostics',10)
         self.timer=self.create_timer(.05,self.tick,clock=Clock(clock_type=ClockType.STEADY_TIME))
     def sensor(self,key,msg):
         self.received[key]=time.monotonic();self.stamps[key]=msg.header.stamp.sec+msg.header.stamp.nanosec/1e9
-        frames={'scan':'laser_frame','top_scan':'top_laser_frame'}
+        prefix=getattr(self,'frame_prefix','')
+        frames={'scan':prefix+'laser_frame','top_scan':prefix+'top_laser_frame'}
         if key not in frames:return
         # Both scanners: right frame and well-formed ranges (NaN never valid). The 360-degree
         # scanner must also show at least one return: that is the blind-sensor check. The front
@@ -81,15 +89,16 @@ class CommandGuard(Node):
             if age < -.1 or age > .4:return 'Invalid simulation timestamp: '+key
         if self.command is None or not command_is_finite(self.command):return 'Invalid command'
         if self.covariance is None or any(not math.isfinite(self.covariance[i]) or self.covariance[i]>1. for i in [0,7,35]):return 'Localization unavailable or uncertain'
+        f=getattr(self,'frame_prefix','')
         try:
-            for parent,child in [('map','odom'),('odom','base_link')]:
+            for parent,child in [('map',f+'odom'),(f+'odom',f+'base_link')]:
                 t=self.buffer.lookup_transform(parent,child,rclpy.time.Time())
                 age=sim-(t.header.stamp.sec+t.header.stamp.nanosec/1e9)
                 if age>.5 or age<-.8:return 'Stale localization/odometry TF'
-            self.buffer.lookup_transform('base_link','laser_frame',rclpy.time.Time())
-            self.buffer.lookup_transform('base_link','top_laser_frame',rclpy.time.Time())
+            self.buffer.lookup_transform(f+'base_link',f+'laser_frame',rclpy.time.Time())
+            self.buffer.lookup_transform(f+'base_link',f+'top_laser_frame',rclpy.time.Time())
         except Exception:return 'Localization TF unavailable'
-        others=[p.node_name for p in self.get_publishers_info_by_topic('/cmd_vel') if p.node_name!=self.get_name()]
+        others=[p.node_name for p in self.get_publishers_info_by_topic(getattr(self,'cmd_topic','/cmd_vel')) if p.node_name!=self.get_name()]
         if others:return 'Conflicting command publishers: '+','.join(others)
         v=self.command.twist
         if v.linear.x<0 or abs(v.linear.x)>.70 or abs(v.angular.z)>1.50:return 'Command outside drive limits'
@@ -106,7 +115,7 @@ class CommandGuard(Node):
             self.emergency_pause(wall)
         elif reason=='ready' and (abs(self.command.twist.linear.x)>.001 or abs(self.command.twist.angular.z)>.001):
             self.last_motion=wall
-        msg=TwistStamped();msg.header.stamp=self.get_clock().now().to_msg();msg.header.frame_id='base_link'
+        msg=TwistStamped();msg.header.stamp=self.get_clock().now().to_msg();msg.header.frame_id=self.frame_prefix+'base_link'
         if reason=='ready':msg=self.command
         self.publisher.publish(msg)
         if reason!=self.reason or wall-self.last_report>1.:
@@ -158,7 +167,7 @@ class CommandGuard(Node):
         self.pause_process=self.pause_client.call_async(SetBool.Request(data=True))
 
     def stop(self):
-        msg=TwistStamped();msg.header.stamp=self.get_clock().now().to_msg();msg.header.frame_id='base_link';self.publisher.publish(msg)
+        msg=TwistStamped();msg.header.stamp=self.get_clock().now().to_msg();msg.header.frame_id=self.frame_prefix+'base_link';self.publisher.publish(msg)
 
 
 def main():

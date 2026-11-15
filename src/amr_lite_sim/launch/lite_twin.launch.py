@@ -1,4 +1,4 @@
-"""Lite engine + robot_state_publisher + Gateway (world-state v1). No Gazebo, no Nav2."""
+"""Lite engine + robot_state_publishers + Gateway (world-state v1). No Gazebo, no Nav2."""
 from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -13,9 +13,11 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('profile', default_value='operations', choices=['operations', 'mapping', 'empty']),
         DeclareLaunchArgument('real_time_factor', default_value='1.0'),
+        DeclareLaunchArgument('robots', default_value='all', description="'all' or comma-separated robot ids"),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(str(lite)),
                                  launch_arguments={'profile': LaunchConfiguration('profile'),
-                                                   'real_time_factor': LaunchConfiguration('real_time_factor')}.items()),
+                                                   'real_time_factor': LaunchConfiguration('real_time_factor'),
+                                                   'robots': LaunchConfiguration('robots')}.items()),
         # The engine keeps running if the Gateway exits; the Gateway only distributes state.
         Node(package='digital_twin_gateway', executable='gateway', output='screen',
              additional_env={'TWIN_SCENARIO_SOURCE': 'unspecified'}),

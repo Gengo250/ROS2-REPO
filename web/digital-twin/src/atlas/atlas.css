@@ -7,6 +7,7 @@
 .status.offline{border-color:#ff8a7e66;background:#6b1d1d33;color:#ffb3aa}.status.offline .pulse{background:#ff6f61;box-shadow:0 0 0 5px #ff6f611a,0 0 14px #ff6f61}.status.stale{border-color:#ffc97866;background:#6b4d1d33;color:#ffd9a3}.status.stale .pulse{background:#ffc978;box-shadow:0 0 0 5px #ffc9781a,0 0 14px #ffc978}
 .banner{position:absolute;top:92px;left:50%;transform:translateX(-50%);z-index:8;max-width:min(640px,calc(100vw - 32px));background:#3a1717e6;border:1px solid #ff8a7e88;color:#ffd9d4;padding:10px 16px;border-radius:10px;font-size:12px;line-height:1.5;box-shadow:0 14px 40px #0006;display:none;text-align:center}.banner.warn{background:#3a2c17e6;border-color:#ffc97888;color:#ffe7c2}.banner.show{display:block}
 .mission-row{display:flex;gap:6px;margin-top:8px}.mission-row select{flex:1;min-width:0;background:#19273a;border:1px solid #35465a;color:#d6e3f0;border-radius:7px;padding:8px;font:500 11px 'DM Sans',system-ui,sans-serif}.mission-row button{background:#1d4f48;border:1px solid #3f9d8d;color:#c6fff0;border-radius:7px;padding:8px 10px;font:600 11px 'DM Sans',system-ui,sans-serif;cursor:pointer}.mission-row button.secondary{background:#3a2a1c;border-color:#a3743f;color:#ffd9bd}.mission-row button:disabled{opacity:.45;cursor:not-allowed}
+.mission-row select.robot-select{flex:0 0 86px}.mission-row button{flex:1}
 .mission-status{margin-top:8px;font-size:10.5px;line-height:1.55;color:#a3b2c5}.mission-status b{color:#73e9ce}
 .camlist{display:flex;flex-direction:column;gap:2px;margin-top:6px}.camlist .camera-btn{height:30px;font-size:11px}
 .perf{font-size:10px;line-height:1.7;color:#9fb0c4;font-variant-numeric:tabular-nums}.perf b{color:#e9f0fa;font-weight:600}
@@ -23,3 +24,15 @@
 .viewmodes{margin-top:12px;display:grid;gap:6px}.viewmodes .vmlabel{font:700 10px 'Space Grotesk';letter-spacing:1.4px;color:var(--muted)}
 canvas#scene.fp,canvas#scene.fp:active{cursor:default}canvas#scene.fp.look{cursor:grab}canvas#scene.fp.look:active{cursor:grabbing}
 .walls-row{margin-bottom:6px}.walls-row button.active{background:#194a4a;border-color:#368a7a;color:#baffeb}.toolhead small{font:500 10px "DM Sans";color:var(--muted)}
+
+/* Computer vision on the onboard camera (VisionView.ts): processed frame + model detections. */
+.vision-overlay{position:fixed;z-index:5;pointer-events:none;border-radius:2px}
+.vision-overlay[hidden]{display:none}
+.vision-panel{position:absolute;z-index:6;width:290px;background:rgba(9,18,30,.86);border:1px solid var(--line);border-radius:10px;padding:9px 11px;backdrop-filter:blur(14px);box-shadow:0 12px 34px #0006;color:#dbe7f3;font-size:10.5px}
+.vision-panel[hidden]{display:none}
+.vision-panel .hudtitle{font:700 10px 'Space Grotesk';letter-spacing:1.6px;color:var(--mint);display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.vision-panel .vrow{display:flex;align-items:center;gap:7px;margin:3px 0;color:#c9d6e3;cursor:pointer}
+.vision-panel .vrow input[type=checkbox]{accent-color:#53debc}
+.vision-panel .vslider{flex-wrap:wrap;cursor:default}.vision-panel .vslider b{color:#73e9ce}.vision-panel .vslider input{width:100%;accent-color:#53debc}
+.vision-panel .vmeta{margin-top:6px;line-height:1.55;color:#a3b2c5}.vision-panel .vmeta b{color:#dbe7f3}
+.vision-panel .vwarn{color:#ffd9a3}

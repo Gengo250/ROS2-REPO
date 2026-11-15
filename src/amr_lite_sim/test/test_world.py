@@ -217,3 +217,63 @@ def test_exterior_walls_stop_the_robot_and_are_seen_at_their_inner_face(scene, m
     limit = {'west': poly[:, 0].min() >= inner-1e-6, 'east': poly[:, 0].max() <= inner+1e-6,
              'north': poly[:, 1].max() <= inner+1e-6, 'south': poly[:, 1].min() >= inner-1e-6}
     assert limit[side]
+
+
+def test_three_robots_are_independent(scene, model):
+    """Every active spawn is a robot with its own drive, odometry, commands, sensors and contacts."""
+    world = World(scene, model, 'empty')
+    assert list(world.robots) == ['amr_01', 'amr_02', 'amr_03']
+    starts = {r: (world.robots[r].drive.x, world.robots[r].drive.y) for r in world.robots}
+    assert starts == {'amr_01': (2., 0.), 'amr_02': (-5., 0.), 'amr_03': (9., 0.)}
+    for _ in range(300):                          # 3 s: only amr_02 is commanded
+        world.command('amr_02', .5, 0.)
+        world.step(.01)
+    assert world.robots['amr_02'].drive.y > 0.8 and world.robots['amr_02'].state == 'moving'
+    for other in ('amr_01', 'amr_03'):
+        assert (world.robots[other].drive.x, world.robots[other].drive.y) == starts[other]
+        assert world.odometry(other) == (0., 0., 0.) and world.robots[other].state == 'stopped'
+    ox, oy, oyaw = world.odometry('amr_02')      # each odometry starts at its own spawn
+    assert ox == pytest.approx(world.robots['amr_02'].drive.y) and abs(oy) < 1e-9 and abs(oyaw) < 1e-9
+    # Each robot's scanners see the other robots as bodies (front scanner, below their top).
+    front = model.front
+    assert front.mount_z < model.height-.05
+    for robot in world.robots:
+        assert np.isfinite(world.scan(robot, front)).any()
+
+
+def test_robots_collide_with_each_other(scene, model):
+    world = World(scene, model, 'empty')
+    a, b = world.robots['amr_01'], world.robots['amr_02']
+    b.drive.x, b.drive.y, b.drive.yaw = a.drive.x, a.drive.y+3.0, -math.pi/2   # face to face, 3 m apart
+    # amr_01's front scanner sees amr_02's body: centre beam ends at its near face.
+    ranges = world.scan('amr_01', model.front)
+    near_face = b.drive.y-(model.footprint_offset+model.length/2)          # amr_02 faces south
+    sensor_y = world.sensor_pose(a, model.front)[1]
+    assert ranges[len(ranges)//2] == pytest.approx(near_face-sensor_y, abs=.03)
+    for _ in range(800):
+        world.command('amr_01', .4, 0.)
+        world.step(.01)
+    assert a.state == 'blocked' and a.contact_with == 'amr_02'
+    assert not overlap_any(model, a, b)
+
+
+def overlap_any(model, a, b):
+    from amr_lite_sim.geometry import overlap
+    return overlap(footprint(model, a.drive.x, a.drive.y, a.drive.yaw), footprint(model, b.drive.x, b.drive.y, b.drive.yaw))
+
+
+def test_robot_subset_and_unknown_ids(scene, model):
+    assert list(World(scene, model, 'empty', robots=['amr_01']).robots) == ['amr_01']
+    assert list(World(scene, model, 'empty', robots=['amr_03', 'amr_02']).robots) == ['amr_02', 'amr_03']
+    with pytest.raises(ValueError):
+        World(scene, model, 'empty', robots=['amr_09'])
+
+
+def test_fleet_names_keep_the_reference_robot_on_root_topics():
+    from amr_lite_sim import fleet
+    assert fleet.topic('amr_01', 'cmd_vel') == '/cmd_vel' and fleet.frame_prefix('amr_01') == ''
+    assert fleet.topic('amr_02', 'scan') == '/amr_02/scan' and fleet.frame_prefix('amr_02') == 'amr_02/'
+    assert fleet.topic('amr_03', 'camera/image_raw') == '/amr_03/camera/image_raw'
+    assert fleet.parse_robots('all') is None and fleet.parse_robots('amr_01, amr_03') == ['amr_01', 'amr_03']
+    with pytest.raises(ValueError):
+        fleet.parse_robots('amr_01,amr_01')

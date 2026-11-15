@@ -1,4 +1,8 @@
-"""Publish an explicit map-frame initial estimate; never reads Gazebo poses."""
+"""Publish an explicit map-frame initial estimate; never reads Gazebo poses.
+
+Topics are relative (run the node in a robot's namespace for a namespaced robot) and
+``--frame-prefix`` names that robot's base frame (e.g. amr_02/ for amr_02/base_link).
+"""
 import argparse
 import math
 import time
@@ -11,14 +15,14 @@ from tf2_ros import Buffer,TransformListener
 from amr_navigation.goal_client import grid_coordinates
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('x',type=float);p.add_argument('y',type=float);p.add_argument('yaw',type=float);p.add_argument('--timeout',type=float,default=90.)
+    p=argparse.ArgumentParser();p.add_argument('x',type=float);p.add_argument('y',type=float);p.add_argument('yaw',type=float);p.add_argument('--timeout',type=float,default=90.);p.add_argument('--frame-prefix',default='')
     a=p.parse_args(rclpy.utilities.remove_ros_args()[1:])
     if not all(math.isfinite(x) for x in [a.x,a.y,a.yaw]):p.error('Pose must be finite')
     rclpy.init();n=rclpy.create_node('explicit_initial_pose',parameter_overrides=[Parameter('use_sim_time',value=True)])
     maps=[];estimates=[];b=Buffer(node=n);listener=TransformListener(b,n)
-    n.create_subscription(OccupancyGrid,'/map',lambda m:maps.append(m),QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL))
-    n.create_subscription(PoseWithCovarianceStamped,'/amcl_pose',lambda m:estimates.append(m),10)
-    pub=n.create_publisher(PoseWithCovarianceStamped,'/initialpose',10)
+    n.create_subscription(OccupancyGrid,'map',lambda m:maps.append(m),QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL))
+    n.create_subscription(PoseWithCovarianceStamped,'amcl_pose',lambda m:estimates.append(m),10)
+    pub=n.create_publisher(PoseWithCovarianceStamped,'initialpose',10)
     try:
         deadline=time.monotonic()+a.timeout
         while not maps or pub.get_subscription_count()==0 or n.get_clock().now().nanoseconds==0:
@@ -33,7 +37,7 @@ def main():
         # AMCL subscribes when configured but ignores /initialpose until active (large maps take
         # seconds in between), so repeat the same estimate until AMCL answers with a pose.
         deadline=time.monotonic()+a.timeout;next_publish=0.
-        while not estimates or not b.can_transform('map','base_link',rclpy.time.Time()):
+        while not estimates or not b.can_transform('map',a.frame_prefix+'base_link',rclpy.time.Time()):
             if time.monotonic()>deadline:raise TimeoutError('AMCL did not produce a pose and connected map TF')
             if not estimates and time.monotonic()>=next_publish:
                 msg.header.stamp=n.get_clock().now().to_msg();pub.publish(msg);next_publish=time.monotonic()+2.

@@ -6,7 +6,8 @@ import {
 
 // ATLAS shaders, unchanged lighting: per-instance position, scale, colour, emission and
 // yaw/tilt/roll; one directional light, a warm fill, emission boosted at night, distance fog.
-const VERTEX = `precision highp float;
+/** Instance vertex shader (exported for the camera capture's instance-ID pass, src/camera). */
+export const VERTEX = `precision highp float;
 in vec3 position; in vec3 normal;
 in vec3 iPosition; in vec3 iScale; in vec3 iColor; in float iEmission; in float iYaw; in vec2 iRot;
 uniform mat4 uProjectionView;
@@ -75,7 +76,7 @@ export class InstancedLayer {
   readonly geometry = new InstancedBufferGeometry();
   readonly mesh: Mesh;
   private buffer: InstancedInterleavedBuffer;
-  constructor(shape: Shape, material: RawShaderMaterial, data: Float32Array, dynamic: boolean) {
+  constructor(readonly shape: Shape, material: RawShaderMaterial, data: Float32Array, dynamic: boolean) {
     const base = geometryOf(shape);
     this.geometry.index = base.index;
     this.geometry.setAttribute('position', base.getAttribute('position'));

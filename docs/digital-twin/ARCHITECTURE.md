@@ -158,6 +158,15 @@ Gazebo remains an optional, headless `gazebo_validation` mode. See
 [Phase 6 diagnostic](PHASE_6_DIAGNOSTIC.md), [plan](PHASE_6_LITE_PLAN.md) and
 [runtime](PHASE_6_LITE_RUNTIME.md).
 
+## Phase 7 three AMRs and onboard-camera vision
+
+Three operational AMRs (`amr_01` keeps the root topics and frames; `amr_02`, `amr_03` are
+namespaced and frame-prefixed), each with its own Nav2 stack and Gateway mission ownership. The
+`vision/` workspace renders onboard RGB frames with the twin's own Three.js renderer (headless
+Chromium worker, instance-ID pass for ground truth), trains YOLO26n on that synthetic data and
+serves live per-robot detections (WebSocket, `sensor_msgs/Image`, `vision_msgs/Detection2DArray`)
+to the twin's onboard view. See [Phase 7](PHASE_7_MULTI_AMR_VISION.md).
+
 ## Official references consulted
 
 - [rclpy Jazzy executor implementation](https://github.com/ros2/rclpy/blob/jazzy/rclpy/rclpy/executors.py)

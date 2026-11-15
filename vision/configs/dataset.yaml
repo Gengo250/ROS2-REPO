@@ -1,0 +1,20 @@
+# The one class mapping of the ATLAS vision pipeline (generation, training, evaluation, inference
+# and the browser overlay all read it from here or from the trained checkpoint, which embeds it).
+# Every class exists in the lite twin and is labelled from rendered instance masks:
+#   person   - workers (world-state entities of type human)
+#   forklift - forklifts EMP-1..3 (type forklift)
+#   amr      - the other AMRs (type amr; never the capturing robot itself)
+#   pallet   - user-placed pallets (obstacle kind pallet) and the scene's floor pallets
+#   box      - user-placed boxes (obstacle kind box) and the boxes on the inspection tables
+#   cone     - user-placed cones (obstacle kind cone)
+path: data/synthetic
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: person
+  1: forklift
+  2: amr
+  3: pallet
+  4: box
+  5: cone

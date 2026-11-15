@@ -8,10 +8,11 @@ import { ViewController, type ViewKind, type ViewTarget } from './ViewController
 import type { RenderView } from './render/InstancedRenderer';
 import { Minimap, type MiniMark } from './Minimap';
 import { LiveWorld, type RenderedEntity } from './live/LiveWorld';
-import { LiveScene } from './live/LiveScene';
+import { LiveScene, type RobotRoute } from './live/LiveScene';
 import { createDemo, type Demo } from './demo/atlasDemo.js';
 import { boxDyn, drawPlacement } from './rig/atlasRig.js';
 import { rosToGl } from './coords';
+import { VisionView } from './vision/VisionView';
 import type { WorldEvent } from '../core/types/world-state';
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
@@ -20,6 +21,8 @@ const mode: 'live' | 'demo' = params.get('mode') === 'demo' ? 'demo' : 'live';
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 const WS = import.meta.env.VITE_WORLD_WS_URL || `${API.replace(/^http/, 'ws')}/ws/v1/world?protocol_version=1.0`;
 const FPS_CAP = Math.max(15, Math.min(240, Number(params.get('fps')) || 60));
+/** Perception service (vision/scripts/serve_perception.py): processed onboard frames + detections. */
+const PERCEPTION = import.meta.env.VITE_PERCEPTION_URL || 'http://127.0.0.1:8100';
 document.body.className = mode;
 
 const canvas = $<HTMLCanvasElement>('#scene');
@@ -32,6 +35,7 @@ const minimap = new Minimap($<HTMLCanvasElement>('#minimap'));
 const show: Record<string, boolean> = { roof: false, racks: true, vehicles: true, people: true, routes: true, labels: true, fields: true };
 /** Upper building walls: presentation only (scene.ts, wallVisibility); the plinth is always drawn. */
 let walls: WallMode = 'auto', wallsShown: Record<string, boolean> = {};
+let vision: VisionView | null = null;
 let night = 0, scene: CampusScene, live: LiveWorld | null = null, liveScene: LiveScene | null = null, demo: Demo | null = null;
 let tool: string | null = null, lastTool = 'cone', hover: { x: number; z: number; ok: boolean } | null = null;
 let selectedId: string | null = null, following = false, active = true, speed = 1;
@@ -74,6 +78,7 @@ function buildPanels() {
     `<button class="camera-btn${i === 0 ? ' active' : ''}" data-view="${id}"><span class="camicon">${['◈', '▤', '▥', '◇', '▦'][i] ?? '◈'}</span> ${v.label} <span class="key">${i + 1}</span></button>`).join('');
   $('#cctv').innerHTML = scene.cameras.map(c => `<button class="camera-btn" data-cctv="${c.id}"><span class="camicon">◉</span> ${c.label}</button>`).join('');
   $('#zones').innerHTML = scene.zones.map(z => `<button data-focus="${z.name}">${z.name.split(' ').map((w, i) => i ? w[0] : w).join(' ')}</button>`).join('');
+  $<HTMLSelectElement>('#missionRobot').innerHTML = scene.spawns.map(s => `<option value="${s.robot_id}">${s.robot_id.toUpperCase().replace('_', ' ')}</option>`).join('');
   $<HTMLSelectElement>('#missionTarget').innerHTML = scene.stations.map(s => `<option value="${s.id}">${s.label} · ${s.zone.toLowerCase()}</option>`).join('');
   $('#stockCount').innerHTML = `${(scene.metadata.stock_volumes / 1000).toFixed(1)}<span>k</span>`;
   for (const z of scene.zones) {
@@ -144,7 +149,13 @@ function backToOverview() {
 }
 /** AMRs of the current mode (backend entities in LIVE, the prototype fleet in DEMO). */
 function amrIds(): string[] { return mode === 'live' ? lastEntities.filter(e => e.type === 'amr').map(e => e.id) : demo!.robots.map(r => r.id as string); }
+/** The mission panel follows the AMR the user selects in the scene. */
+function followMissionRobot(id: string) {
+  const select = document.querySelector<HTMLSelectElement>('#missionRobot');
+  if (mode === 'live' && select && [...select.options].some(o => o.value === id)) select.value = id;
+}
 function viewAmr(action: string, id: string) {
+  followMissionRobot(id);
   if (action === 'onboard') { selectedId = id; enterView('onboard', id); return; }
   enterView('overview', null); selectedId = id;
   const e = mode === 'live' ? lastEntities.find(x => x.id === id) : null, r = mode === 'demo' ? demo!.robots.find(x => x.id === id) : null;
@@ -196,7 +207,18 @@ function describe(e: WorldEvent): string | null {
     default: return `${e.kind}: ${e.entity}`;
   }
 }
-let lastMission = '';
+const missionLog = new Map<string, string>();
+/** Robot the mission panel addresses (selector; follows the AMR selected in the scene). */
+function missionRobot() { return $<HTMLSelectElement>('#missionRobot').value; }
+/** Nav2 plan and active goal of every AMR in the latest world state, keyed by robot id. */
+function robotRoutes(): Map<string, RobotRoute> {
+  const out = new Map<string, RobotRoute>();
+  for (const r of live?.latest?.robots ?? []) {
+    const goal = r.mission && ['pending', 'active'].includes(r.mission.status) ? r.mission.goal : null;
+    out.set(r.id, { path: r.path as [number, number][], goal });
+  }
+  return out;
+}
 function startLive() {
   live = new LiveWorld(API, WS);
   liveScene = new LiveScene(scene);
@@ -211,14 +233,16 @@ function startLive() {
   });
   live.start();
   $('#missionSend').onclick = async () => {
-    const target = $<HTMLSelectElement>('#missionTarget').value;
-    try { const r = await live!.sendMission(target); toast(r.accepted ? `Missão enviada ao Nav2: ${target}` : `Missão recusada: ${r.reason}`); }
+    const robot = missionRobot(), target = $<HTMLSelectElement>('#missionTarget').value;
+    try { const r = await live!.sendMission(robot, target); toast(r.accepted ? `Missão de ${robot} enviada ao Nav2: ${target}` : `Missão de ${robot} recusada: ${r.reason}`); }
     catch (error) { toast(`Missão não enviada: ${(error as Error).message}`); }
   };
   $('#missionCancel').onclick = async () => {
-    try { const r = await live!.cancelMission(); toast(r.accepted ? 'Cancelamento solicitado ao Nav2' : `Nada a cancelar: ${r.reason}`); }
+    const robot = missionRobot();
+    try { const r = await live!.cancelMission(robot); toast(r.accepted ? `Cancelamento de ${robot} solicitado ao Nav2` : `Nada a cancelar em ${robot}: ${r.reason}`); }
     catch (error) { toast(`Falha ao cancelar: ${(error as Error).message}`); }
   };
+  $<HTMLSelectElement>('#missionRobot').onchange = () => updatePanels();
 }
 function liveStatus() {
   const s = live!.latest, pill = $('#status'), text = $('#statusText');
@@ -234,11 +258,14 @@ function liveStatus() {
     if (!msg && sim.scene_sha256 && sim.scene_sha256 !== scene.metadata.scene_sha256) { msg = 'A cena do motor difere da geometria carregada. Recarregue a página.'; cls = 'stale'; }
     if (!msg && s.connection.registration !== 'verified') msg = 'Registro mundo/mapa não verificado: trajetórias do Nav2 não são desenhadas.';
     $('#modeBadge').textContent = `LIVE ROS · RTF ${sim.real_time_factor === null ? '—' : fmt(sim.real_time_factor, 2)}`;
-    const m = s.robots[0]?.mission;
-    const status = m ? `<b>${m.destination}</b> · ${m.status}${m.distance_remaining_m !== null ? ` · faltam ${fmt(m.distance_remaining_m)} m` : ''}${m.recoveries ? ` · ${m.recoveries} recuperações` : ''}${m.detail ? `<br>${m.detail}` : ''}` : 'Nenhuma missão ativa.';
-    $('#missionStatus').innerHTML = `${status}<br>Interlock: ${s.robots[0]?.interlock ?? 'sem diagnóstico do Nav2'}`;
-    const key = m ? `${m.id}:${m.status}` : '';
-    if (m && key !== lastMission) { lastMission = key; logEvent(`Missão ${m.destination}: ${m.status}`); }
+    const nav = s.robots.find(r => r.id === missionRobot()), m = nav?.mission;
+    const status = !nav ? `${missionRobot()} ausente do estado do backend.` : m ? `<b>${m.destination}</b> · ${m.status}${m.distance_remaining_m !== null ? ` · faltam ${fmt(m.distance_remaining_m)} m` : ''}${m.recoveries ? ` · ${m.recoveries} recuperações` : ''}${m.detail ? `<br>${m.detail}` : ''}` : 'Nenhuma missão ativa.';
+    $('#missionStatus').innerHTML = `${status}<br>Interlock: ${nav?.interlock ?? 'sem diagnóstico do Nav2'}`;
+    // Mission changes of every AMR go to the event log, each with its robot.
+    for (const r of s.robots) {
+      const key = r.mission ? `${r.mission.id}:${r.mission.status}` : '';
+      if (r.mission && key !== missionLog.get(r.id)) { missionLog.set(r.id, key); logEvent(`${r.id} · missão ${r.mission.destination}: ${r.mission.status}`); }
+    }
     $('#robotCount').textContent = String(s.entities.filter(e => e.type === 'amr').length).padStart(2, '0');
     $('#livePerf').innerHTML = `Fator de tempo real: <b>${sim.real_time_factor === null ? '—' : fmt(sim.real_time_factor, 3)}</b> · tempo simulado <b>${fmt(sim.sim_time ?? 0, 1)} s</b>`;
   }
@@ -312,6 +339,7 @@ canvas.addEventListener('pointerup', e => {
   for (const c of candidates) { const p = screen(c.at[0]!, c.at[1]!, c.at[2]!); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < c.radius && d < bestD) { bestD = d; best = c.id; } }
   // In a first-person view a click only selects (the view stays on the chosen camera).
   if (best && view.firstPerson) { selectedId = best; toast('Selecionado ' + best); return; }
+  if (best) followMissionRobot(best);
   if (best) { clearCameraSelection(); selectedId = best; following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + best); return; }
   if (view.firstPerson) return;
   let zone: Zone | null = null, zd = 48;
@@ -352,7 +380,7 @@ function bindControls() {
     else if (view.kind === 'onboard') viewAmr(action, view.id!);
     updateHud(true);
   };
-  if (mode === 'live') $('#missionOnboard').onclick = () => { const id = live?.latest?.robots[0]?.id; if (id) viewAmr('onboard', id); };
+  if (mode === 'live') $('#missionOnboard').onclick = () => { if (lastEntities.some(e => e.id === missionRobot())) viewAmr('onboard', missionRobot()); };
   $('#followNext').onclick = () => cycleWorker();
   $('#screenshot').onclick = () => { const a = document.createElement('a'); a.download = 'atlas-digital-twin.png'; a.href = canvas.toDataURL('image/png'); a.click(); toast('Captura salva'); };
   for (const b of document.querySelectorAll<HTMLButtonElement>('[data-mode]')) {
@@ -360,7 +388,10 @@ function bindControls() {
     b.onclick = () => { if (b.dataset.mode !== mode) { const p = new URLSearchParams(location.search); p.set('mode', b.dataset.mode!); location.search = p.toString(); } };
   }
   window.addEventListener('keydown', e => {
-    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName ?? '')) return;
+    // Typing in a text field or a select keeps its keys; a focused checkbox or slider does not
+    // swallow the view shortcuts (Esc after toggling a layer or the detection, for example).
+    const focused = document.activeElement as HTMLInputElement | null;
+    if (focused && (['TEXTAREA', 'SELECT'].includes(focused.tagName) || (focused.tagName === 'INPUT' && !['checkbox', 'radio', 'range'].includes(focused.type)))) return;
     if (e.code === 'Space' && mode === 'demo') { e.preventDefault(); $('#play').click(); }
     const views = Object.keys(scene.views);
     if (/Digit[1-9]/.test(e.code)) { const v = views[Number(e.code.slice(-1)) - 1]; if (v) setView(v); }
@@ -438,14 +469,13 @@ function render(now: number) {
   camera.update(dt);
   const sky = night ? [.034, .065, .108] : [.075, .129, .185];
   batch.reset();
-  let path: [number, number][] = [];
+  let routes = new Map<string, RobotRoute>();
   let dim = 0;
   if (mode === 'live' && live && liveScene) {
     lastEntities = live.entities();
-    const s = live.latest, robot = s?.robots[0];
-    path = (robot?.path ?? []) as [number, number][];
-    const goal = robot?.mission && ['pending', 'active'].includes(robot.mission.status) ? robot.mission.goal : null;
-    liveScene.draw(batch, lastEntities, s?.obstacles ?? [], path, goal, { people: show.people!, vehicles: show.vehicles!, fields: show.fields!,
+    const s = live.latest;
+    routes = robotRoutes();
+    liveScene.draw(batch, lastEntities, s?.obstacles ?? [], routes, { people: show.people!, vehicles: show.vehicles!, fields: show.fields!,
       routes: show.routes!, selected: selectedId, eye: camera.eye, time: now / 1000, onboard: view.kind === 'onboard' ? view.id : null });
     dim = live.connection !== 'connected' || s?.simulation.availability !== 'online' ? .55 : 0;
   } else if (demo) {
@@ -466,6 +496,8 @@ function render(now: number) {
   rendered = view.frame(target, now / 1000, { x: 0, y: 0, width: canvas.clientWidth, height: canvas.clientHeight });
   applyWalls(rendered.position);
   renderer.render(rendered, sky, night, dim);
+  // Onboard camera of a LIVE AMR: its computer-vision panel (frames the model processed + detections).
+  if (vision) { const onboard = view.kind === 'onboard' && !view.blending(now / 1000); vision.setRobot(view.kind === 'onboard' ? view.id : null); vision.update(onboard ? rendered.viewport : null); }
   // Adaptive resolution: lower the pixel ratio while the delivered rate stays well below the
   // cap; raise it again once the cap is held. Never below 0.75.
   frameEma += ((frameTimes.at(-1) ?? frameEma) - frameEma) * .05;
@@ -477,7 +509,7 @@ function render(now: number) {
   fpsFrames++;
   if (now - fpsStart > 1000) { fps = fpsFrames * 1000 / (now - fpsStart); fpsFrames = 0; fpsStart = now; publishMetrics(); }
   if (frame % 3 === 0) updateLabels();
-  if (frame % 9 === 0) updateMinimap(path);
+  if (frame % 9 === 0) updateMinimap(routes);
   if (frame % 12 === 0) updatePanels();
 }
 /** Upper walls for the camera of this frame (WebGL position: x east, z = -north). */
@@ -499,7 +531,7 @@ function updateLabels() {
     } else el.style.display = 'none';
   }
 }
-function updateMinimap(path: [number, number][]) {
+function updateMinimap(routes: Map<string, RobotRoute>) {
   const marks: MiniMark[] = [];
   if (mode === 'live') {
     for (const e of lastEntities) if (e.type !== 'human' || (show.people && e.z < 1)) marks.push({ x: e.x, y: e.y, kind: e.type === 'amr' ? 'robot' : e.type === 'forklift' ? 'forklift' : 'worker', sel: e.id === selectedId, stale: e.stale });
@@ -511,7 +543,7 @@ function updateMinimap(path: [number, number][]) {
     for (const o of demo.loose) marks.push({ x: o.x, y: -o.z, kind: 'obj' });
   }
   for (const c of scene.cameras) marks.push({ x: c.position[0], y: c.position[1], kind: 'camera', sel: view.kind === 'industrial' && view.id === c.id });
-  minimap.draw(marks, path);
+  minimap.draw(marks, [...routes].map(([id, r]) => ({ path: r.path, sel: id === selectedId })));
 }
 /** Discreet identifier of the first-person view, anchored to the camera's framed viewport. */
 function updateHud(force = false) {
@@ -537,7 +569,7 @@ function updateHud(force = false) {
       status = r ? `${demo!.vehStatus(r)} · ${fmt(r.v, 2)} m/s · AMR demonstrativo: lente na frente do veículo do protótipo` : '';
     }
     html = `<div class="hudtitle">CÂMERA EMBARCADA <span class="small-pill">PRIMEIRA PESSOA 3D</span></div><div class="hudname">${id} · ${m.id}</div>`
-      + `<div class="hudmeta">${status}<br><code>${m.frame_id}</code> (URDF) · ${fmt(m.horizontal_fov * 180 / Math.PI, 0)}° · ${m.resolution[0]}×${m.resolution[1]} · renderização 3D, não é a imagem RGB-D</div>`
+      + `<div class="hudmeta">${status}<br><code>${m.frame_id}</code> (URDF) · ${fmt(m.horizontal_fov * 180 / Math.PI, 0)}° · ${m.resolution[0]}×${m.resolution[1]} · ${vision?.enabled && mode === 'live' ? 'imagem: quadros sintéticos processados pelo YOLO26n (painel de visão)' : 'renderização 3D da cena'}</div>`
       + (stale ? '<div class="hudwarn">DADOS DESATUALIZADOS · última pose recebida do backend</div>' : '')
       + `<div class="hudbtns"><button data-hud="external">Visão externa</button><button data-hud="follow">Acompanhar AMR</button>${look}<button data-hud="overview">Visão geral <span class="key">ESC</span></button></div>`;
   }
@@ -590,7 +622,7 @@ async function boot() {
     stage = stageRect(); window.addEventListener('resize', () => { stage = stageRect(); });
     camera.setView(scene.views.overview!); camera.state.yaw = camera.desired.yaw; camera.state.pitch = camera.desired.pitch;
     camera.state.distance = camera.desired.distance; camera.state.target = [...camera.desired.target];
-    if (mode === 'live') startLive(); else startDemo();
+    if (mode === 'live') { startLive(); vision = new VisionView(PERCEPTION, document.body); } else startDemo();
     document.body.dataset.ready = 'true';
     $('#busy').style.opacity = '0'; setTimeout(() => $('#busy').remove(), 780);
     requestAnimationFrame(render);
@@ -599,4 +631,4 @@ async function boot() {
   }
 }
 void boot();
-window.addEventListener('pagehide', () => { live?.stop(); renderer.dispose(); });
+window.addEventListener('pagehide', () => { live?.stop(); vision?.dispose(); renderer.dispose(); });

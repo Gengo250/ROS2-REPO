@@ -1,0 +1,23 @@
+# Live perception service (scripts/serve_perception.py) and the evaluation operating point.
+model_path: runs/results/latest/checkpoints/best.pt   # 'latest' = newest run directory
+confidence_threshold: 0.35
+iou_threshold: 0.7
+image_size: 640
+capture: {width: 640, height: 480}
+max_inference_fps_per_robot: 3
+max_frame_age_s: 1.0             # a frame older than this (wall clock) when the model is free is dropped
+device: auto                     # cuda:0 if available, else cpu
+torch_threads: 3                 # CPU inference threads (leave cores for the engine, Nav2 and the Gateway)
+nice: 10                         # scheduling priority of the service and its camera worker (best effort below
+                                 # navigation: at 3 AMRs + 3 Nav2 the CPU saturates; at nice 0 Nav2 missed its
+                                 # 40 ms action-acknowledgement deadline in 2 of 2 full-system runs)
+enabled: true
+robots: all                      # robots captured and analysed ('all' or comma-separated ids)
+gateway: http://127.0.0.1:8000
+host: 127.0.0.1
+port: 8100
+browser: auto                    # camera render worker: nvidia (headless on the NVIDIA GPU; auto's first choice),
+                                 # gpu (minimised window on the display GPU) or headless (SwiftShader, CPU)
+jpeg_quality: 85                 # processed frames sent to the browser
+ros: {enabled: true}             # publish sensor_msgs/Image, CameraInfo and vision_msgs/Detection2DArray when rclpy is available
+allowed_origins: [http://localhost:5173, http://127.0.0.1:5173]

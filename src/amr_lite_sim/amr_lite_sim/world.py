@@ -86,7 +86,8 @@ def predicted_samples(model, d, horizon=3., step=.35):
 
 
 class World:
-    def __init__(self, scene, model, profile='operations', seed=7):
+    def __init__(self, scene, model, profile='operations', seed=7, robots=None):
+        """``robots``: ids of the active spawns to instantiate (None: every active spawn)."""
         self.scene, self.model, self.profile = scene, model, profile
         self.rng = np.random.default_rng(seed)
         self.time = 0.
@@ -99,10 +100,19 @@ class World:
         self.scan_static = {spec.frame_id: SegmentSet(*polygon_segments(scene.slice_polygons(spec.mount_z)))
                             for spec in (model.front, model.top)}
         self.robots = {}
-        for spawn in scene.section('spawns'):
-            if spawn['active']:
-                x, y, _, _, _, yaw = map(float, spawn['pose'])
-                self.robots[spawn['robot_id']] = Robot(spawn['robot_id'], DriveState(x, y, yaw), (x, y, yaw))
+        active = [s for s in scene.section('spawns') if s['active']]
+        if robots is not None:
+            unknown = set(robots)-{s['robot_id'] for s in active}
+            if unknown:
+                raise ValueError(f'no active spawn for robot(s) {sorted(unknown)}')
+            active = [s for s in active if s['robot_id'] in set(robots)]
+        for spawn in active:
+            x, y, _, _, _, yaw = map(float, spawn['pose'])
+            if spawn['robot_id'] in self.robots:
+                raise ValueError(f'duplicate robot id {spawn["robot_id"]}')
+            self.robots[spawn['robot_id']] = Robot(spawn['robot_id'], DriveState(x, y, yaw), (x, y, yaw))
+        if not self.robots:
+            raise ValueError('the scene has no active robot spawn')
         agents = scene.section('agents')
         self.workers = []
         self.forklifts = []
@@ -351,6 +361,28 @@ class World:
                         return True
             return False
         return blocked
+
+    # ------------------------------------------------------------------ state
+    def entity_states(self):
+        """Pose, motion and state of every robot, worker and forklift (the EntityState fields
+        the node publishes in /lite_sim/world_state; field_state as 0 free, 1 warning, 2 protective)."""
+        for r in self.robots.values():
+            d = r.drive
+            yield dict(id=r.id, type='amr', x=d.x, y=d.y, z=0., yaw=d.yaw, vx=d.v*math.cos(d.yaw),
+                       vy=d.v*math.sin(d.yaw), wz=d.w, speed=d.v, state=r.state, field_state=r.field_state,
+                       field_length=r.field_length, reason=r.reason)
+        for k in self.workers:
+            activity, progress = k.activity()
+            yield dict(id=k.id, type='human', x=k.x, y=k.y, z=k.level_z, yaw=k.yaw, vx=k.v*math.cos(k.yaw),
+                       vy=k.v*math.sin(k.yaw), wz=getattr(k, 'yaw_rate', 0.), speed=k.v, state=k.state(),
+                       activity=activity, activity_progress=float(progress), carrying=k.carry,
+                       look=float(k.look), reason=k.reason)
+        for f in self.forklifts:
+            state, reason = Traffic.state(f)
+            yaw = f.pose[2]
+            yield dict(id=f.id, type='forklift', x=f.pose[0], y=f.pose[1], z=0., yaw=yaw,
+                       vx=f.v*math.cos(yaw), vy=f.v*math.sin(yaw), speed=f.v, state=state,
+                       field_state=f.field, field_length=float(f.prot), reason=reason)
 
     # ------------------------------------------------------------------ sensing
     def sensor_pose(self, robot, spec):

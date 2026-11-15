@@ -1,0 +1,47 @@
+[project]
+name = "atlas-vision"
+version = "0.1.0"
+description = "Synthetic-data object detection (YOLO26n) for the ATLAS digital twin's onboard AMR cameras"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # CUDA 13.2 wheels (NVIDIA driver 595, GTX 1650 / sm_75). They also run on the CPU when no
+    # driver is present; for a CPU-only machine point the index below at .../whl/cpu (README).
+    "torch>=2.5",
+    "torchvision>=0.20",
+    # YOLO26 needs Ultralytics 8.4 or newer.
+    "ultralytics>=8.4.0",
+    # ROS 2 Jazzy's generated message modules are compiled against NumPy 1.26: the perception
+    # service and the dataset generator import rclpy / the lite engine in this environment.
+    "numpy>=1.26,<2",
+    "opencv-python-headless>=4.9,<4.12",
+    "matplotlib>=3.8",
+    "pandas>=2.1",
+    "pyyaml>=6.0",
+    "pillow>=10.0",
+    # Render-worker channel (dataset generation) and the perception service.
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.uv]
+# The system interpreter: rclpy and the lite engine are built for /usr/bin/python3.12.
+python-preference = "only-system"
+# Ultralytics depends on opencv-python (GUI build); the headless build provides the same cv2.
+override-dependencies = ["opencv-python; sys_platform == 'never'"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu132" }
+torchvision = { index = "pytorch-cu132" }
+
+[[tool.uv.index]]
+name = "pytorch-cu132"
+url = "https://download.pytorch.org/whl/cu132"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# With ROS sourced, ROS 2's pytest plugins are on PYTHONPATH and need packages this env does not have.
+addopts = "-p no:launch_testing -p no:launch_ros -p no:ament_lint -p no:ament_pep257 -p no:ament_flake8 -p no:ament_xmllint -p no:ament_copyright"

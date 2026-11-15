@@ -1,10 +1,15 @@
 """ROS 2 node of the lite engine: fixed-step loop, /clock, odometry, TF, sensors, services.
 
+Every robot of the scene (or the ``robots`` parameter) has its own drive, odometry, TF, scanners,
+IMU and command input; topic and frame names follow ``fleet.py`` (reference robot on the root
+topics, the others namespaced with prefixed frames).
+
 The simulation loop runs in its own thread, paced by the wall clock (step / target RTF),
 so neither the executor, the Gateway nor a browser can slow it down. The executor thread
 only receives commands and serves requests; both sides share the world under one lock.
 """
 import math
+from dataclasses import dataclass
 import threading
 import time
 import uuid
@@ -22,7 +27,7 @@ from tf2_msgs.msg import TFMessage
 from amr_lite_interfaces.msg import EntityState, Obstacle as ObstacleMsg, ObstacleArray, SimEvent, WorldState
 from amr_lite_interfaces.srv import AddObstacle, RemoveObstacle
 from atlas_scene.scene import Scene
-from . import robot_model
+from . import fleet, robot_model
 from .agents import Traffic
 from .world import World
 
@@ -62,6 +67,19 @@ class Schedule:
         return False
 
 
+@dataclass
+class RobotIO:
+    """ROS interface of one robot: its frames and its publishers."""
+    id: str
+    prefix: str
+    odom: object
+    joints: object
+    scan: object
+    top: object
+    imu: object
+    subscription: object = None
+
+
 class LiteSim(Node):
     def __init__(self):
         super().__init__('lite_sim')
@@ -74,8 +92,8 @@ class LiteSim(Node):
         noise = p('lidar_noise_stddev', 0.0)
         self.scene = Scene.load(scene_file or None)
         self.model = robot_model.load(noise_stddev=noise)
-        self.world = World(self.scene, self.model, profile, seed=p('seed', 7))
-        self.robot_id = next(iter(self.world.robots))
+        self.root_robot = p('root_robot', fleet.ROOT_ROBOT)
+        self.world = World(self.scene, self.model, profile, seed=p('seed', 7), robots=fleet.parse_robots(p('robots', 'all')))
         self.session = str(uuid.uuid4())
         self.lock = threading.Lock()
         self.paused = p('start_paused', False)
@@ -87,33 +105,41 @@ class LiteSim(Node):
                           'world': Schedule(p('world_state_rate', 30.)), 'truth': Schedule(p('ground_truth_rate', 20.))}
         self.clock_divider = max(1, round(1./(self.step*p('clock_rate', 100.))))
         self.pub_clock = self.create_publisher(Clock, '/clock', BEST_EFFORT_1)
-        self.pub_odom = self.create_publisher(Odometry, '/odom', 10)
         self.pub_tf = self.create_publisher(TFMessage, '/tf', 10)
-        self.pub_joints = self.create_publisher(JointState, '/joint_states', 10)
-        self.pub_scan = self.create_publisher(LaserScan, '/scan', qos_profile_sensor_data)
-        self.pub_top = self.create_publisher(LaserScan, '/top_scan', qos_profile_sensor_data)
-        self.pub_imu = self.create_publisher(Imu, '/imu/data', qos_profile_sensor_data)
+        self.io = {}
+        for robot_id in self.world.robots:
+            topic = lambda name, r=robot_id: fleet.topic(r, name, self.root_robot)
+            io = RobotIO(robot_id, fleet.frame_prefix(robot_id, self.root_robot),
+                         self.create_publisher(Odometry, topic('odom'), 10),
+                         self.create_publisher(JointState, topic('joint_states'), 10),
+                         self.create_publisher(LaserScan, topic('scan'), qos_profile_sensor_data),
+                         self.create_publisher(LaserScan, topic('top_scan'), qos_profile_sensor_data),
+                         self.create_publisher(Imu, topic('imu/data'), qos_profile_sensor_data))
+            # Each robot listens only to its own command topic: no node can move another robot.
+            io.subscription = self.create_subscription(TwistStamped, topic('cmd_vel'),
+                                                       lambda msg, r=robot_id: self.on_command(r, msg), 10)
+            self.io[robot_id] = io
         self.pub_world = self.create_publisher(WorldState, '/lite_sim/world_state', BEST_EFFORT_1)
         self.pub_events = self.create_publisher(SimEvent, '/lite_sim/events', QoSProfile(depth=50, reliability=ReliabilityPolicy.RELIABLE))
         self.pub_obstacles = self.create_publisher(ObstacleArray, '/lite_sim/obstacles', LATCHED)
         self.pub_truth = self.create_publisher(TFMessage, '/digital_twin/simulation/poses', BEST_EFFORT_1)
         self.pub_diag = self.create_publisher(DiagnosticArray, '/diagnostics', 10)
-        self.create_subscription(TwistStamped, '/cmd_vel', self.on_command, 10)
         self.create_service(AddObstacle, '/lite_sim/add_obstacle', self.on_add)
         self.create_service(RemoveObstacle, '/lite_sim/remove_obstacle', self.on_remove)
         self.create_service(SetBool, '/lite_sim/set_paused', self.on_pause)
         self.publish_obstacles()
         self.get_logger().info(
             f'lite_sim: scene {self.scene.geometry_sha256[:12]}, profile {profile}, {len(self.world.workers)} workers, '
-            f'{len(self.world.forklifts)} forklifts, step {self.step*1000:.0f} ms, target RTF {self.target_rtf}')
+            f'{len(self.world.forklifts)} forklifts, robots '
+            + ', '.join(f'{r} ({fleet.topic(r, "cmd_vel", self.root_robot)})' for r in self.io)+f', step {self.step*1000:.0f} ms, target RTF {self.target_rtf}')
         self.running = True
         self.thread = threading.Thread(target=self.loop, name='lite-sim-loop', daemon=True)
         self.thread.start()
 
     # ------------------------------------------------------------------ inputs
-    def on_command(self, msg):
+    def on_command(self, robot_id, msg):
         with self.lock:
-            self.world.command(self.robot_id, msg.twist.linear.x, msg.twist.angular.z)
+            self.world.command(robot_id, msg.twist.linear.x, msg.twist.angular.z)
 
     def on_add(self, request, response):
         with self.lock:
@@ -193,83 +219,76 @@ class LiteSim(Node):
         when = stamp(t)
         if count % self.clock_divider == 0:
             self.pub_clock.publish(Clock(clock=when))
-        robot = w.robots[self.robot_id]
-        d = robot.drive
-        if self.schedules['odom'].due(t):
-            ox, oy, oyaw = w.odometry(self.robot_id)
-            odom = Odometry()
-            odom.header.stamp, odom.header.frame_id, odom.child_frame_id = when, 'odom', 'base_link'
-            odom.pose.pose.position.x, odom.pose.pose.position.y = ox, oy
-            q = quaternion(oyaw)
-            o = odom.pose.pose.orientation
-            o.x, o.y, o.z, o.w = q
-            odom.twist.twist.linear.x, odom.twist.twist.angular.z = d.v, d.w
-            for i, value in enumerate(POSE_COVARIANCE):
-                odom.pose.covariance[7*i] = value
-                odom.twist.covariance[7*i] = value
-            self.pub_odom.publish(odom)
-            tf = TransformStamped()
-            tf.header.stamp, tf.header.frame_id, tf.child_frame_id = when, 'odom', 'base_link'
-            tf.transform.translation.x, tf.transform.translation.y = ox, oy
-            r = tf.transform.rotation
-            r.x, r.y, r.z, r.w = q
-            self.pub_tf.publish(TFMessage(transforms=[tf]))
-            left, right = w.drive.wheel_rates(d.v, d.w)
-            joints = JointState()
-            joints.header.stamp = when
-            joints.name = ['left_wheel_joint', 'right_wheel_joint']
-            joints.position = [d.left_angle, d.right_angle]
-            joints.velocity = [left, right]
-            self.pub_joints.publish(joints)
-        for key, spec, pub in (('front', self.model.front, self.pub_scan), ('top', self.model.top, self.pub_top)):
-            if self.schedules[key].due(t):
-                ranges = w.scan(self.robot_id, spec)
+        odom_due = self.schedules['odom'].due(t)
+        scans_due = [(key, spec) for key, spec in (('front', self.model.front), ('top', self.model.top))
+                     if self.schedules[key].due(t)]
+        imu_due = self.schedules['imu'].due(t)
+        transforms = []
+        for io in self.io.values():
+            d = w.robots[io.id].drive
+            if odom_due:
+                transforms.append(self.publish_odometry(io, d, when))
+            for key, spec in scans_due:
+                ranges = w.scan(io.id, spec)
                 msg = LaserScan()
-                msg.header.stamp, msg.header.frame_id = when, spec.frame_id
+                msg.header.stamp, msg.header.frame_id = when, io.prefix+spec.frame_id
                 msg.angle_min, msg.angle_max, msg.angle_increment = spec.angle_min, spec.angle_max, spec.increment
                 msg.time_increment, msg.scan_time = 0., 1./spec.rate
                 msg.range_min, msg.range_max = spec.range_min, spec.range_max
                 msg.ranges = ranges.tolist()
-                pub.publish(msg)
-        if self.schedules['imu'].due(t):
-            imu = Imu()
-            imu.header.stamp, imu.header.frame_id = when, 'imu_link'
-            o = imu.orientation
-            o.x, o.y, o.z, o.w = quaternion(d.yaw)
-            imu.angular_velocity.z = d.w
-            imu.linear_acceleration.x, imu.linear_acceleration.y, imu.linear_acceleration.z = d.accel, d.v*d.w, 9.81
-            imu.orientation_covariance[0] = imu.orientation_covariance[4] = imu.orientation_covariance[8] = 1e-4
-            imu.angular_velocity_covariance[0] = imu.angular_velocity_covariance[4] = imu.angular_velocity_covariance[8] = 1e-4
-            imu.linear_acceleration_covariance[0] = imu.linear_acceleration_covariance[4] = imu.linear_acceleration_covariance[8] = 1e-3
-            self.pub_imu.publish(imu)
+                (io.scan if key == 'front' else io.top).publish(msg)
+            if imu_due:
+                imu = Imu()
+                imu.header.stamp, imu.header.frame_id = when, io.prefix+'imu_link'
+                o = imu.orientation
+                o.x, o.y, o.z, o.w = quaternion(d.yaw)
+                imu.angular_velocity.z = d.w
+                imu.linear_acceleration.x, imu.linear_acceleration.y, imu.linear_acceleration.z = d.accel, d.v*d.w, 9.81
+                imu.orientation_covariance[0] = imu.orientation_covariance[4] = imu.orientation_covariance[8] = 1e-4
+                imu.angular_velocity_covariance[0] = imu.angular_velocity_covariance[4] = imu.angular_velocity_covariance[8] = 1e-4
+                imu.linear_acceleration_covariance[0] = imu.linear_acceleration_covariance[4] = imu.linear_acceleration_covariance[8] = 1e-3
+                io.imu.publish(imu)
+        if transforms:
+            self.pub_tf.publish(TFMessage(transforms=transforms))
         if self.schedules['world'].due(t):
             self.pub_world.publish(self.world_state(when))
         if self.schedules['truth'].due(t):
             self.pub_truth.publish(self.ground_truth(when))
         self.publish_events()
 
+    def publish_odometry(self, io, d, when):
+        """Odometry and wheel joints of one robot; returns its odom → base_link transform."""
+        ox, oy, oyaw = self.world.odometry(io.id)
+        odom = Odometry()
+        odom.header.stamp, odom.header.frame_id, odom.child_frame_id = when, io.prefix+'odom', io.prefix+'base_link'
+        odom.pose.pose.position.x, odom.pose.pose.position.y = ox, oy
+        q = quaternion(oyaw)
+        o = odom.pose.pose.orientation
+        o.x, o.y, o.z, o.w = q
+        odom.twist.twist.linear.x, odom.twist.twist.angular.z = d.v, d.w
+        for i, value in enumerate(POSE_COVARIANCE):
+            odom.pose.covariance[7*i] = value
+            odom.twist.covariance[7*i] = value
+        io.odom.publish(odom)
+        tf = TransformStamped()
+        tf.header.stamp, tf.header.frame_id, tf.child_frame_id = when, io.prefix+'odom', io.prefix+'base_link'
+        tf.transform.translation.x, tf.transform.translation.y = ox, oy
+        r = tf.transform.rotation
+        r.x, r.y, r.z, r.w = q
+        left, right = self.world.drive.wheel_rates(d.v, d.w)
+        joints = JointState()
+        joints.header.stamp = when
+        joints.name = ['left_wheel_joint', 'right_wheel_joint']
+        joints.position = [d.left_angle, d.right_angle]
+        joints.velocity = [left, right]
+        io.joints.publish(joints)
+        return tf
+
     def entities(self):
         return [entity(**fields) for fields in self.entity_fields()]
 
     def entity_fields(self):
-        w = self.world
-        for r in w.robots.values():
-            d = r.drive
-            yield dict(id=r.id, type='amr', x=d.x, y=d.y, z=0., yaw=d.yaw, vx=d.v*math.cos(d.yaw),
-                              vy=d.v*math.sin(d.yaw), wz=d.w, speed=d.v, state=r.state, field_state=r.field_state,
-                              field_length=r.field_length, reason=r.reason)
-        for k in w.workers:
-            activity, progress = k.activity()
-            yield dict(id=k.id, type='human', x=k.x, y=k.y, z=k.level_z, yaw=k.yaw, vx=k.v*math.cos(k.yaw),
-                              vy=k.v*math.sin(k.yaw), wz=getattr(k, 'yaw_rate', 0.), speed=k.v, state=k.state(),
-                              activity=activity, activity_progress=float(progress), carrying=k.carry,
-                              look=float(k.look), reason=k.reason)
-        for f in w.forklifts:
-            state, reason = Traffic.state(f)
-            yaw = f.pose[2]
-            yield dict(id=f.id, type='forklift', x=f.pose[0], y=f.pose[1], z=0., yaw=yaw,
-                              vx=f.v*math.cos(yaw), vy=f.v*math.sin(yaw), speed=f.v, state=state,
-                              field_state=f.field, field_length=float(f.prot), reason=reason)
+        return self.world.entity_states()
 
     def world_state(self, when):
         msg = WorldState()

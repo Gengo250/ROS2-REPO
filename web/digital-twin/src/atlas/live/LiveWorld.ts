@@ -152,6 +152,7 @@ export class LiveWorld {
   addObstacle(kind: string, x: number, y: number, yaw = 0) { return this.command('POST', '/api/v1/obstacles', { kind, x, y, yaw }); }
   removeObstacle(id: string) { return this.command('DELETE', `/api/v1/obstacles/${encodeURIComponent(id)}`); }
   clearObstacles() { return this.command('DELETE', '/api/v1/obstacles'); }
-  sendMission(destination: string) { return this.command('POST', '/api/v1/missions', { robot_id: 'amr_01', destination, strategy: 'direct' }); }
-  cancelMission() { return this.command('DELETE', '/api/v1/missions/amr_01'); }
+  /** Mission for one robot: the Gateway sends it to that robot's own Nav2 (its namespace). */
+  sendMission(robot: string, destination: string) { return this.command('POST', '/api/v1/missions', { robot_id: robot, destination, strategy: 'direct' }); }
+  cancelMission(robot: string) { return this.command('DELETE', `/api/v1/missions/${encodeURIComponent(robot)}`); }
 }

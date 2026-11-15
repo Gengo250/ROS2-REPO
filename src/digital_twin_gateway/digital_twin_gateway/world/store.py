@@ -33,7 +33,7 @@ class WorldStore:
         self.last_event_seq = 0
         self.engine_session = None
         self.plans = {}             # robot id → (receipt, world points, omitted reason)
-        self.interlock = None       # (receipt, message)
+        self.interlocks = {}        # robot id → (receipt, message)
         self.missions = {}
 
     def set_ros_initialized(self, value):
@@ -85,9 +85,9 @@ class WorldStore:
         with self.lock:
             self.plans[robot_id] = (self.timer(), world, reason)
 
-    def update_interlock(self, message):
+    def update_interlock(self, robot_id, message):
         with self.lock:
-            self.interlock = (self.timer(), message[:256])
+            self.interlocks[robot_id] = (self.timer(), message[:256])
 
     def update_mission(self, mission):
         with self.lock:
@@ -116,17 +116,17 @@ class WorldStore:
                                         real_time_factor=engine['rtf'], target_real_time_factor=engine['target_rtf'],
                                         overruns=engine['overruns'], scene_sha256=engine['scene_sha256'],
                                         age_seconds=now-receipt)
-            interlock_receipt = self.interlock[0] if self.interlock else None
-            navigation_availability = self.availability(interlock_receipt, now)
-            robots = []
+            robots, availabilities = [], []
             for e in (engine['entities'] if engine else ()):
                 if e.type != 'amr':
                     continue
-                plan = self.plans.get(e.id)
+                plan, interlock = self.plans.get(e.id), self.interlocks.get(e.id)
+                availability = self.availability(interlock[0] if interlock else None, now)
+                availabilities.append(availability)
                 robots.append(RobotNavigation(
-                    id=e.id, interlock=self.interlock[1] if self.interlock else None,
-                    interlock_ready=bool(self.interlock and self.interlock[1] == 'ready' and navigation_availability == 'online'),
-                    interlock_availability=navigation_availability,
+                    id=e.id, interlock=interlock[1] if interlock else None,
+                    interlock_ready=bool(interlock and interlock[1] == 'ready' and availability == 'online'),
+                    interlock_availability=availability,
                     path=plan[1] if plan else (), path_age_seconds=now-plan[0] if plan else None, path_frame='world',
                     path_omitted_reason=plan[2] if plan else None, mission=self.missions.get(e.id)))
             self.sequence += 1
@@ -134,10 +134,16 @@ class WorldStore:
                 session_id=self.session_id, sequence=self.sequence, timestamp=self.wall_clock(),
                 server_wall_time=self.wall_time(), simulation=simulation,
                 connection=Connection(gateway='online', ros='online' if self.ros_initialized else 'offline',
-                                      simulation=simulation_availability, navigation=navigation_availability,
+                                      simulation=simulation_availability, navigation=fleet_availability(availabilities, self.availability(None, now)),
                                       registration='verified' if self.registration else 'missing'),
                 entities=engine['entities'] if engine else (), robots=tuple(robots),
                 obstacles=engine['obstacles'] if engine else (), events=tuple(self.events))
+
+
+def fleet_availability(per_robot, default):
+    """Navigation of the fleet: the least available robot's stack (no robot: as before, unknown/offline)."""
+    order = ('offline', 'unknown', 'stale', 'online')
+    return min(per_robot, key=order.index) if per_robot else default
 
 
 def field_name(value):

@@ -56,3 +56,26 @@ def test_each_scanner_feeds_its_own_obstacle_layer():
         top=c['top_obstacle_layer']
         assert top['observation_sources']=='top_scan' and top['top_scan']['topic']=='/top_scan'
         assert top['top_scan']['observation_persistence']==0.0 and top['top_scan']['marking'] and top['top_scan']['clearing']
+
+
+def test_robot_namespace_rewrites_only_robot_frames_and_topics():
+    """amr_02's stack: its frames and topics, the shared map frame; the root robot unchanged."""
+    from amr_navigation.launch_support import rewrite_for_robot, robot_params
+    original=ROOT/'config/nav2_params.yaml'
+    params=yaml.safe_load(original.read_text())
+    assert rewrite_for_robot(params,'','')==params and robot_params(original)==str(original)
+    nested=rewrite_for_robot(params,'amr_02','amr_02/')
+    assert list(nested)==['amr_02']
+    p=nested['amr_02']
+    local=p['local_costmap']['local_costmap']['ros__parameters'];global_=p['global_costmap']['global_costmap']['ros__parameters']
+    assert local['global_frame']=='amr_02/odom' and local['robot_base_frame']=='amr_02/base_link'
+    assert global_['global_frame']=='map' and global_['robot_base_frame']=='amr_02/base_link'
+    assert local['obstacle_layer']['scan']['topic']=='/amr_02/scan' and global_['top_obstacle_layer']['top_scan']['topic']=='/amr_02/top_scan'
+    assert p['bt_navigator']['ros__parameters']['odom_topic']=='/amr_02/odom'
+    b=p['behavior_server']['ros__parameters'];assert (b['local_frame'],b['global_frame'],b['robot_base_frame'])==('amr_02/odom','map','amr_02/base_link')
+    # Every other value (limits, plugins, speeds) is the validated file's.
+    assert p['controller_server']==params['controller_server']
+    amcl=rewrite_for_robot(yaml.safe_load((ROOT/'config/amcl_params.yaml').read_text()),'amr_03','amr_03/')['amr_03']['amcl']['ros__parameters']
+    assert (amcl['base_frame_id'],amcl['odom_frame_id'],amcl['global_frame_id'],amcl['scan_topic'])==('amr_03/base_link','amr_03/odom','map','/amr_03/scan')
+    written=yaml.safe_load(open(robot_params(original,'amr_02','amr_02/')).read())
+    assert written==nested

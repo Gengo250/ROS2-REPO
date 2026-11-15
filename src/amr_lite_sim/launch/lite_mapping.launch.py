@@ -18,8 +18,9 @@ def setup(context):
     value = lambda key: LaunchConfiguration(key).perform(context)
     actions = [
         IncludeLaunchDescription(PythonLaunchDescriptionSource(str(lite/'launch/lite.launch.py')),
+                                 # Only the reference robot: other robots would be mapped as fixed obstacles.
                                  launch_arguments={'profile': 'mapping', 'real_time_factor': value('real_time_factor'),
-                                                   'lidar_noise_stddev': value('lidar_noise_stddev')}.items()),
+                                                   'lidar_noise_stddev': value('lidar_noise_stddev'), 'robots': 'amr_01'}.items()),
         # SLAM reads /top_scan_mapping: no-return beams clear free space (see free_space_relay.py).
         Node(package='amr_lite_sim', executable='free_space_relay', output='screen', parameters=[{'use_sim_time': True}]),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(str(navigation/'launch/mapping.launch.py')),

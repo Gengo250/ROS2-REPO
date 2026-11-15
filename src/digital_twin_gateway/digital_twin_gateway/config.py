@@ -16,6 +16,21 @@ class RobotConfig(BaseModel):
     joint_states_topic: Topic = '/joint_states'
 
 
+class FleetRobot(BaseModel):
+    """A robot of the lite twin and the ROS namespace of its navigation stack ('' = root topics:
+    /plan, /navigation/diagnostics, /navigate_to_pose). Same convention as amr_lite_sim/fleet.py."""
+    model_config = ConfigDict(extra='forbid', frozen=True)
+    id: str = Field(pattern=r'^[A-Za-z0-9_-]+$', max_length=64)
+    namespace: str = Field(default='', pattern=r'^[A-Za-z0-9_]*$')
+
+    def topic(self, name):
+        return f'/{self.namespace}/{name}' if self.namespace else f'/{name}'
+
+
+DEFAULT_FLEET = (FleetRobot(id='amr_01'), FleetRobot(id='amr_02', namespace='amr_02'),
+                 FleetRobot(id='amr_03', namespace='amr_03'))
+
+
 class Settings(BaseModel):
     model_config = ConfigDict(extra='forbid', frozen=True, allow_inf_nan=False)
     host: str = '127.0.0.1'
@@ -25,7 +40,9 @@ class Settings(BaseModel):
     offline_seconds: float = Field(default=10, gt=0)
     send_timeout: float = Field(default=2, gt=0, le=30)
     max_clients: int = Field(default=64, ge=1, le=1024)
-    allowed_origins: tuple[str, ...] = ('http://localhost:5173', 'http://127.0.0.1:5173')
+    # The frontend dev server, and the onboard-camera render worker of the perception service
+    # (vision/, camera.html served on 8100: reads the world state to render camera frames).
+    allowed_origins: tuple[str, ...] = ('http://localhost:5173', 'http://127.0.0.1:5173', 'http://127.0.0.1:8100')
     world_id: str = 'warehouse'
     world_frame: str = 'world'
     scenario: Scenario | None = None
@@ -46,6 +63,8 @@ class Settings(BaseModel):
     lite_world_topic: Topic = '/lite_sim/world_state'
     lite_events_topic: Topic = '/lite_sim/events'
     plan_topic: Topic = '/plan'
+    # Robots of the lite twin with an independent navigation stack (world-state v1 missions/plans).
+    fleet: tuple[FleetRobot, ...] = DEFAULT_FLEET
     command_timeout: float = Field(default=5, gt=0, le=30)
 
     @model_validator(mode='after')
@@ -58,6 +77,8 @@ class Settings(BaseModel):
             raise ValueError('Ground truth must not enter the TF graph')
         if self.offline_seconds <= self.stale_seconds:
             raise ValueError('offline_seconds must exceed stale_seconds')
+        if len({r.id for r in self.fleet}) != len(self.fleet) or len({r.namespace for r in self.fleet}) != len(self.fleet):
+            raise ValueError('fleet robots need unique ids and unique namespaces')
         if not self.robots or len({r.id for r in self.robots}) != len(self.robots):
             raise ValueError('robots must have unique, nonempty stable IDs')
         if len({r.odom_topic for r in self.robots}) != len(self.robots):
@@ -74,7 +95,7 @@ class Settings(BaseModel):
         for key in cls.model_fields:
             value = os.environ.get('TWIN_' + key.upper())
             if value is not None:
-                values[key] = json.loads(value) if key in ('robots', 'allowed_origins', 'simulation_entities') else value
+                values[key] = json.loads(value) if key in ('robots', 'allowed_origins', 'simulation_entities', 'fleet') else value
         # The installed existing layout remains authoritative for world metadata.
         from ament_index_python.packages import get_package_share_directory
         layout = Path(get_package_share_directory('amr_simulation')) / 'config/warehouse_layout.json'

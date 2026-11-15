@@ -59,22 +59,29 @@ def subscribe_world(node, store, settings):
         except (ValueError, TypeError):
             node.get_logger().warning('Invalid simulation event rejected', throttle_duration_sec=5)
 
-    def plan(msg):
+    def plan(robot_id, msg):
         points = [(p.pose.position.x, p.pose.position.y) for p in msg.poses]
         if all(math.isfinite(v) for point in points for v in point):
-            store.update_plan(settings.robots[0].id, points, msg.header.frame_id)
+            store.update_plan(robot_id, points, msg.header.frame_id)
 
-    def diagnostics(msg):
+    def diagnostics(robot_id, msg):
         for status in msg.status:
             if status.name == 'navigation/interlock':
-                store.update_interlock(status.message)
+                store.update_interlock(robot_id, status.message)
 
-    return [node.create_subscription(WorldState, settings.lite_world_topic, world, LIVE),
-            node.create_subscription(SimEvent, settings.lite_events_topic, event, EVENTS),
-            node.create_subscription(Path, settings.plan_topic, plan,
+    subscriptions = [node.create_subscription(WorldState, settings.lite_world_topic, world, LIVE),
+                     node.create_subscription(SimEvent, settings.lite_events_topic, event, EVENTS)]
+    # One plan and one interlock per robot, each from that robot's own namespace: a plan or an
+    # interlock state can never be attributed to another robot.
+    for robot in settings.fleet:
+        plan_topic = settings.plan_topic if not robot.namespace else robot.topic('plan')
+        subscriptions += [
+            node.create_subscription(Path, plan_topic, lambda msg, r=robot.id: plan(r, msg),
                                      QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
                                                 durability=DurabilityPolicy.VOLATILE)),
-            node.create_subscription(DiagnosticArray, '/navigation/diagnostics', diagnostics, LIVE)]
+            node.create_subscription(DiagnosticArray, robot.topic('navigation/diagnostics'),
+                                     lambda msg, r=robot.id: diagnostics(r, msg), LIVE)]
+    return subscriptions
 
 
 def bridge(ros_future, loop, timeout):
@@ -103,7 +110,8 @@ class Commands:
         self.AddObstacle, self.RemoveObstacle, self.NavigateToPose = AddObstacle, RemoveObstacle, NavigateToPose
         self.add_client = node.create_client(AddObstacle, '/lite_sim/add_obstacle')
         self.remove_client = node.create_client(RemoveObstacle, '/lite_sim/remove_obstacle')
-        self.navigate = ActionClient(node, NavigateToPose, '/navigate_to_pose')
+        # One NavigateToPose client per robot, on that robot's own Nav2 (its namespace).
+        self.navigate = {r.id: ActionClient(node, NavigateToPose, r.topic('navigate_to_pose')) for r in settings.fleet}
         self.goals = {}
 
     async def add_obstacle(self, request):
@@ -134,13 +142,14 @@ class Commands:
             return CommandResult(accepted=False, reason=f'unknown destination {request.destination!r}')
         if registration is None:
             return CommandResult(accepted=False, reason='world/map registration unavailable')
-        if request.robot_id != self.settings.robots[0].id:
+        navigate = self.navigate.get(request.robot_id)
+        if navigate is None:
             return CommandResult(accepted=False, reason=f'unknown robot {request.robot_id!r}')
         active = self.store.mission(request.robot_id)
         if active and active.status in ('pending', 'active'):
             return CommandResult(accepted=False, reason=f'mission {active.id} is still {active.status}; cancel it first')
-        if not self.navigate.server_is_ready():
-            return CommandResult(accepted=False, reason='Nav2 navigate_to_pose unavailable')
+        if not navigate.server_is_ready():
+            return CommandResult(accepted=False, reason=f'Nav2 navigate_to_pose of {request.robot_id} unavailable')
         wx, wy, wyaw = station['pose'][0], station['pose'][1], station['pose'][5]
         mx, my = registration.world_to_map(wx, wy)
         myaw = registration.world_yaw_to_map(wyaw)
@@ -163,7 +172,7 @@ class Commands:
                 self.store.update_mission(self._mission(current, status='active',
                                                         distance_remaining_m=max(0., f.distance_remaining),
                                                         recoveries=f.number_of_recoveries))
-        handle = await bridge(self.navigate.send_goal_async(goal, feedback_callback=feedback), loop,
+        handle = await bridge(navigate.send_goal_async(goal, feedback_callback=feedback), loop,
                               self.settings.command_timeout)
         if not handle.accepted:
             rejected = self._mission(mission, status='rejected', detail='Nav2 rejected the goal')
