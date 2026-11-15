@@ -45,7 +45,8 @@ export class VisionView {
   private readonly ctx: CanvasRenderingContext2D;
   private socket: WebSocket | null = null;
   private robot: string | null = null;
-  private frame: { header: DetectionFrame; bitmap: ImageBitmap; received: number } | null = null;
+  /** Newest processed frame of ``robot`` and the socket it came from (frame ids restart per connection). */
+  private frame: { header: DetectionFrame; bitmap: ImageBitmap; received: number; socket: WebSocket } | null = null;
   private status: Status | null = null;
   private statusError = '';
   private poll: ReturnType<typeof setInterval> | undefined;
@@ -77,12 +78,13 @@ export class VisionView {
   /** Robot whose onboard camera is on screen (null: no onboard view → panel and stream off). */
   setRobot(robot: string | null) {
     if (robot === this.robot) return;
-    this.robot = robot; this.close(); this.frame = null; this.drawn = '';
+    // Previous robot: stream closed, its image and boxes released before the next robot connects.
+    this.close(); this.clearFrame(); this.robot = robot;
     this.panel.hidden = robot === null;
     if (robot && this.enabled) this.open();
   }
   setEnabled(on: boolean) {
-    this.enabled = on; this.close(); this.frame = null; this.drawn = '';
+    this.enabled = on; this.close(); this.clearFrame();
     if (on && this.robot) this.open();
     if (on) { void this.refresh(); this.poll = setInterval(() => void this.refresh(), 2000); } else clearInterval(this.poll);
   }
@@ -94,11 +96,12 @@ export class VisionView {
       try {
         const { header, jpeg } = parseFrame(event.data as ArrayBuffer);
         if (header.robot_id !== this.robot || socket !== this.socket) return;      // never another robot's frame
-        if (this.frame && header.frame_id <= this.frame.header.frame_id) return;   // never go back in time
+        const newer = () => !this.frame || this.frame.socket !== socket || header.frame_id > this.frame.header.frame_id;
+        if (!newer()) return;                                                       // never go back in time
         const bitmap = await createImageBitmap(jpeg);
-        if (header.robot_id !== this.robot || socket !== this.socket) { bitmap.close(); return; }
+        if (header.robot_id !== this.robot || socket !== this.socket || !newer()) { bitmap.close(); return; }
         this.frame?.bitmap.close();
-        this.frame = { header, bitmap, received: performance.now() / 1000 }; this.drawn = '';
+        this.frame = { header, bitmap, received: performance.now() / 1000, socket }; this.drawn = '';
       } catch (error) { this.statusError = `Quadro inválido: ${(error as Error).message}`; }
     };
     socket.onclose = () => { if (socket === this.socket && this.enabled) { this.socket = null; this.retry = setTimeout(() => { if (this.enabled && this.robot && !this.socket) this.open(); }, 1500); } };
@@ -106,6 +109,12 @@ export class VisionView {
   private close() {
     clearTimeout(this.retry);
     if (this.socket) { this.socket.onclose = this.socket.onmessage = null; this.socket.close(); this.socket = null; }
+  }
+  /** Drop the displayed frame: its bitmap is released and the overlay emptied and hidden. */
+  private clearFrame() {
+    this.frame?.bitmap.close(); this.frame = null; this.drawn = '';
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0); this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.canvas.hidden = true;
   }
   private async refresh() {
     try {
@@ -123,15 +132,20 @@ export class VisionView {
     } catch { this.statusError = 'Limiar não aplicado: serviço indisponível'; }
   }
 
-  /** Panel text and overlay for this rendered frame; ``viewport``: the onboard viewport in CSS px. */
-  update(viewport: Rect | null) {
-    if (!this.robot || !viewport) { this.canvas.hidden = true; return; }
-    // Panel at the top right of the onboard viewport (the view's HUD sits at its top left).
-    const left = `${Math.max(viewport.x + 12, viewport.x + viewport.width - 302)}px`, top = `${viewport.y + 12}px`;
-    if (this.panel.style.left !== left || this.panel.style.top !== top) Object.assign(this.panel.style, { left, top });
+  /** Panel text and overlay for this rendered frame; ``viewport``: the onboard viewport in CSS px;
+   * ``simTime``: simulation time the scene is drawn at (a frame much older than it is stale, even if
+   * it just arrived: the service replays its last frame to a new connection). */
+  update(viewport: Rect | null, simTime: number | null = null) {
+    if (!this.robot) { this.canvas.hidden = true; return; }
+    // Panel at the top right of the onboard viewport (the view's HUD sits at its top left). Its text
+    // is refreshed even while the view blends (no viewport yet), so it names the new robot at once.
+    if (viewport) {
+      const left = `${Math.max(viewport.x + 12, viewport.x + viewport.width - 302)}px`, top = `${viewport.y + 12}px`;
+      if (this.panel.style.left !== left || this.panel.style.top !== top) Object.assign(this.panel.style, { left, top });
+    }
     const q = <T extends HTMLElement>(k: string) => this.panel.querySelector<T>(`[data-v="${k}"]`)!;
     const now = performance.now() / 1000, f = this.frame, robot = this.status?.robots[this.robot];
-    const age = f ? now - f.received : null, stale = age !== null && age > STALE_SECONDS;
+    const age = f ? Math.max(now - f.received, simTime === null ? 0 : simTime - f.header.stamp) : null, stale = age !== null && age > STALE_SECONDS;
     const pill = !this.enabled ? 'DESLIGADA' : this.statusError ? 'INDISPONÍVEL' : !f ? 'AGUARDANDO' : stale ? 'DESATUALIZADA' : 'EXECUTANDO';
     q('pill').textContent = pill;
     q<HTMLInputElement>('enable').checked = this.enabled;
@@ -146,14 +160,14 @@ export class VisionView {
       meta.push(`Objetos detectados: <b>${f ? f.header.detections.length : '—'}</b>${f && f.header.detections.length ? ' · ' + summary(f.header.detections) : ''}`);
       if (robot?.last_error) meta.push(`<span class="vwarn">${robot.last_error}</span>`);
       if (this.statusError) meta.push(`<span class="vwarn">${this.statusError}</span>`);
-      if (stale) meta.push(`<span class="vwarn">Sem quadros novos há ${fmt(age!, 1)} s: exibindo o último quadro processado</span>`);
+      if (stale) meta.push(`<span class="vwarn">Último quadro processado há ${fmt(age!, 1)} s: imagem desatualizada</span>`);
     } else meta.push('Ative a detecção para ver as imagens processadas pelo modelo e suas detecções.');
     const html = meta.join('<br>');
     if (q('meta').innerHTML !== html) q('meta').innerHTML = html;
     // ----------------------------------------------------------------- overlay (processed frame + its boxes)
-    const show = this.enabled && !!f;
+    const show = this.enabled && !!f && !!viewport;
     this.canvas.hidden = !show;
-    if (!show) return;
+    if (!show || !viewport) return;
     const ratio = Math.min(devicePixelRatio || 1, 2);
     const key = `${f!.header.frame_id}:${viewport.x}:${viewport.y}:${viewport.width}:${viewport.height}:${ratio}:${this.showBoxes}:${this.showConfidence}:${stale}`;
     if (key === this.drawn) return;
@@ -183,7 +197,7 @@ export class VisionView {
     ctx.fillText(`${h.robot_id} · quadro ${h.frame_id} · ${h.width}×${h.height} · imagem processada pelo modelo`, t.x + 6, t.y + h.height * t.scale - 6);
   }
 
-  dispose() { this.setEnabled(false); this.close(); this.frame?.bitmap.close(); }
+  dispose() { this.setEnabled(false); this.close(); this.clearFrame(); }
 }
 
 function summary(detections: Detection[]) {

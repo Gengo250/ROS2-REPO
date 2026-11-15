@@ -43,7 +43,13 @@ const counters = { stops: 0, yields: 0, detours: 0, hits: 0 };
 const log: { time: string; msg: string }[] = [];
 /** Onboard RGB-D camera of the AMR model (URDF export); null if the file could not be read. */
 let onboardMount: MountedCamera | null = null;
-let lastOnboard: { pose: Pose; optics: Optics } | null = null, onboardBase: { x: number; y: number; z: number; yaw: number } | null = null;
+type OnboardBase = { x: number; y: number; z: number; yaw: number };
+/** Last lens of each robot's onboard camera, keyed by robot id: a robot whose state stops arriving
+ * keeps its own last pose (shown as stale), never another robot's. */
+const onboardPoses = new Map<string, { base: OnboardBase; pose: Pose; optics: Optics }>();
+let onboardBase: OnboardBase | null = null;
+/** Selected AMR in DEMO (in LIVE the mission selector holds it: selectedAmrId()). */
+let demoAmr: string | null = null;
 /** Area between the panels where first-person views are framed, and the last rendered view. */
 let stage: Rect = { x: 0, y: 0, width: 1, height: 1 }, rendered: RenderView | null = null;
 let selectedCamera: string | null = null, targetViewport: Rect | null = null, hudHtml = '';
@@ -122,6 +128,12 @@ function clearCameraSelection() {
 /** Switch the main view (overview, an industrial camera, a robot's onboard camera). */
 function enterView(kind: ViewKind, id: string | null) {
   if (kind === 'onboard' && !onboardMount) { toast('Modelo da câmera embarcada indisponível (robots/amr.cameras.json)'); return; }
+  // A robot that never reached the backend state has no pose to place its lens from: never show
+  // another robot's camera instead (an onboard view of a different robot is left for the overview).
+  if (kind === 'onboard' && !onboardAvailable(id!)) {
+    if (view.kind === 'onboard') backToOverview();
+    toast(`Câmera embarcada de ${amrLabel(id!)} indisponível: robô ausente do estado do backend`); return;
+  }
   // Leaving the overview: remember its orbit so "back to overview" returns exactly there.
   if (!view.firstPerson && kind !== 'overview') overviewBefore = { orbit: { ...camera.desired, target: [...camera.desired.target] }, following };
   // Leaving an industrial camera ends its selection (otherwise its panel stays on screen).
@@ -131,7 +143,7 @@ function enterView(kind: ViewKind, id: string | null) {
   camera.override = kind === 'overview' ? null : (dx, dy) => view.drag(dx, dy);
   canvas.classList.toggle('fp', kind !== 'overview'); canvas.classList.remove('look');
   if (kind === 'industrial') { const cam = scene.cameras.find(c => c.id === id)!; toast('Câmera industrial: ' + cam.label); }
-  if (kind === 'onboard') toast(`Câmera embarcada: ${id}`);
+  if (kind === 'onboard') toast(`Câmera embarcada: ${amrLabel(id!)}`);
   updateHud(true);
 }
 function nextCamera() {
@@ -149,14 +161,32 @@ function backToOverview() {
 }
 /** AMRs of the current mode (backend entities in LIVE, the prototype fleet in DEMO). */
 function amrIds(): string[] { return mode === 'live' ? lastEntities.filter(e => e.type === 'amr').map(e => e.id) : demo!.robots.map(r => r.id as string); }
-/** The mission panel follows the AMR the user selects in the scene. */
-function followMissionRobot(id: string) {
-  const select = document.querySelector<HTMLSelectElement>('#missionRobot');
-  if (mode === 'live' && select && [...select.options].some(o => o.value === id)) select.value = id;
+const amrLabel = (id: string) => id.toUpperCase().replace('_', ' ');
+/** The selected AMR, one for the whole interface (mission selector, scene click, AMR panel and HUD
+ * buttons, V): in LIVE the mission selector holds it, in DEMO ``demoAmr``. */
+function selectedAmrId(): string | null {
+  if (mode === 'live') return missionRobot() || null;
+  return demoAmr && amrIds().includes(demoAmr) ? demoAmr : amrIds()[0] ?? null;
+}
+/** A pose for this robot's lens exists (backend entity, or its own last pose in this session). */
+function onboardAvailable(id: string) {
+  return mode === 'live' ? lastEntities.some(e => e.id === id && e.type === 'amr') || onboardPoses.has(id) : amrIds().includes(id);
+}
+/** Make ``id`` the selected AMR everywhere: mission selector, inspection panel and, while an onboard
+ * camera is on screen, the camera itself (straight to that robot's lens, no stop at the overview). */
+function selectAmr(id: string) {
+  if (mode === 'live') {
+    const select = $<HTMLSelectElement>('#missionRobot');
+    if ([...select.options].some(o => o.value === id)) select.value = id;
+  } else demoAmr = id;
+  // Following someone who is not an AMR ends with the new selection; following an AMR carries over.
+  if (selectedId !== id && !(selectedId && amrIds().includes(selectedId))) following = false;
+  selectedId = id;
+  if (view.kind === 'onboard' && view.id !== id) enterView('onboard', id);
 }
 function viewAmr(action: string, id: string) {
-  followMissionRobot(id);
-  if (action === 'onboard') { selectedId = id; enterView('onboard', id); return; }
+  selectAmr(id);
+  if (action === 'onboard') { enterView('onboard', id); return; }
   enterView('overview', null); selectedId = id;
   const e = mode === 'live' ? lastEntities.find(x => x.id === id) : null, r = mode === 'demo' ? demo!.robots.find(x => x.id === id) : null;
   const at = e ? [e.x, e.y] : r ? [r.pose.x, -r.pose.z] : null;
@@ -242,7 +272,8 @@ function startLive() {
     try { const r = await live!.cancelMission(robot); toast(r.accepted ? `Cancelamento de ${robot} solicitado ao Nav2` : `Nada a cancelar em ${robot}: ${r.reason}`); }
     catch (error) { toast(`Falha ao cancelar: ${(error as Error).message}`); }
   };
-  $<HTMLSelectElement>('#missionRobot').onchange = () => updatePanels();
+  // Choosing a robot selects it everywhere (and switches the onboard camera if one is on screen).
+  $<HTMLSelectElement>('#missionRobot').onchange = () => { const id = missionRobot(); if (id) selectAmr(id); updatePanels(); };
 }
 function liveStatus() {
   const s = live!.latest, pill = $('#status'), text = $('#statusText');
@@ -338,9 +369,10 @@ canvas.addEventListener('pointerup', e => {
   let best: string | null = null, bestD = Infinity;
   for (const c of candidates) { const p = screen(c.at[0]!, c.at[1]!, c.at[2]!); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < c.radius && d < bestD) { bestD = d; best = c.id; } }
   // In a first-person view a click only selects (the view stays on the chosen camera).
-  if (best && view.firstPerson) { selectedId = best; toast('Selecionado ' + best); return; }
-  if (best) followMissionRobot(best);
-  if (best) { clearCameraSelection(); selectedId = best; following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + best); return; }
+  // An AMR selected in an onboard view also switches to its camera (selectAmr).
+  const pick = (id: string) => { if (amrIds().includes(id)) selectAmr(id); else selectedId = id; };
+  if (best && view.firstPerson) { toast('Selecionado ' + best); pick(best); return; }
+  if (best) { clearCameraSelection(); pick(best); following = true; const d = camera.desired; d.distance = Math.min(d.distance, 18); d.pitch = Math.min(d.pitch, .66); toast('Acompanhando ' + best); return; }
   if (view.firstPerson) return;
   let zone: Zone | null = null, zd = 48;
   for (const { z } of labelNodes) { const p = screen(...rosToGl(z.pos[0], z.pos[1], z.pos[2])); if (!p) continue; const d = Math.hypot(cx - p[0]!, cy - p[1]!); if (d < zd) { zd = d; zone = z; } }
@@ -377,10 +409,11 @@ function bindControls() {
     if (action === 'overview') backToOverview();
     else if (action === 'next') nextCamera();
     else if (action === 'look') { view.setLook(!view.look.enabled); canvas.classList.toggle('look', view.look.enabled); toast(view.look.enabled ? 'Olhar ao redor: arraste no cenário (a orientação do sensor não muda)' : 'Vista alinhada ao sensor'); }
+    else if (action === 'amr') viewAmr('onboard', b.dataset.robot!);
     else if (view.kind === 'onboard') viewAmr(action, view.id!);
     updateHud(true);
   };
-  if (mode === 'live') $('#missionOnboard').onclick = () => { if (lastEntities.some(e => e.id === missionRobot())) viewAmr('onboard', missionRobot()); };
+  if (mode === 'live') $('#missionOnboard').onclick = () => { const id = selectedAmrId(); if (id) viewAmr('onboard', id); };
   $('#followNext').onclick = () => cycleWorker();
   $('#screenshot').onclick = () => { const a = document.createElement('a'); a.download = 'atlas-digital-twin.png'; a.href = canvas.toDataURL('image/png'); a.click(); toast('Captura salva'); };
   for (const b of document.querySelectorAll<HTMLButtonElement>('[data-mode]')) {
@@ -390,15 +423,17 @@ function bindControls() {
   window.addEventListener('keydown', e => {
     // Typing in a text field or a select keeps its keys; a focused checkbox or slider does not
     // swallow the view shortcuts (Esc after toggling a layer or the detection, for example).
+    // The robot selector keeps focus after a choice: V and Esc still reach the views from it.
     const focused = document.activeElement as HTMLInputElement | null;
-    if (focused && (['TEXTAREA', 'SELECT'].includes(focused.tagName) || (focused.tagName === 'INPUT' && !['checkbox', 'radio', 'range'].includes(focused.type)))) return;
+    if (focused?.tagName === 'SELECT' && ['KeyV', 'Escape'].includes(e.code)) focused.blur();
+    else if (focused && (['TEXTAREA', 'SELECT'].includes(focused.tagName) || (focused.tagName === 'INPUT' && !['checkbox', 'radio', 'range'].includes(focused.type)))) return;
     if (e.code === 'Space' && mode === 'demo') { e.preventDefault(); $('#play').click(); }
     const views = Object.keys(scene.views);
     if (/Digit[1-9]/.test(e.code)) { const v = views[Number(e.code.slice(-1)) - 1]; if (v) setView(v); }
     if (e.code === 'KeyF') cycleWorker();
     if (e.code === 'KeyO') setTool(tool || lastTool);
     if (e.code === 'KeyC') nextCamera();
-    if (e.code === 'KeyV') { const id = amrIds().includes(selectedId ?? '') ? selectedId! : amrIds()[0]; if (id) viewAmr('onboard', id); }
+    if (e.code === 'KeyV') { const id = selectedAmrId(); if (id) viewAmr('onboard', id); }
     if (e.code === 'Escape') { if (tool) setTool(tool); else if (view.firstPerson) backToOverview(); else setView(views[0]!); }
   });
 }
@@ -429,23 +464,25 @@ function stageRect(): Rect {
 }
 /** Desired camera of this frame from the current mode. Onboard poses come from the same
  * interpolated backend state that is drawn (or the DEMO's own state); a robot that vanished
- * keeps its last pose. */
+ * keeps its own last pose (onboardPoses). */
 function viewTarget(): ViewTarget {
   if (view.kind === 'industrial') {
     const cam = scene.cameras.find(c => c.id === view.id)!, optics = industrialOptics(cam);
     return { pose: industrialPose(cam), optics, viewport: fitViewport(stage, optics.aspect) };
   }
   if (view.kind === 'onboard' && onboardMount) {
-    let base: { x: number; y: number; z: number; yaw: number } | null = null, mount = onboardMount;
-    if (mode === 'live') { const e = lastEntities.find(x => x.id === view.id && x.type === 'amr'); if (e) base = { x: e.x, y: e.y, z: e.z, yaw: e.yaw }; }
+    const id = view.id!;
+    let base: OnboardBase | null = null, mount = onboardMount;
+    if (mode === 'live') { const e = lastEntities.find(x => x.id === id && x.type === 'amr'); if (e) base = { x: e.x, y: e.y, z: e.z, yaw: e.yaw }; }
     else {
       // DEMO vehicles are the prototype's (1.64 m), not the URDF robot: same optics, orientation and
       // lens height, lens at the vehicle's nominal front.
-      const r = demo?.robots.find(x => x.id === view.id);
+      const r = demo?.robots.find(x => x.id === id);
       if (r) { base = { x: r.pose.x, y: -r.pose.z, z: 0, yaw: r.pose.yaw }; mount = { ...onboardMount, position: [r.S.cx + r.S.L / 2, 0, onboardMount.position[2]!] }; }
     }
-    if (base) { onboardBase = base; lastOnboard = { pose: onboardPose(base, mount), optics: onboardOptics(mount) }; }
-    if (lastOnboard) return { ...lastOnboard, viewport: fitViewport(stage, lastOnboard.optics.aspect) };
+    if (base) onboardPoses.set(id, { base, pose: onboardPose(base, mount), optics: onboardOptics(mount) });
+    const lens = onboardPoses.get(id);
+    if (lens) { onboardBase = lens.base; return { pose: lens.pose, optics: lens.optics, viewport: fitViewport(stage, lens.optics.aspect) }; }
   }
   return { pose: lookPose(camera.eye, camera.state.target), optics: { fov: 47, aspect: canvas.clientWidth / Math.max(canvas.clientHeight, 1), near: .2, far: 700 }, viewport: null };
 }
@@ -497,7 +534,7 @@ function render(now: number) {
   applyWalls(rendered.position);
   renderer.render(rendered, sky, night, dim);
   // Onboard camera of a LIVE AMR: its computer-vision panel (frames the model processed + detections).
-  if (vision) { const onboard = view.kind === 'onboard' && !view.blending(now / 1000); vision.setRobot(view.kind === 'onboard' ? view.id : null); vision.update(onboard ? rendered.viewport : null); }
+  if (vision) { const onboard = view.kind === 'onboard' && !view.blending(now / 1000); vision.setRobot(view.kind === 'onboard' ? view.id : null); vision.update(onboard ? rendered.viewport : null, live?.renderTime ?? null); }
   // Adaptive resolution: lower the pixel ratio while the delivered rate stays well below the
   // cap; raise it again once the cap is held. Never below 0.75.
   frameEma += ((frameTimes.at(-1) ?? frameEma) - frameEma) * .05;
@@ -568,9 +605,10 @@ function updateHud(force = false) {
       const r = demo!.robots.find(x => x.id === id);
       status = r ? `${demo!.vehStatus(r)} · ${fmt(r.v, 2)} m/s · AMR demonstrativo: lente na frente do veículo do protótipo` : '';
     }
-    html = `<div class="hudtitle">CÂMERA EMBARCADA <span class="small-pill">PRIMEIRA PESSOA 3D</span></div><div class="hudname">${id} · ${m.id}</div>`
+    html = `<div class="hudtitle">CÂMERA EMBARCADA <span class="small-pill">PRIMEIRA PESSOA 3D</span></div><div class="hudname">${amrLabel(id)} · ${m.id}</div>`
       + `<div class="hudmeta">${status}<br><code>${m.frame_id}</code> (URDF) · ${fmt(m.horizontal_fov * 180 / Math.PI, 0)}° · ${m.resolution[0]}×${m.resolution[1]} · ${vision?.enabled && mode === 'live' ? 'imagem: quadros sintéticos processados pelo YOLO26n (painel de visão)' : 'renderização 3D da cena'}</div>`
       + (stale ? '<div class="hudwarn">DADOS DESATUALIZADOS · última pose recebida do backend</div>' : '')
+      + `<div class="hudbtns">${[...amrIds()].sort().map(r => `<button data-hud="amr" data-robot="${r}" class="${r === id ? 'active' : ''}" title="Câmera embarcada de ${r}">${amrLabel(r)}</button>`).join('')}</div>`
       + `<div class="hudbtns"><button data-hud="external">Visão externa</button><button data-hud="follow">Acompanhar AMR</button>${look}<button data-hud="overview">Visão geral <span class="key">ESC</span></button></div>`;
   }
   const v = targetViewport ?? stage;
@@ -581,7 +619,7 @@ function updateHud(force = false) {
 function updatePanels() {
   $('#clock').textContent = clockText();
   updateHud();
-  if (mode === 'live') liveStatus();
+  if (mode === 'live') { liveStatus(); onboardButton(); }
   const t = mode === 'demo' && demo ? demo.traffic : counters;
   $('#cntStops').textContent = String(t.stops); $('#cntYield').textContent = String(t.yields); $('#cntDetour').textContent = String(t.detours); $('#cntHits').textContent = String(t.hits);
   const entries = mode === 'demo' && demo ? demo.traffic.log : log;
@@ -590,6 +628,13 @@ function updatePanels() {
     if (mode === 'live') { const e = lastEntities.find(x => x.id === selectedId); if (e) entityPanel(e); }
     else if (demo) { const w = demo.workers.find(x => x.id === selectedId); const v = [...demo.robots, ...demo.forklifts].find(x => x.id === selectedId); if (w) demoPanel(w, true); else if (v) demoPanel(v, false); }
   }
+}
+/** "Ver pela câmera" names the selected AMR and shows when its camera is the one on screen. */
+function onboardButton() {
+  const id = selectedAmrId(), on = !!id && view.kind === 'onboard' && view.id === id;
+  const html = `${on ? 'Exibindo a câmera do' : 'Ver pela câmera do'} ${id ? amrLabel(id) : 'AMR'} <span class="key">V</span>`;
+  const b = $('#missionOnboard'); if (b.innerHTML !== html) b.innerHTML = html;
+  b.classList.toggle('active', on);
 }
 function publishMetrics() {
   const sorted = [...frameTimes].sort((a, b) => a - b), p95 = sorted[Math.floor(sorted.length * .95)] ?? 0;
