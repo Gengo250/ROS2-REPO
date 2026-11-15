@@ -254,7 +254,10 @@ class Perception:
 
     async def serve_client(self, socket: WebSocket, robot):
         origin = socket.headers.get('origin')
-        if origin is not None and origin not in self.config['allowed_origins']:
+        # The service also serves the built web app (render_worker.mount_worker), so a page loaded
+        # from it (same origin as the Host it connects to) is accepted besides the configured ones.
+        same_origin = origin == f"http://{socket.headers.get('host')}"
+        if origin is not None and not same_origin and origin not in self.config['allowed_origins']:
             await socket.close(code=1008)
             return
         if robot not in self.clients:
